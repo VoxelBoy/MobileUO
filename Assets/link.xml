@@ -1,0 +1,8 @@
+<linker>
+    <assembly fullname="Newtonsoft.Json">
+        <type fullname="System.Runtime.CompilerServices.NullableAttribute" preserve="all"/>
+    </assembly>
+    <assembly fullname="System.Core">
+        <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve="all" />
+    </assembly>
+</linker>
