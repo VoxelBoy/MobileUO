@@ -1,5 +1,4 @@
-﻿using States;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Init : MonoBehaviour
 {

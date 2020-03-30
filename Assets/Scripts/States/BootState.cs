@@ -1,5 +1,3 @@
-using States;
-
 public class BootState : IState
 {
     public void Enter()
