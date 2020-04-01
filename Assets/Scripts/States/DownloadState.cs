@@ -32,7 +32,7 @@ public class DownloadState : IState
     public void Enter()
     {
         serverConfiguration = ServerConfigurationModel.ActiveConfiguration;
-        if (serverConfiguration.AllFilesDownloaded)
+        if (serverConfiguration.AllFilesDownloaded || Application.isEditor)
         {
             StateManager.GoToState<GameState>();
         }
