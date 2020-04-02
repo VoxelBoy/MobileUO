@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering;
 using XNAEmulator.Graphics;
 using UnityGraphics = UnityEngine.Graphics;
 
@@ -45,7 +44,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         internal void Clear(Color color)
         {
-            GL.Clear(true, color != Color.Transparent, UnityEngine.Color.yellow);
+            var unityColor = new UnityEngine.Color((float)color.R / 255, (float)color.G / 255, (float)color.B / 255, (float)color.A / 255);
+            GL.Clear(true, color != Color.Transparent, unityColor);
         }
 
         public void Clear(ClearOptions options, Vector4 color, int depth, int stencil)
