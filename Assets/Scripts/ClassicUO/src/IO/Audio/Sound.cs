@@ -190,9 +190,9 @@ namespace ClassicUO.IO.Audio
                 VolumeFactor = volumeFactor;
                 Volume = volume;
                 m_ThisInstance.Play(Name);
-                // List<Tuple<DynamicSoundEffectInstance, double>> list = asEffect ? m_EffectInstances : m_MusicInstances;
-                // double ms = m_ThisInstance.GetSampleDuration(buffer.Length).TotalMilliseconds;
-                // list.Add(new Tuple<DynamicSoundEffectInstance, double>(m_ThisInstance, now + ms));
+                List<Tuple<DynamicSoundEffectInstance, double>> list = asEffect ? m_EffectInstances : m_MusicInstances;
+                double ms = m_ThisInstance.GetSampleDuration(buffer.Length).TotalMilliseconds;
+                list.Add(new Tuple<DynamicSoundEffectInstance, double>(m_ThisInstance, now + ms));
             }
 
             return true;
@@ -200,10 +200,10 @@ namespace ClassicUO.IO.Audio
 
         public void Stop()
         {
-            //m_ThisInstance?.Stop();
-            //m_ThisInstance?.Dispose();
+            m_ThisInstance?.Stop();
+            m_ThisInstance?.Dispose();
 
-            //CullExpiredEffects(Time.Ticks);
+            CullExpiredEffects(Time.Ticks);
 
             foreach (Tuple<DynamicSoundEffectInstance, double> sound in m_EffectInstances)
             {

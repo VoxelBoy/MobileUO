@@ -171,6 +171,9 @@ public class UnityMain : MonoBehaviour
 	    //Load and adjust settings
 	    Settings.GlobalSettings = JsonConvert.DeserializeObject<Settings>(Resources.Load<TextAsset>("settings").text);
 	    Settings.GlobalSettings.IP = config.UoServerUrl;
+	    //If connecting to UO Outlands, set shard type to 2 for outlands
+	    Settings.GlobalSettings.ShardType = config.UoServerUrl.ToLower().Contains("ououtlands") ? 2 : 0;
+
 	    if (Application.isMobilePlatform)
 	    {
 		    Settings.GlobalSettings.UltimaOnlineDirectory = CUOEnviroment.ExecutablePath;

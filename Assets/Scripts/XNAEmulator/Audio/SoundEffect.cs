@@ -7,8 +7,13 @@ namespace Microsoft.Xna.Framework.Audio
 {
     public class DynamicSoundEffectInstance : IDisposable
     {
+        private int sampleRate;
+        private int channels;
+        
         public DynamicSoundEffectInstance(int sampleRate, AudioChannels channels)
         {
+            this.sampleRate = sampleRate;
+            this.channels = channels == AudioChannels.Stereo ? 2 : 1;
         }
 
         private AudioSource source;
@@ -44,7 +49,6 @@ namespace Microsoft.Xna.Framework.Audio
             else
             {
                 MediaPlayer.AudioSourceOneShot.PlayOneShot(Clip);
-                Object.Destroy(Clip, Clip.length);
             }
 
             State = SoundState.Playing;
@@ -81,7 +85,7 @@ namespace Microsoft.Xna.Framework.Audio
                 }
                 else
                 {
-                    Clip = AudioClip.Create("clip", newBuffer.Length, 2, frequency, false);
+                    Clip = AudioClip.Create("clip", newBuffer.Length, 1, frequency, false);
                     Clip.SetData(ConvertByteToFloat16(newBuffer), 0);
                 }
             }
@@ -139,6 +143,14 @@ namespace Microsoft.Xna.Framework.Audio
             {
                 Object.Destroy(source.gameObject);
             }
+
+            if (Clip != null)
+            {
+                Object.Destroy(Clip);
+            }
+            
+            buffer = null;
+            conversionBuffer = null;
         }
 
         public enum SoundState
@@ -146,6 +158,13 @@ namespace Microsoft.Xna.Framework.Audio
             Playing,
             Paused,
             Stopped,
+        }
+
+        //Copied from SDL2.dll implementation
+        public TimeSpan GetSampleDuration(int sizeInBytes)
+        {
+            sizeInBytes /= 2;
+            return new TimeSpan(0,0,0,0, (int) ((double) sizeInBytes / (int) channels / ((double) sampleRate / 1000.0)));
         }
     }
 }
