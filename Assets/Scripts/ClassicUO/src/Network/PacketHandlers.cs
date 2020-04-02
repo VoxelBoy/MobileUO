@@ -37,14 +37,13 @@ using ClassicUO.Game.UI.Controls;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
+using ClassicUO.Renderer;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Collections;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Utility.Platforms;
 
 using Microsoft.Xna.Framework;
-using UnityEngine;
-using FontStyle = ClassicUO.Renderer.FontStyle;
 
 namespace ClassicUO.Network
 {
@@ -1840,32 +1839,32 @@ namespace ClassicUO.Network
 
             var serial = p.ReadUInt();
             var pageCnt = p.ReadUShort();
-            var pages = new string[pageCnt];
             var gump = UIManager.GetGump<BookGump>(serial);
-
+           
             if (gump == null) return;
 
+            var pages = gump.BookPages;
+
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < pageCnt; i++) pages[i] = string.Empty;
 
             //packets sent from server can contain also an uneven amount of page, not counting that we could receive only part of them, not every page!
             for (int i = 0; i < pageCnt; i++, sb.Clear())
             {
-                var pageNum = p.ReadUShort() - 1;
+                var pageNum = p.ReadUShort();
 
-                if (pageNum < pageCnt)
+                if (pageNum <= pages.Length)
                 {
                     var lineCnt = p.ReadUShort();
 
                     for (int x = 0; x < lineCnt; x++)
                     {
-                        sb.Append(BookGump.IsNewBookD4 ? p.ReadUTF8StringSafe() : p.ReadASCII());
+                        sb.Append(BookGump.IsNewBook ? p.ReadUTF8StringSafe() : p.ReadASCII());
                         sb.Append('\n');
                     }
 
                     if (sb.Length > 0)
                         sb.Remove(sb.Length - 1, 1); //this removes the last, unwanted, newline
-                    pages[pageNum] = sb.ToString();
+                    pages[pageNum - 1] = sb.ToString();
                 }
                 else
                     Log.Error( "BOOKGUMP: The server is sending a page number GREATER than the allowed number of pages in BOOK!");
@@ -2539,37 +2538,40 @@ namespace ClassicUO.Network
                     BookPageCount = p.ReadUShort(),
                     //title allows only 47 dots (. + \0) so 47 is the right number
                     BookTitle =
-                        new MultiLineBox(new MultiLineEntry(BookGump.DefaultFont, 47, 150, 150, BookGump.IsNewBookD4, FontStyle.None, 0), editable)
+                        new TextBox(new TextEntry(BookGump.DefaultFont, 47, 150, 150, BookGump.IsNewBook, FontStyle.None, 0), editable)
                         {
                             X = 40,
                             Y = 60,
                             Height = 25,
                             Width = 155,
                             IsEditable = editable,
-                            Text = oldpacket ? p.ReadASCII(60).Trim('\0') : p.ReadASCII(p.ReadUShort()).Trim('\0')
+                            Text = oldpacket ? p.ReadUTF8StringSafe(60) : p.ReadUTF8StringSafe(p.ReadUShort())
                         },
                     //as the old booktitle supports only 30 characters in AUTHOR and since the new clients only allow 29 dots (. + \0 character at end), we use 29 as a limitation
                     BookAuthor =
-                        new MultiLineBox(new MultiLineEntry(BookGump.DefaultFont, 29, 150, 150, BookGump.IsNewBookD4, FontStyle.None, 0), editable)
+                        new TextBox(new TextEntry(BookGump.DefaultFont, 29, 150, 150, BookGump.IsNewBook, FontStyle.None, 0), editable)
                         {
                             X = 40,
                             Y = 160,
                             Height = 25,
                             Width = 155,
                             IsEditable = editable,
-                            Text = oldpacket ? p.ReadASCII(30).Trim('\0') : p.ReadASCII(p.ReadUShort()).Trim('\0')
+                            Text = oldpacket ? p.ReadUTF8StringSafe(30) : p.ReadUTF8StringSafe(p.ReadUShort())
                         },
-                    IsEditable = editable
+                    IsEditable = editable,
+                    UseNewHeader = !oldpacket
                 });
+                NetClient.Socket.Send(new PBookPageDataRequest(serial, 1));
             }
             else
             {
                 p.Skip(2);
                 bgump.IsEditable = editable;
-                bgump.BookTitle.Text = oldpacket ? p.ReadASCII(60).Trim('\0') : p.ReadASCII(p.ReadUShort()).Trim('\0');
+                bgump.BookTitle.Text = oldpacket ? p.ReadUTF8StringSafe(60) : p.ReadUTF8StringSafe(p.ReadUShort());
                 bgump.BookTitle.IsEditable = editable;
-                bgump.BookAuthor.Text = oldpacket ? p.ReadASCII(30).Trim('\0') : p.ReadASCII(p.ReadUShort()).Trim('\0');
+                bgump.BookAuthor.Text = oldpacket ? p.ReadUTF8StringSafe(30) : p.ReadUTF8StringSafe(p.ReadUShort());
                 bgump.BookAuthor.IsEditable = editable;
+                bgump.UseNewHeader = !oldpacket;
             }
         }
 
@@ -2745,7 +2747,7 @@ namespace ClassicUO.Network
 
             if (!string.IsNullOrEmpty(url))
             {
-                if (Application.isMobilePlatform == false)
+                if (UnityEngine.Application.isMobilePlatform == false)
                 {
                     try
                     {

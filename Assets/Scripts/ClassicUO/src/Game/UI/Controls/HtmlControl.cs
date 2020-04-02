@@ -30,8 +30,6 @@ using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 
 using Microsoft.Xna.Framework;
-using UnityEngine;
-using FontStyle = ClassicUO.Renderer.FontStyle;
 
 namespace ClassicUO.Game.UI.Controls
 {
@@ -260,7 +258,7 @@ namespace ClassicUO.Game.UI.Controls
                         {
                             Log.Info("LINK CLICKED: " + result.Link);
 
-                            if(Application.isMobilePlatform == false)
+                            if(UnityEngine.Application.isMobilePlatform == false)
                             {
                                 try
                                 {

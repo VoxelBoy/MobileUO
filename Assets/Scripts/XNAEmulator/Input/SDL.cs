@@ -647,6 +647,12 @@ namespace SDL2
             [FieldOffset(0)] public SDL_DollarGestureEvent dgesture;
             [FieldOffset(0)] public SDL_DropEvent drop;
         }
+        
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate int SDL_EventFilter(IntPtr userdata, IntPtr sdlevent);
+        
+        public static void SDL_AddEventWatch(SDL.SDL_EventFilter filter, IntPtr userdata)
+        {}
 
         public struct SDL_Keysym
         {
