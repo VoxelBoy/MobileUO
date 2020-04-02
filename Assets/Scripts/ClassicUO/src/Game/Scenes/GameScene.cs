@@ -592,16 +592,20 @@ namespace ClassicUO.Game.Scenes
             Pathfinder.ProcessAutoWalk();
             DelayedObjectClickManager.Update();
 
-            if (!MoveCharacterByMouseInput() && !ProfileManager.Current.DisableArrowBtn)
+            //Don't allow MoveCharacterByMouseInput on mobile platforms
+            if (UnityEngine.Application.isMobilePlatform == false)
             {
-                Direction dir = DirectionHelper.DirectionFromKeyboardArrows(_flags[0],
-                                                                            _flags[2],
-                                                                            _flags[1],
-                                                                            _flags[3]);
-
-                if (World.InGame && !Pathfinder.AutoWalking && dir != Direction.NONE)
+                if (!MoveCharacterByMouseInput() && !ProfileManager.Current.DisableArrowBtn)
                 {
-                    World.Player.Walk(dir, ProfileManager.Current.AlwaysRun);
+                    Direction dir = DirectionHelper.DirectionFromKeyboardArrows(_flags[0],
+                        _flags[2],
+                        _flags[1],
+                        _flags[3]);
+
+                    if (World.InGame && !Pathfinder.AutoWalking && dir != Direction.NONE)
+                    {
+                        World.Player.Walk(dir, ProfileManager.Current.AlwaysRun);
+                    }
                 }
             }
 
