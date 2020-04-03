@@ -40,7 +40,7 @@ namespace ClassicUO.Game.UI.Controls
             {
                 SetKeyboardFocus();
                 //NOTE: Show touchscreen keyboard when abstract text box is selected
-                UnityEngine.TouchScreenKeyboard.Open(EntryValue.Text, UnityEngine.TouchScreenKeyboardType.Default, false, false, false);
+                GameController.TouchScreenKeyboard = UnityEngine.TouchScreenKeyboard.Open(EntryValue.Text, UnityEngine.TouchScreenKeyboardType.Default, false, false, false);
                 EntryValue?.OnMouseClick(x, y);
             }
 

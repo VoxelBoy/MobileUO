@@ -76,6 +76,7 @@ namespace ClassicUO
 
         private SDL_EventFilter _filter;
         public float scale = 1;
+        public static UnityEngine.TouchScreenKeyboard TouchScreenKeyboard; 
 
         protected override void Initialize()
         {
@@ -909,15 +910,39 @@ namespace ClassicUO
                 }
             }
 
-            if (!_ignoreNextTextInput && UnityEngine.Input.inputString != "")
+            //Input text handling
+            if (UnityEngine.Application.isMobilePlatform)
             {
-                //On mobile, due to the way the touch-screen keyboard works, we need to clear the existing text before applying the new one
-                if (UnityEngine.Application.isMobilePlatform && UIManager.KeyboardFocusControl is AbstractTextBox abstractTextBox)
+                var text = TouchScreenKeyboard?.text;
+                if (_ignoreNextTextInput == false && string.IsNullOrEmpty(text) == false && TouchScreenKeyboard?.status == UnityEngine.TouchScreenKeyboard.Status.Done)
                 {
-                    abstractTextBox.EntryValue.Clear();
+                    //Need to clear the existing text in textbox before "pasting" new text from TouchScreenKeyboard
+                    if (UIManager.KeyboardFocusControl is AbstractTextBox abstractTextBox)
+                    {
+                        abstractTextBox.EntryValue.Clear();
+                    }
+                    
+                    UIManager.KeyboardFocusControl?.InvokeTextInput(text);
+                    _scene.OnTextInput(text);
+                    
+                    //When targeting SystemChat textbox, "auto-press" return key so that the text entered on the TouchScreenKeyboard is submitted right away
+                    if (UIManager.KeyboardFocusControl != null && UIManager.KeyboardFocusControl == UIManager.SystemChat?.TextBoxControl)
+                    {
+                        UIManager.KeyboardFocusControl.InvokeKeyDown(SDL_Keycode.SDLK_RETURN, SDL_Keymod.KMOD_NONE);
+                    }
+                    
+                    //Clear the text of TouchScreenKeyboard, otherwise it stays there and is re-evaluated every frame
+                    TouchScreenKeyboard.text = string.Empty;
                 }
-                UIManager.KeyboardFocusControl?.InvokeTextInput(UnityEngine.Input.inputString);
-                _scene.OnTextInput(UnityEngine.Input.inputString);
+            }
+            else
+            {
+                var text = UnityEngine.Input.inputString;
+                if (_ignoreNextTextInput == false && string.IsNullOrEmpty(text) == false)
+                {
+                    UIManager.KeyboardFocusControl?.InvokeTextInput(text);
+                    _scene.OnTextInput(text);
+                }
             }
 
             if (Mouse.IsDragging)
