@@ -1,5 +1,4 @@
-﻿using System.IO;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ServerConfigurationPresenter : MonoBehaviour
 {
@@ -73,13 +72,7 @@ public class ServerConfigurationPresenter : MonoBehaviour
     
     private void OnConfigurationFilesDeleted()
     {
-        var directoryInfo = new DirectoryInfo(serverConfigurationEditPresenter.ServerConfigurationToEdit.GetPathToSaveFiles());
-        if (directoryInfo.Exists)
-        {
-            directoryInfo.Delete(true);
-        }
-        serverConfigurationEditPresenter.ServerConfigurationToEdit.AllFilesDownloaded = false;
-        
-        ServerConfigurationModel.SaveServerConfigurations();
+        var config = serverConfigurationEditPresenter.ServerConfigurationToEdit;
+        ServerConfigurationModel.DeleteConfigurationFiles(config);
     }
 }

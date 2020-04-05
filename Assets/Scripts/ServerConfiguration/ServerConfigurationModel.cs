@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -88,6 +89,17 @@ public static class ServerConfigurationModel
     public static void DeleteConfiguration(ServerConfiguration config)
     {
         ServerConfigurations.Remove(config);
+        DeleteConfigurationFiles(config);
+    }
+
+    public static void DeleteConfigurationFiles(ServerConfiguration config)
+    {
+        var directoryInfo = new DirectoryInfo(config.GetPathToSaveFiles());
+        if (directoryInfo.Exists)
+        {
+            directoryInfo.Delete(true);
+        }
+        config.AllFilesDownloaded = false;
         SaveServerConfigurations();
     }
 }
