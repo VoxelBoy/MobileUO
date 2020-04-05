@@ -119,7 +119,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.0
+  bundleVersion: 0.1
   preloadedAssets: []
   metroInputSource: 1
   wsaTransparentSwapchain: 0
@@ -175,10 +175,10 @@ PlayerSettings:
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
-  stripEngineCode: 0
+  stripEngineCode: 1
   iPhoneStrippingLevel: 0
   iPhoneScriptCallOptimization: 0
-  ForceInternetPermission: 0
+  ForceInternetPermission: 1
   ForceSDCardPermission: 0
   CreateWallpaper: 0
   APKExpansionFiles: 0
@@ -767,7 +767,7 @@ PlayerSettings:
   monoEnv: 
   splashScreenBackgroundSourceLandscape: {fileID: 0}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
-  blurSplashScreenBackground: 1
+  blurSplashScreenBackground: 0
   spritePackerPolicy: 
   webGLMemorySize: 256
   webGLExceptionSupport: 1
@@ -789,9 +789,9 @@ PlayerSettings:
     Android: 1
     Standalone: 1
   il2cppCompilerConfiguration:
-    Android: 0
-  managedStrippingLevel:
     Android: 1
+  managedStrippingLevel:
+    Android: 3
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 1
   additionalIl2CppArgs: 
