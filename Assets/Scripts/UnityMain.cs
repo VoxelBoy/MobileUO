@@ -65,6 +65,19 @@ public class UnityMain : MonoBehaviour
 		}
 	}
 
+	private static readonly int ScissorStateOverrideNameId = Shader.PropertyToID("ScissorStateOverride");
+
+	private ScissorStateOverride scissorStateOverride = ScissorStateOverride.On;
+	public ScissorStateOverride ScissorStateOverride
+	{
+		get => scissorStateOverride;
+		set
+		{
+			scissorStateOverride = value;
+			Shader.SetGlobalInt(ScissorStateOverrideNameId, (int) scissorStateOverride);
+		}
+	}
+
 	[Header("Controls")]
 	[SerializeField]
 	private MobileJoystick movementJoystick;
