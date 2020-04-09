@@ -2,7 +2,7 @@
 MobileUO - the first mobile client for Ultima Online!
 
 Support the project on Patreon
-<br/><a href="http://www.patreon.com/mobileuo"><img src="https://github.com/VoxelBoy/MobileUO/raw/master/docs/images/become_a_patron_button%402x.png" alt="Patreon" width="200"/></a>
+<br/><a href="http://www.patreon.com/mobileuo"><img src="https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/become_a_patron_button%402x.png" alt="Patreon" width="200"/></a>
 
 # Introduction
 MobileUO is an open source implementation of ClassicUO in Unity.
