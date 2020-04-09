@@ -1,8 +1,8 @@
 # MobileUO
 
-MobileUO - the first mobile client for Ultima Online!
+MobileUO - the first **mobile** client for Ultima Online!
 
-MobileUO runs on iOS & Android and enables you to play UO on the go.
+MobileUO runs on **iOS & Android** and enables you to play UO on the go.
 
 <img src="https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/MobileUOGitHubCover.png"/>
 
