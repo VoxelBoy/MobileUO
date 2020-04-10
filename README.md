@@ -23,7 +23,7 @@ Follow the instructions on the [Wiki](https://github.com/VoxelBoy/MobileUO/wiki)
 
 Click to play the video
 
-[![MobileUO Renaissance capture](https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/MobileUORenaissanceCaptureVideoThumbnail.png)](http://www.youtube.com/watch?v=3daWcFjlDaM "MobileUO - UO Renaissance capture")
+[![MobileUO Renaissance capture](https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/MobileUORenaissanceCaptureVideoThumbnail.png)](http://www.youtube.com/watch?v=fT_gdb_X9oc "MobileUO - UO Renaissance capture")
 
 # Legal
 This project uses the ClassicUO client code inside of Unity
