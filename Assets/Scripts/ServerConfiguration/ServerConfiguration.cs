@@ -16,4 +16,15 @@ public class ServerConfiguration
     {
         return Path.Combine(Application.persistentDataPath, Name);
     }
+
+    public void CreateDirectoryToSaveFiles()
+    {
+        Directory.CreateDirectory(GetPathToSaveFiles());
+    }
+
+    public bool SaveDirectoryContainsFiles()
+    {
+        var directoryInfo = new DirectoryInfo(GetPathToSaveFiles());
+        return directoryInfo.Exists && directoryInfo.GetFiles().Length > 0;
+    }
 }

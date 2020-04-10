@@ -52,6 +52,9 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
 
     [SerializeField]
     private Text deleteServerFilesButtonText;
+    
+    [SerializeField]
+    private Button markFilesAsDownloadedButton;
 
     public Action OnConfigurationEditSaved;
     public Action OnConfigurationEditCanceled;
@@ -91,6 +94,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         cancelButton.onClick.AddListener(() => OnConfigurationEditCanceled?.Invoke());
         deleteServerConfigurationButton.onClick.AddListener(OnDeleteServerConfigurationButtonClicked);
         deleteServerFilesButton.onClick.AddListener(OnDeleteServerFilesButtonClicked);
+        markFilesAsDownloadedButton.onClick.AddListener(OnMarkFilesAsDownloadedButtonClicked);
     }
 
     private void OnDisable()
@@ -99,6 +103,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         cancelButton.onClick.RemoveAllListeners();
         deleteServerConfigurationButton.onClick.RemoveAllListeners();
         deleteServerFilesButton.onClick.RemoveAllListeners();
+        markFilesAsDownloadedButton.onClick.RemoveAllListeners();
         
         ResetDeleteServerConfigurationButton();
         ResetDeleteServerFilesButton();
@@ -157,6 +162,12 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
             ResetDeleteServerFilesButton();
         }
     }
+    
+    private void OnMarkFilesAsDownloadedButtonClicked()
+    {
+        serverConfigurationToEdit.AllFilesDownloaded = true;
+        ResetDeleteServerFilesButton();
+    }
 
     private void Update()
     {
@@ -181,5 +192,11 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
     {
         deleteServerFilesButtonText.text = deleteServerFilesButtonOriginalText;
         deleteServerFilesButtonClickCount = 0;
+        if (ServerConfigurationToEdit != null)
+        {
+            deleteServerFilesButton.gameObject.SetActive(ServerConfigurationToEdit.AllFilesDownloaded ||
+                                                         serverConfigurationToEdit.SaveDirectoryContainsFiles());
+            markFilesAsDownloadedButton.gameObject.SetActive(deleteServerFilesButton.gameObject.activeSelf == false);
+        }
     }
 }

@@ -46,6 +46,7 @@ public static class ServerConfigurationModel
             return;
         }
         ServerConfigurations.Add(newConfiguration);
+        newConfiguration.CreateDirectoryToSaveFiles();
         SaveServerConfigurations();
     }
 
@@ -89,15 +90,19 @@ public static class ServerConfigurationModel
     public static void DeleteConfiguration(ServerConfiguration config)
     {
         ServerConfigurations.Remove(config);
-        DeleteConfigurationFiles(config);
+        DeleteConfigurationFiles(config, false);
     }
 
-    public static void DeleteConfigurationFiles(ServerConfiguration config)
+    public static void DeleteConfigurationFiles(ServerConfiguration config, bool createEmptyDirectory = true)
     {
         var directoryInfo = new DirectoryInfo(config.GetPathToSaveFiles());
         if (directoryInfo.Exists)
         {
             directoryInfo.Delete(true);
+            if (createEmptyDirectory)
+            {
+                config.CreateDirectoryToSaveFiles();
+            }
         }
         config.AllFilesDownloaded = false;
         SaveServerConfigurations();
