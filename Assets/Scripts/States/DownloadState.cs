@@ -42,6 +42,7 @@ public class DownloadState : IState
             //Get list of files to download from server
             var uriBuilder = new UriBuilder("http",serverConfiguration.FileDownloadServerUrl,8080);
             var request = UnityWebRequest.Get(uriBuilder.Uri);
+            request.timeout = 5;
             request.SendWebRequest().completed += operation =>
             {
                 if (request.isHttpError || request.isNetworkError)
@@ -84,6 +85,7 @@ public class DownloadState : IState
                 var fileDownloadHandler = new DownloadHandlerFile(filePath);
                 fileDownloadHandler.removeFileOnAbort = true;
                 request.downloadHandler = fileDownloadHandler;
+                request.timeout = 5;
                 request.SendWebRequest().completed += operation => SingleFileDownloadFinished(request, fileName);
                 ++concurrentDownloadCounter;
             }
