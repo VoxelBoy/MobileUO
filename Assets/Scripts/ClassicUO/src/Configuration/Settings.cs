@@ -101,7 +101,7 @@ namespace ClassicUO.Configuration
         public bool RunMouseInASeparateThread { get; set; } = true;
 
         [JsonProperty(PropertyName = "plugins")]
-        public string[] Plugins { get; set; } = {@"./Assistant/Razor.dll"};
+        public string[] Plugins { get; set; } = { };//{@"./Assistant/Razor.dll"};
 
 
 
