@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -90,6 +91,8 @@ public class UnityMain : MonoBehaviour
 
 	private Texture2D generatedHueTexture1;
 	private Texture2D generatedHueTexture2;
+
+	public Action<string> OnError;
 
 	void Start ()
     {
@@ -210,13 +213,21 @@ public class UnityMain : MonoBehaviour
 	    MediaPlayer.AudioSourceOneShot = gameObject.AddComponent<AudioSource>();
 	    Log.Start( LogTypes.All );
 
-	    Client.Run();
+	    try
+	    {
+		    Client.Run();
+		    
+		    generatedHueTexture1 = (Texture2D) Client.Game.GraphicsDevice.Textures[1].UnityTexture;
+		    generatedHueTexture2 = (Texture2D) Client.Game.GraphicsDevice.Textures[2].UnityTexture;
 
-	    generatedHueTexture1 = (Texture2D) Client.Game.GraphicsDevice.Textures[1].UnityTexture;
-	    generatedHueTexture2 = (Texture2D) Client.Game.GraphicsDevice.Textures[2].UnityTexture;
-
-	    Client.Game.sceneChanged += OnSceneChanged;
-	    ApplyScalingFactor();
+		    Client.Game.sceneChanged += OnSceneChanged;
+		    ApplyScalingFactor();
+	    }
+	    catch (Exception e)
+	    {
+		    Console.WriteLine(e);
+		    OnError?.Invoke(e.ToString());
+	    }
     }
 
     private void OnProfileLoaded()

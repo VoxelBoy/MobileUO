@@ -10,6 +10,9 @@ public class Init : MonoBehaviour
     
     [SerializeField]
     private UnityMain unityMain;
+
+    [SerializeField]
+    private ErrorPresenter errorPresenter;
     
     private void Awake()
     {
@@ -19,7 +22,7 @@ public class Init : MonoBehaviour
         StateManager.AddState(new BootState());
         StateManager.AddState(new ServerConfigurationState(serverConfigurationUiParent));
         StateManager.AddState(new DownloadState(downloadPresenter));
-        StateManager.AddState(new GameState(unityMain));
+        StateManager.AddState(new GameState(unityMain, errorPresenter));
         
         ServerConfigurationModel.Initialize();
         
