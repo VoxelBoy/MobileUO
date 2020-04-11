@@ -35,7 +35,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static HuesLoader _instance;
+        public static HuesLoader _instance;
         public static HuesLoader Instance
         {
             get
@@ -90,7 +90,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-            // nothing to clear
+            _instance = null;
         }
 
         public void CreateHuesPalette()

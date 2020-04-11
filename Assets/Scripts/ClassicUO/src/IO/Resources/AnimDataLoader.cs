@@ -39,7 +39,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static AnimDataLoader _instance;
+        public static AnimDataLoader _instance;
         public static AnimDataLoader Instance
         {
             get
@@ -69,7 +69,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-            //
+            _instance = null;
         }
 
 

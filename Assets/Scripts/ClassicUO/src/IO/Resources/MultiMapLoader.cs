@@ -39,7 +39,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static MultiMapLoader _instance;
+        public static MultiMapLoader _instance;
         public static MultiMapLoader Instance
         {
             get
@@ -257,7 +257,8 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-            // do nothing
+            _file?.Dispose();
+            _instance = null;
         }
     }
 }

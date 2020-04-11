@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using ClassicUO;
 using ClassicUO.Utility.Logging;
@@ -9,7 +8,7 @@ using ClassicUO.Game;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Scenes;
 using Newtonsoft.Json;
-using System.IO;
+using ClassicUO.IO.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 using UnityEngine.EventSystems;
@@ -142,7 +141,27 @@ public class UnityMain : MonoBehaviour
         Client.Game.Tick(deltaTime);
 	}
 
-    private void OnPostRender()
+	private void OnDisable()
+	{
+		AnimationsLoader._instance?.Dispose();
+		AnimDataLoader._instance?.Dispose();
+		ArtLoader._instance?.Dispose();
+		MapLoader._instance?.Dispose();
+		ClilocLoader._instance?.Dispose();
+		GumpsLoader._instance?.Dispose();
+		FontsLoader._instance?.Dispose();
+		HuesLoader._instance?.Dispose();
+		TileDataLoader._instance?.Dispose();
+		MultiLoader._instance?.Dispose();
+		SkillsLoader._instance?.Dispose();
+		TexmapsLoader._instance?.Dispose();
+		SpeechesLoader._instance?.Dispose();
+		LightsLoader._instance?.Dispose();
+		SoundsLoader._instance?.Dispose();
+		MultiMapLoader._instance?.Dispose();
+	}
+
+	private void OnPostRender()
     {
 	    if (Client.Game == null)
 		    return;

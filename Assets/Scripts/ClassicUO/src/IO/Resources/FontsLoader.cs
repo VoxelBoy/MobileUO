@@ -77,7 +77,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static FontsLoader _instance;
+        public static FontsLoader _instance;
         public static FontsLoader Instance
         {
             get
@@ -205,7 +205,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-            // do nothing
+            _instance = null;
         }
 
 

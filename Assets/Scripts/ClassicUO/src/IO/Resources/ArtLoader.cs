@@ -47,7 +47,7 @@ namespace ClassicUO.IO.Resources
             _graphicMask = Client.IsUOPInstallation ? (ushort) 0xFFFF : (ushort) 0x3FFF;
         }
 
-        private static ArtLoader _instance;
+        public static ArtLoader _instance;
         public static ArtLoader Instance
         {
             get
@@ -139,6 +139,10 @@ namespace ClassicUO.IO.Resources
                 s.Value.Dispose();
                 _landDictionary.Remove(s.Key);
             });
+            
+            _file?.Dispose();
+            
+            _instance = null;
         }
 
         public override void CleaUnusedResources(int count)

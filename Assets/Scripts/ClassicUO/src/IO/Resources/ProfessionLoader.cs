@@ -353,6 +353,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _instance = null;
         }
 
         internal enum PROF_TYPE

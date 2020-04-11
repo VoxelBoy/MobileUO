@@ -651,6 +651,8 @@ namespace ClassicUO.IO
                         _filesStaticsStream[i]?.Dispose();
                     _filesStaticsStream = null;
                 }
+                
+                _instance = null;
             }
 
             public override Task Load()

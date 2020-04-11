@@ -38,7 +38,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static ClilocLoader _instance;
+        public static ClilocLoader _instance;
         public static ClilocLoader Instance
         {
             get
@@ -100,6 +100,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _instance = null;
         }
 
         public string GetString(int number)

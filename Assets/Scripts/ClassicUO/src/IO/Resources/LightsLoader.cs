@@ -36,7 +36,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static LightsLoader _instance;
+        public static LightsLoader _instance;
         public static LightsLoader Instance
         {
             get
@@ -68,6 +68,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _instance = null;
         }
 
         public override UOTexture16 GetTexture(uint id)

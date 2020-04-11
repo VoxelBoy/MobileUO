@@ -40,7 +40,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static TexmapsLoader _instance;
+        public static TexmapsLoader _instance;
         public static TexmapsLoader Instance
         {
             get
@@ -161,7 +161,8 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-            throw new NotImplementedException();
+            _file?.Dispose();
+            _instance = null;
         }
 
         //public void ClearUnusedTextures()

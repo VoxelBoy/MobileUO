@@ -63,7 +63,7 @@ namespace ClassicUO.IO.Resources
             
         }
 
-        private static AnimationsLoader _instance;
+        public static AnimationsLoader _instance;
         public static AnimationsLoader Instance
         {
             get
@@ -934,6 +934,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _instance = null;
         }
 
         public void UpdateAnimationTable(uint flags)

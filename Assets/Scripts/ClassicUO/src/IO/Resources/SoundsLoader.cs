@@ -42,7 +42,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static SoundsLoader _instance;
+        public static SoundsLoader _instance;
         public static SoundsLoader Instance
         {
             get
@@ -308,6 +308,16 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _mMusicData.Clear();
+            foreach (var keyValuePair in _sounds)
+            {
+                keyValuePair.Value.Dispose();
+            }
+            _sounds.Clear();
+            
+            _file?.Dispose();
+            
+            _instance = null;
         }
     }
 }

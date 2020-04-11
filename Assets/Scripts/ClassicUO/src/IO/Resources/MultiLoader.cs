@@ -40,7 +40,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static MultiLoader _instance;
+        public static MultiLoader _instance;
         public static MultiLoader Instance
         {
             get
@@ -95,7 +95,8 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-            // do nothing
+            _file?.Dispose();
+            _instance = null;
         }
     }
 

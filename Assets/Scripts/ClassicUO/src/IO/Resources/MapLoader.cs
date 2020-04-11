@@ -48,7 +48,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static MapLoader _instance;
+        public static MapLoader _instance;
         public static MapLoader Instance
         {
             get
@@ -186,7 +186,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-           
+            _instance = null;
         }
 
 

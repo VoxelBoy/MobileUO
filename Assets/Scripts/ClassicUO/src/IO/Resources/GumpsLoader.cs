@@ -38,7 +38,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static GumpsLoader _instance;
+        public static GumpsLoader _instance;
         public static GumpsLoader Instance
         {
             get
@@ -133,7 +133,8 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-           
+           _file?.Dispose();
+           _instance = null;
         }
 
         public unsafe ushort[] GetGumpPixels(uint index, out int width, out int height)

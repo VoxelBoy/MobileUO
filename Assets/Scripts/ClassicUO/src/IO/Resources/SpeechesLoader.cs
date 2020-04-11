@@ -38,7 +38,7 @@ namespace ClassicUO.IO.Resources
         }
 
 
-        private static SpeechesLoader _instance;
+        public static SpeechesLoader _instance;
         public static SpeechesLoader Instance
         {
             get
@@ -87,6 +87,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _instance = null;
         }
 
         public bool IsMatch(string input, in SpeechEntry entry)

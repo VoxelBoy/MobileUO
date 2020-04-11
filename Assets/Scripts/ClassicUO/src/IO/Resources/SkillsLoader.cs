@@ -35,7 +35,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static SkillsLoader _instance;
+        public static SkillsLoader _instance;
         public static SkillsLoader Instance
         {
             get
@@ -104,7 +104,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-            //
+            _instance = null;
         }
     }
 
