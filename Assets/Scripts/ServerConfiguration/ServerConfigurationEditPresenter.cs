@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ServerConfigurationEditPresenter : MonoBehaviour
@@ -24,7 +23,13 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
     private InputField uoServerUrlInputField;
     
     [SerializeField]
+    private InputField uoServerPortInputField;
+    
+    [SerializeField]
     private InputField fileDownloadServerUrlInputField;
+    
+    [SerializeField]
+    private InputField fileDownloadServerPortInputField;
     
     [SerializeField]
     private InputField clientVersionInputField;
@@ -76,7 +81,9 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
     {
         serverNameInputField.text = serverConfigurationToEdit?.Name ?? "";
         uoServerUrlInputField.text = serverConfigurationToEdit?.UoServerUrl ?? "";
+        uoServerPortInputField.text = serverConfigurationToEdit?.UoServerPort ?? "2593";
         fileDownloadServerUrlInputField.text = serverConfigurationToEdit?.FileDownloadServerUrl ?? "";
+        fileDownloadServerPortInputField.text = serverConfigurationToEdit?.FileDownloadServerPort ?? "8080";
         clientVersionInputField.text = serverConfigurationToEdit?.ClientVersion ?? "";
         clientPathForUnityEditorInputField.text = serverConfigurationToEdit?.ClientPathForUnityEditor ?? "";
         clientPathForUnityEditorParent.SetActive(Application.isEditor);
@@ -125,7 +132,9 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
             ServerConfigurationToEdit.Name = serverNameInputField.text;
         }
         ServerConfigurationToEdit.UoServerUrl = uoServerUrlInputField.text;
+        ServerConfigurationToEdit.UoServerPort = uoServerPortInputField.text;
         ServerConfigurationToEdit.FileDownloadServerUrl = fileDownloadServerUrlInputField.text;
+        ServerConfigurationToEdit.FileDownloadServerPort = fileDownloadServerPortInputField.text;
         ServerConfigurationToEdit.ClientVersion = clientVersionInputField.text;
         ServerConfigurationToEdit.ClientPathForUnityEditor = clientPathForUnityEditorInputField.text;
         
