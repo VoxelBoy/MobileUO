@@ -7,7 +7,9 @@ public class ServerConfiguration
 {
     public string Name;
     public string UoServerUrl;
+    public string UoServerPort = "2593";
     public string FileDownloadServerUrl;
+    public string FileDownloadServerPort = "8080";
     public string ClientVersion;
     public string ClientPathForUnityEditor;
     public bool AllFilesDownloaded;

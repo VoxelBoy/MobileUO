@@ -11,6 +11,7 @@ public class DownloadState : IState
 {
     private readonly DownloadPresenter downloadPresenter;
     private ServerConfiguration serverConfiguration;
+    private int port;
     private const int maxConcurrentDownloads = 4;
     private int concurrentDownloadCounter = 0;
     private int numberOfFilesDownloaded = 0;
@@ -32,6 +33,7 @@ public class DownloadState : IState
     public void Enter()
     {
         serverConfiguration = ServerConfigurationModel.ActiveConfiguration;
+        port = int.Parse(serverConfiguration.FileDownloadServerPort);
         if (serverConfiguration.AllFilesDownloaded || Application.isEditor)
         {
             StateManager.GoToState<GameState>();
@@ -40,7 +42,7 @@ public class DownloadState : IState
         {
             downloadPresenter.gameObject.SetActive(true);
             //Get list of files to download from server
-            var uriBuilder = new UriBuilder("http",serverConfiguration.FileDownloadServerUrl,8080);
+            var uriBuilder = new UriBuilder("http",serverConfiguration.FileDownloadServerUrl, port);
             var request = UnityWebRequest.Get(uriBuilder.Uri);
             request.timeout = 5;
             request.SendWebRequest().completed += operation =>
@@ -79,7 +81,7 @@ public class DownloadState : IState
             while (concurrentDownloadCounter < maxConcurrentDownloads && index < filesList.Count)
             {
                 var fileName = filesList[index++];
-                var uriBuilder = new UriBuilder("http",serverConfiguration.FileDownloadServerUrl,8080, fileName);
+                var uriBuilder = new UriBuilder("http",serverConfiguration.FileDownloadServerUrl,port, fileName);
                 var request = UnityWebRequest.Get(uriBuilder.Uri);
                 var filePath = Path.Combine(pathToSaveFiles, fileName);
                 var fileDownloadHandler = new DownloadHandlerFile(filePath);
