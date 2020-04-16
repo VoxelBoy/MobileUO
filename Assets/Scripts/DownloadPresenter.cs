@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,15 +12,24 @@ public class DownloadPresenter : MonoBehaviour
     private Text errorText;
 
     [SerializeField]
+    private GameObject filesScrollView;
+    
+    [SerializeField]
+    private FileNameView fileNameViewInstance;
+
+    [SerializeField]
     private Button backButton;
 
     public Action backButtonPressed;
+
+    private readonly Dictionary<string, FileNameView> fileNameToFileNameView = new Dictionary<string, FileNameView>();
 
     private void OnEnable()
     {
         backButton.onClick.AddListener(() => backButtonPressed?.Invoke());
         backButton.gameObject.SetActive(false);
         errorText.gameObject.SetActive(false);
+        fileNameViewInstance.gameObject.SetActive(false);
     }
 
     private void OnDisable()
@@ -34,8 +44,57 @@ public class DownloadPresenter : MonoBehaviour
         errorText.text = error;
     }
 
-    public void UpdateCounter(int numberOfFilesDownloaded, int numberOfFilesToDownload)
+    public void UpdateView(int numberOfFilesDownloaded, int numberOfFilesToDownload)
     {
-        counterText.text = $"Files downloaded: {numberOfFilesDownloaded}/{numberOfFilesToDownload}";
+        if (counterText != null)
+        {
+            counterText.text = $"Files downloaded: {numberOfFilesDownloaded}/{numberOfFilesToDownload}";
+        }
+    }
+
+    public void SetFileDownloaded(string file)
+    {
+        var fileNameView = fileNameToFileNameView[file];
+        if (fileNameView != null)
+        {
+            fileNameView.SetDownloaded();
+        }
+    }
+
+    public void SetFileList(List<string> filesList)
+    {
+        var filenameTextInstanceGameObject = fileNameViewInstance.gameObject;
+        var filenameTextInstanceTransformParent = fileNameViewInstance.transform.parent;
+        filesList.ForEach(file =>
+        {
+            var newFileNameText = Instantiate(filenameTextInstanceGameObject, filenameTextInstanceTransformParent).GetComponent<FileNameView>();
+            newFileNameText.SetText(file);
+            fileNameToFileNameView.Add(file, newFileNameText);
+            newFileNameText.gameObject.SetActive(true);
+        });
+        filesScrollView.SetActive(true);
+    }
+
+    public void ClearFileList()
+    {
+        foreach (var keyValuePair in fileNameToFileNameView)
+        {
+            if (keyValuePair.Value != null)
+            {
+                Destroy(keyValuePair.Value.gameObject);
+            }
+        }
+        
+        fileNameToFileNameView.Clear();
+        filesScrollView.SetActive(false);
+    }
+
+    public void SetDownloadProgress(string file, float progress)
+    {
+        var fileNameView = fileNameToFileNameView[file];
+        if (fileNameView != null)
+        {
+            fileNameView.SetProgress(progress);
+        }
     }
 }

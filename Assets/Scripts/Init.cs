@@ -7,6 +7,9 @@ public class Init : MonoBehaviour
     
     [SerializeField]
     private DownloadPresenter downloadPresenter;
+
+    [SerializeField]
+    private bool forceDownloadsInEditor;
     
     [SerializeField]
     private UnityMain unityMain;
@@ -21,7 +24,7 @@ public class Init : MonoBehaviour
         
         StateManager.AddState(new BootState());
         StateManager.AddState(new ServerConfigurationState(serverConfigurationUiParent));
-        StateManager.AddState(new DownloadState(downloadPresenter));
+        StateManager.AddState(new DownloadState(downloadPresenter, forceDownloadsInEditor));
         StateManager.AddState(new GameState(unityMain, errorPresenter));
         
         ServerConfigurationModel.Initialize();
