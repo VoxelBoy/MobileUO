@@ -67,10 +67,14 @@ public class DownloadState : IState
                     downloadPresenter.ShowError(error);
                     return;
                 }
-                downloadingFilesList = new List<string>(Regex.Matches(request.downloadHandler.text, H_REF_PATTERN, RegexOptions.IgnoreCase).
-                    Cast<Match>().Select(match => match.Groups[1].Value)
-                    .Where(text => text.Contains("."))
-                    .Where(text => text.Contains(".exe") == false));
+
+                downloadingFilesList = new List<string>(Regex
+                    .Matches(request.downloadHandler.text, H_REF_PATTERN, RegexOptions.IgnoreCase).Cast<Match>()
+                    .Select(match => match.Groups[1].Value)
+                    .Where(text => text.Contains(".") &&
+                                   text.Contains(".exe") == false &&
+                                   text.Contains(".app") == false &&
+                                   text.Contains("/") == false));
                 numberOfFilesToDownload = downloadingFilesList.Count;
                 downloadPresenter.SetFileList(downloadingFilesList);
                 downloadCoroutine = downloadPresenter.StartCoroutine(DownloadFiles());

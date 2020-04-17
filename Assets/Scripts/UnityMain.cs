@@ -210,16 +210,16 @@ public class UnityMain : MonoBehaviour
 	    //If connecting to UO Outlands, set shard type to 2 for outlands
 	    Settings.GlobalSettings.ShardType = config.UoServerUrl.ToLower().Contains("ououtlands") ? 2 : 0;
 
-	    if (Application.isMobilePlatform)
-	    {
-		    Settings.GlobalSettings.UltimaOnlineDirectory = CUOEnviroment.ExecutablePath;
-		    Settings.GlobalSettings.ClientVersion = config.ClientVersion;
-	    }
-	    else
+	    if (Application.isEditor)
 	    {
 		    Settings.GlobalSettings.UltimaOnlineDirectory = config.ClientPathForUnityEditor;
 		    //Empty client version loaded from settings.json so that CUO detects the actual version from client.exe
 		    Settings.GlobalSettings.ClientVersion = "";
+	    }
+	    else
+	    {
+		    Settings.GlobalSettings.UltimaOnlineDirectory = CUOEnviroment.ExecutablePath;
+		    Settings.GlobalSettings.ClientVersion = config.ClientVersion;
 	    }
 
 	    //This flag is tied to whether the GameCursor gets drawn, in a convoluted way

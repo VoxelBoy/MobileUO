@@ -21,7 +21,6 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             UnityTexture = new UnityEngine.Texture2D(width, height, TextureFormat.ARGB32, false, false);
             UnityTexture.wrapMode = TextureWrapMode.Clamp;
-            // UnityTexture.filterMode = FilterMode.Point;
             GraphicDevice = graphicsDevice;
         }
 

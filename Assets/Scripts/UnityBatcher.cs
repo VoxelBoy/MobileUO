@@ -93,7 +93,12 @@ namespace ClassicUO.Renderer
 
             hueMaterial = new Material(UnityEngine.Resources.Load<Shader>("HueShader"));
 
-            smallTexturesAtlas = new CustomDynamicAtlas(smallTexturesAtlasSize, smallTexturesAtlasSize, nameof(smallTexturesAtlas));
+            if (UseDynamicAtlas)
+            {
+                smallTexturesAtlas = new CustomDynamicAtlas(smallTexturesAtlasSize, smallTexturesAtlasSize,
+                    nameof(smallTexturesAtlas));
+            }
+
             drawSpriteMesh = new Mesh();
             //Initialize draw sprite mesh with a lot of quads quads
             drawSpriteMesh.SetVertexBufferParams(spriteMeshVertexCount,
