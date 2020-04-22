@@ -44,7 +44,7 @@ namespace ClassicUO.Game.GameObjects
 
         static Multi()
         {
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < Constants.PREDICTABLE_MULTIS; i++)
                 _pool.Enqueue(new Multi());
         }
 
@@ -82,6 +82,7 @@ namespace ClassicUO.Game.GameObjects
                 m.AlphaHue = 0;
                 m.FoliageIndex = 0;
                 m.IsFromTarget = false;
+                m.IsMovable = false;
 
                 if (m.ItemData.Height > 5)
                     m._canBeTransparent = 1;
@@ -113,6 +114,7 @@ namespace ClassicUO.Game.GameObjects
         public CUSTOM_HOUSE_MULTI_OBJECT_FLAGS State = 0;
         public bool IsCustom;
         public bool IsVegetation;
+        public bool IsMovable;
 
         public ref readonly StaticTiles ItemData => ref TileDataLoader.Instance.StaticData[Graphic];
 

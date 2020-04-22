@@ -519,6 +519,7 @@ namespace ClassicUO
                     Keyboard.OnKeyUp(e->key);
                     UIManager.KeyboardFocusControl?.InvokeKeyUp(e->key.keysym.sym, e->key.keysym.mod);
                     _scene.OnKeyUp(e->key);
+                    Plugin.ProcessHotkeys(0, 0, false);
 
                     if (e->key.keysym.sym == SDL_Keycode.SDLK_PRINTSCREEN)
                     {
@@ -597,7 +598,7 @@ namespace ClassicUO
                                 Mouse.LButtonPressed = true;
                                 Mouse.LDropPosition = Mouse.Position;
                                 Mouse.CancelDoubleClick = false;
-                                uint ticks = SDL_GetTicks();
+                                uint ticks = Time.Ticks;
 
                                 if (Mouse.LastLeftButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
                                 {
@@ -633,8 +634,6 @@ namespace ClassicUO
                                 }
                                 Mouse.LButtonPressed = false;
                                 Mouse.End();
-
-                                Mouse.LastClickPosition = Mouse.Position;
                             }
 
                             break;
@@ -647,7 +646,7 @@ namespace ClassicUO
                                 Mouse.MButtonPressed = true;
                                 Mouse.MDropPosition = Mouse.Position;
                                 Mouse.CancelDoubleClick = false;
-                                uint ticks = SDL_GetTicks();
+                                uint ticks = Time.Ticks;
 
                                 if (Mouse.LastMidButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
                                 {
@@ -692,7 +691,7 @@ namespace ClassicUO
                                 Mouse.RButtonPressed = true;
                                 Mouse.RDropPosition = Mouse.Position;
                                 Mouse.CancelDoubleClick = false;
-                                uint ticks = SDL_GetTicks();
+                                uint ticks = Time.Ticks;
 
                                 if (Mouse.LastRightButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
                                 {
@@ -733,16 +732,25 @@ namespace ClassicUO
                             break;
 
                         case SDL_BUTTON_X1:
-
-                            if (isDown)
-                                Plugin.ProcessMouse(e->button.button, 0);
-
-                            break;
-
                         case SDL_BUTTON_X2:
-
                             if (isDown)
+                            {
+                                Mouse.Begin();
+                                Mouse.XButtonPressed = true;
+                                Mouse.CancelDoubleClick = false;
                                 Plugin.ProcessMouse(e->button.button, 0);
+                                _scene.OnExtraMouseDown(mouse.button - 1);
+                                UIManager.OnExtraMouseButtonDown(mouse.button - 1);
+                            }
+                            else
+                            {
+                                if (!UIManager.HadMouseDownOnGump(MouseButtonType.XButton1) && !UIManager.HadMouseDownOnGump(MouseButtonType.XButton2))
+                                    _scene.OnExtraMouseUp(mouse.button - 1);
+                                UIManager.OnExtraMouseButtonUp(mouse.button - 1);
+
+                                Mouse.XButtonPressed = false;
+                                Mouse.End();
+                            }
 
                             break;
                     }
@@ -836,8 +844,6 @@ namespace ClassicUO
                     UIManager.OnLeftMouseButtonUp();
                 }
                 Mouse.End();
-
-                Mouse.LastClickPosition = Mouse.Position;
             }
 
             if (rightMouseDown)

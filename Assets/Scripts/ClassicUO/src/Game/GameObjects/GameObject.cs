@@ -24,7 +24,6 @@ using System.Runtime.CompilerServices;
 
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
-using ClassicUO.Game.Map;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
 
@@ -34,7 +33,7 @@ using IUpdateable = ClassicUO.Interfaces.IUpdateable;
 
 namespace ClassicUO.Game.GameObjects
 {
-    internal abstract class BaseGameObject
+    internal abstract class BaseGameObject : LinkedObject
     {
         public Point RealScreenPosition;
     }
@@ -51,8 +50,8 @@ namespace ClassicUO.Game.GameObjects
         public int CurrentRenderIndex;
         public byte UseInRender;
         public short PriorityZ;
-        public GameObject Left;
-        public GameObject Right;
+        public GameObject TPrevious;
+        public GameObject TNext;
         public Vector3 Offset;
         // FIXME: remove it
         public sbyte FoliageIndex = -1;
@@ -68,22 +67,30 @@ namespace ClassicUO.Game.GameObjects
                 if (World.Player == null)
                     return ushort.MaxValue;
 
-                if (this == World.Player)
-                    return 0;
+                int x = X, y = Y;
 
-                int x, y;
+                if (this is Mobile mobile)
+                {
+                    if (mobile == World.Player)
+                        return 0;
 
-                if (this is Mobile m && m.Steps.Count != 0)
-                {
-                    ref var step = ref m.Steps.Back();
-                    x = step.X;
-                    y = step.Y;
+                    if (mobile.Steps.Count != 0)
+                    {
+                        ref var step = ref mobile.Steps.Back();
+                        x = step.X;
+                        y = step.Y;
+                    }
+                    //else if (LastX != 0xFFFF && LastY != 0xFFFF)
+                    //{
+                    //    x = LastX;
+                    //    y = LastY;
+                    //}
                 }
-                else
-                {
-                    x = X;
-                    y = Y;
-                }
+                //else if (LastX != 0xFFFF && LastY != 0xFFFF)
+                //{
+                //    x = LastX;
+                //    y = LastY;
+                //}
 
                 int fx = World.RangeSize.X;
                 int fy = World.RangeSize.Y;
@@ -92,6 +99,7 @@ namespace ClassicUO.Game.GameObjects
             }
         }
 
+        //public ushort LastX = 0xFFFF, LastY = 0xFFFF;
 
         public virtual void Update(double totalMS, double frameMS)
         {
@@ -121,14 +129,14 @@ namespace ClassicUO.Game.GameObjects
         [MethodImpl(256)]
         public void RemoveFromTile()
         {
-            if (Left != null)
-                Left.Right = Right;
+            if (TPrevious != null)
+                TPrevious.TNext = TNext;
 
-            if (Right != null)
-                Right.Left = Left;
+            if (TNext != null)
+                TNext.TPrevious = TPrevious;
 
-            Right = null;
-            Left = null;
+            TNext = null;
+            TPrevious = null;
         }
 
         public virtual void UpdateGraphicBySeason()
@@ -301,13 +309,14 @@ namespace ClassicUO.Game.GameObjects
             if (IsDestroyed)
                 return;
 
+            //LastX = 0xFFFF;
+            //LastY = 0xFFFF;
+
+            Next = null;
+            Previous = null;
+
+            Clear();
             RemoveFromTile();
-
-            //if (Left != null || Right != null)
-            //{
-            //    World.Map.GetChunk(X, Y, false)?.RemoveGameObject(this, X % 8, Y % 8);
-            //}
-
             TextContainer?.Clear();
 
             IsDestroyed = true;

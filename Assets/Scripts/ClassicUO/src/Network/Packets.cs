@@ -503,6 +503,7 @@ namespace ClassicUO.Network
         public POpenDoor() : base(0x12)
         {
             WriteByte(0x58);
+            WriteByte(0x00);
         }
     }
 
@@ -1263,6 +1264,18 @@ namespace ClassicUO.Network
         public PDisarmRequest() : base(0xBF)
         {
             WriteUShort(0x0A);
+        }
+    }
+
+    internal sealed class PChangeRaceRequest : PacketWriter
+    {
+        public PChangeRaceRequest(ushort skin_hue, ushort hair_style, ushort hair_color, ushort beard_style, ushort beard_color) : base(0xBF)
+        {
+            WriteUShort(skin_hue);
+            WriteUShort(hair_style);
+            WriteUShort(hair_color);
+            WriteUShort(beard_style);
+            WriteUShort(beard_color);
         }
     }
 

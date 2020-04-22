@@ -21,12 +21,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using ClassicUO.Configuration;
 using ClassicUO.Data;
 using ClassicUO.Game.Data;
+using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
+using ClassicUO.Game.UI.Gumps;
 using ClassicUO.IO.Resources;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Collections;
@@ -53,7 +54,7 @@ namespace ClassicUO.Game.GameObjects
 
         static Mobile()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < Constants.PREDICTABLE_CHUNKS; i++)
                 _pool.Enqueue(new Mobile(0));
         }
 
@@ -117,8 +118,8 @@ namespace ClassicUO.Game.GameObjects
                 mobile.Texture = null;
                 mobile.IsClicked = false;
 
-                if (mobile.Items == null || mobile.Items.Count != 0)
-                    mobile.Items = new EntityCollection<Item>();
+                mobile.Clear();
+
 
                 mobile.CalculateRandomIdleTime();
 
@@ -194,7 +195,7 @@ namespace ClassicUO.Game.GameObjects
                                (Graphic >= 0x025D && Graphic <= 0x0260) ||
                                Graphic == 0x029A || Graphic == 0x029B ||
                                Graphic == 0x02B6 || Graphic == 0x02B7 ||
-                               Graphic == 0x03DB || Graphic == 0x03DF || Graphic == 0x03E2 || Graphic == 0x02E8 || Graphic == 0x02E9; // Vampiric
+                               Graphic == 0x03DB || Graphic == 0x03DF || Graphic == 0x03E2 || Graphic == 0x02E8 || Graphic == 0x02E9|| Graphic == 0x04E5; 
         public bool IsGargoyle => Client.Version >= ClientVersion.CV_7000 && Graphic == 0x029A || Graphic == 0x029B;
 
         public bool IsMounted => HasEquipment && Equipment[0x19] != null && !IsDrivingBoat && Equipment[0x19].GetGraphicForAnimation() != 0xFFFF;
@@ -203,10 +204,10 @@ namespace ClassicUO.Game.GameObjects
         {
             get
             {
-                if (Client.Version >= ClientVersion.CV_70331 && HasEquipment)
+                if (HasEquipment)
                 {
                     Item m = Equipment[0x19];
-                    return m != null && m.Graphic == 0x3E96; // TODO: im not sure if each server sends this value ever
+                    return m != null && m.Graphic == 0x3E96;
                 }
 
                 return false;
@@ -243,7 +244,15 @@ namespace ClassicUO.Game.GameObjects
 
         public Item GetSecureTradeBox()
         {
-            return Items.FirstOrDefault(s => s.Graphic == 0x1E5E && s.Layer == Layer.Invalid);
+            for (var i = Items; i != null; i = i.Next)
+            {
+                Item it = (Item) i;
+
+                if (it.Graphic == 0x1E5E && it.Layer == 0)
+                    return it;
+            }
+
+            return null;
         }
 
         public void SetSAPoison(bool value)
@@ -351,7 +360,7 @@ namespace ClassicUO.Game.GameObjects
         public void SetAnimation(byte id, byte interval = 0, byte frameCount = 0, byte repeatCount = 0, bool repeat = false, bool frameDirection = false)
         {
             AnimationGroup = id;
-            AnimIndex = 0;
+            AnimIndex = (sbyte) (frameDirection ? 0 : frameCount);
             AnimationInterval = interval;
             AnimationFrameCount = frameCount;
             AnimationRepeatMode = repeatCount;
@@ -827,11 +836,10 @@ namespace ClassicUO.Game.GameObjects
                             return;
                         }
 
-                        if (Right != null || Left != null)
+                        if (TNext != null || TPrevious != null)
                             AddToTile();
 
                         LastStepTime = Time.Ticks;
-                        ProcessDelta();
                     }
                 }
             }
@@ -847,8 +855,8 @@ namespace ClassicUO.Game.GameObjects
                 {
                     GameObject start = this;
 
-                    while (start?.Left != null)
-                        start = start.Left;
+                    while (start?.TPrevious != null)
+                        start = start.TPrevious;
 
                     while (start != null && result == 0)
                     {
@@ -959,8 +967,13 @@ namespace ClassicUO.Game.GameObjects
                                 case 0x35EE:
                                 case 0x3DFF:
                                 case 0x3E00:
+                                case 0x4C8D:
+                                case 0x4C8E:
+                                case 0x4C8F:
+                                case 0x4C1E:
+                                //case 0x4C1F:
 
-                                    for (int i = 0; i < 98; i++)
+                                    for (int i = 0; i < AnimationsLoader.Instance.SittingInfos.Length; i++)
                                     {
                                         if (AnimationsLoader.Instance.SittingInfos[i].Graphic == graphic)
                                         {
@@ -974,7 +987,7 @@ namespace ClassicUO.Game.GameObjects
                             }
                         }
 
-                        start = start.Right;
+                        start = start.TNext;
                     }
                 }
 
@@ -1071,7 +1084,10 @@ namespace ClassicUO.Game.GameObjects
             base.Destroy();
 
             if (!(this is PlayerMobile))
+            {
+                UIManager.GetGump<PaperDollGump>(Serial)?.Dispose();
                 _pool.Enqueue(this);
+            }
         }
 
         internal struct Step

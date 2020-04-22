@@ -33,7 +33,7 @@ namespace ClassicUO.IO.Resources
     {
         private UOFile _file;
 
-        private GumpsLoader()
+        private GumpsLoader(int count) : base(count)
         {
 
         }
@@ -45,7 +45,7 @@ namespace ClassicUO.IO.Resources
             {
                 if (_instance == null)
                 {
-                    _instance = new GumpsLoader();
+                    _instance = new GumpsLoader(Constants.MAX_GUMP_DATA_INDEX_COUNT);
                 }
 
                 return _instance;
@@ -58,7 +58,7 @@ namespace ClassicUO.IO.Resources
 
                 string path = UOFileManager.GetUOFilePath("gumpartLegacyMUL.uop");
 
-                if (File.Exists(path))
+                if (Client.IsUOPInstallation && File.Exists(path))
                 {
                     _file = new UOFileUop(path, "build/gumpartlegacymul/{0:D8}.tga", true);
                     Entries = new UOFileIndex[Constants.MAX_GUMP_DATA_INDEX_COUNT];
@@ -97,6 +97,9 @@ namespace ClassicUO.IO.Resources
 
                         int[] group = defReader.ReadGroup();
 
+                        if (group == null)
+                            continue;
+
                         for (int i = 0; i < group.Length; i++)
                         {
                             int checkIndex = group[i];
@@ -116,7 +119,12 @@ namespace ClassicUO.IO.Resources
 
         public override UOTexture16 GetTexture(uint g)
         {
-            if (!ResourceDictionary.TryGetValue(g, out UOTexture16 texture) || texture.IsDisposed)
+            if (g >= Resources.Length)
+                return null;
+
+            ref var texture = ref Resources[g];
+
+            if (texture == null || texture.IsDisposed)
             {
                 ushort[] pixels = GetGumpPixels(g, out int w, out int h);
 
@@ -125,7 +133,8 @@ namespace ClassicUO.IO.Resources
 
                 texture = new UOTexture16(w, h);
                 texture.PushData(pixels);
-                ResourceDictionary.Add(g, texture);
+
+                SaveID(g);
             }
 
             return texture;
@@ -133,8 +142,8 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
-           _file?.Dispose();
-           _instance = null;
+            _file?.Dispose();
+            _instance = null;
         }
 
         public unsafe ushort[] GetGumpPixels(uint index, out int width, out int height)

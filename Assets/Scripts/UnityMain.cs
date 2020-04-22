@@ -120,8 +120,7 @@ public class UnityMain : MonoBehaviour
 			World.Player.Y = 1677;
 			World.Player.Z = 0;
 			World.Player.UpdateScreenPosition();
-			World.Player.ProcessDelta();
-			World.Mobiles.ProcessDelta();
+			World.Player.AddToTile();
 			Client.Game.SetScene(new GameScene());
 		}
 

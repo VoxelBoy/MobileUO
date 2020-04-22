@@ -24,7 +24,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Linq;
 
 using ClassicUO.Configuration;
 using ClassicUO.Data;
@@ -148,6 +147,8 @@ namespace ClassicUO.Game.Scenes
 
         public override void Update(double totalMS, double frameMS)
         {
+            base.Update(totalMS, frameMS);
+
             if (_lastLoginStep != CurrentLoginStep)
             {
                 UIManager.GameCursor.IsLoading = false;
@@ -192,14 +193,12 @@ namespace ClassicUO.Game.Scenes
 
                 _pingTime = Time.Ticks + 60000;
             }
-
-            base.Update(totalMS, frameMS);
         }
 
         private Gump GetGumpForStep()
         {
             World.Items.Clear();
-            World.Items.ProcessDelta();
+            World.Mobiles.Clear();
 
             switch (CurrentLoginStep)
             {
@@ -473,9 +472,7 @@ namespace ClassicUO.Game.Scenes
                 {
                     Reconnect = true;
                     PopupMessage = $"Reconnect, please wait...`{_reconnectTryCounter}`\n`{StringHelper.AddSpaceBeforeCapital(e.ToString())}`";
-                    var c = UIManager.Gumps.OfType<LoadingGump>().FirstOrDefault();
-                    if (c != null)
-                        c._Label.Text = PopupMessage;
+                    UIManager.GetGump<LoadingGump>()?.SetText(PopupMessage);
                 }
                 else
                     PopupMessage = $"Connection lost:\n`{StringHelper.AddSpaceBeforeCapital(e.ToString())}`";

@@ -29,6 +29,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
@@ -97,6 +98,8 @@ namespace ClassicUO.Game.UI.Gumps
             AcceptMouseInput = true;
             CanCloseWithRightClick = false;
 
+            LoadSettings();
+
             GameActions.Print("WorldMap loading...", 0x35);
             Load();
             OnResize();
@@ -120,8 +123,6 @@ namespace ClassicUO.Game.UI.Gumps
                 ShowBorder = !_isTopMost;
 
                 ControlInfo.Layer = _isTopMost ? UILayer.Over : UILayer.Default;
-
-                SetOptionValue("top_most", value);
             }
         }
 
@@ -137,8 +138,6 @@ namespace ClassicUO.Game.UI.Gumps
                     _isScrolling = false;
                     CanMove = true;
                 }
-
-                SetOptionValue("free_view", value);
             }
         }
 
@@ -148,69 +147,75 @@ namespace ClassicUO.Game.UI.Gumps
         {
             base.Restore(xml);
 
-            int width = int.Parse(xml.GetAttribute("width"));
-            int height = int.Parse(xml.GetAttribute("height"));
+            BuildGump();
+        }
 
-            SetFont(int.TryParse(xml.GetAttribute("markerfont"), out int font) ? font : 1);
-            
-            ResizeWindow(new Point(width, height));
+        private void LoadSettings()
+        {
+            Width = ProfileManager.Current.WorldMapWidth;
+            Height = ProfileManager.Current.WorldMapHeight;
 
-            _flipMap = ParseBool(xml.GetAttribute("flipmap"));
-            TopMost = ParseBool(xml.GetAttribute("topmost"));
-            FreeView = ParseBool(xml.GetAttribute("freeview"));
-            _showPartyMembers = ParseBool(xml.GetAttribute("showpartymembers"));
+            SetFont(ProfileManager.Current.WorldMapFont);
+
+            ResizeWindow(new Point(Width, Height));
+
+            _flipMap = ProfileManager.Current.WorldMapFlipMap;
+            TopMost = ProfileManager.Current.WorldMapTopMost;
+            FreeView = ProfileManager.Current.WorldMapFreeView;
+            _showPartyMembers = ProfileManager.Current.WorldMapShowParty;
 
             World.WMapManager.SetEnable(_showPartyMembers);
 
-            if (int.TryParse(xml.GetAttribute("zoomindex"), out int value))
-                _zoomIndex = (value >= 0 && value < _zooms.Length) ? value : 4;
+            _zoomIndex = ProfileManager.Current.WorldMapZoomIndex;
 
-            _showCoordinates = ParseBool(xml.GetAttribute("showcoordinates"));
-            _showMobiles = ParseBool(xml.GetAttribute("showmobiles"));
+            _showCoordinates = ProfileManager.Current.WorldMapShowCoordinates;
+            _showMobiles = ProfileManager.Current.WorldMapShowMobiles;
 
-            _showPlayerName = ParseBool(xml.GetAttribute("showplayername"));
-            _showPlayerBar = ParseBool(xml.GetAttribute("showplayerbar"));
-            _showGroupName = ParseBool(xml.GetAttribute("showgroupname"));
-            _showGroupBar = ParseBool(xml.GetAttribute("showgroupbar"));
-            _showMarkers = ParseBool(xml.GetAttribute("showmarkers"));
-            _showMultis = ParseBool(xml.GetAttribute("showmultis"));
+            _showPlayerName = ProfileManager.Current.WorldMapShowPlayerName;
+            _showPlayerBar = ProfileManager.Current.WorldMapShowPlayerBar;
+            _showGroupName = ProfileManager.Current.WorldMapShowGroupName;
+            _showGroupBar = ProfileManager.Current.WorldMapShowGroupBar;
+            _showMarkers = ProfileManager.Current.WorldMapShowMarkers;
+            _showMultis = ProfileManager.Current.WorldMapShowMultis;
+            _showMarkerNames = ProfileManager.Current.WorldMapShowMarkersNames;
+        }
 
-            BuildGump();
+        private void SaveSettings()
+        {
+            if (ProfileManager.Current == null)
+                return;
+
+            ProfileManager.Current.WorldMapWidth = Width;
+            ProfileManager.Current.WorldMapHeight = Height;
+
+            ProfileManager.Current.WorldMapFlipMap = _flipMap;
+            ProfileManager.Current.WorldMapTopMost = TopMost;
+            ProfileManager.Current.WorldMapFreeView = FreeView;
+            ProfileManager.Current.WorldMapShowParty = _showPartyMembers;
+
+            ProfileManager.Current.WorldMapZoomIndex = _zoomIndex;
+
+            ProfileManager.Current.WorldMapShowCoordinates = _showCoordinates;
+            ProfileManager.Current.WorldMapShowMobiles = _showMobiles;
+
+            ProfileManager.Current.WorldMapShowPlayerName = _showPlayerName;
+            ProfileManager.Current.WorldMapShowPlayerBar = _showPlayerBar;
+            ProfileManager.Current.WorldMapShowGroupName = _showGroupName;
+            ProfileManager.Current.WorldMapShowGroupBar = _showGroupBar;
+            ProfileManager.Current.WorldMapShowMarkers = _showMarkers;
+            ProfileManager.Current.WorldMapShowMultis = _showMultis;
+            ProfileManager.Current.WorldMapShowMarkersNames = _showMarkerNames;
         }
 
         private bool ParseBool(string boolStr)
         {
             return bool.TryParse(boolStr, out bool value) && value;
         }
-
-        public override void Save(XmlTextWriter writer)
-        {
-            base.Save(writer);
-
-            writer.WriteAttributeString("width", Width.ToString());
-            writer.WriteAttributeString("height", Height.ToString());
-
-            writer.WriteAttributeString("markerfont", _markerFontIndex.ToString());
-
-            writer.WriteAttributeString("flipmap", _flipMap.ToString());
-            writer.WriteAttributeString("topmost", _isTopMost.ToString());
-            writer.WriteAttributeString("freeview", _freeView.ToString());
-            writer.WriteAttributeString("showpartymembers", _showPartyMembers.ToString());
-            writer.WriteAttributeString("zoomindex", _zoomIndex.ToString());
-            writer.WriteAttributeString("showcoordinates", _showCoordinates.ToString());
-            writer.WriteAttributeString("showmobiles", _showMobiles.ToString());
-            writer.WriteAttributeString("showgroupname", _showPlayerName.ToString());
-            writer.WriteAttributeString("showgroupbar", _showPlayerBar.ToString());
-            writer.WriteAttributeString("showpartyname", _showGroupName.ToString());
-            writer.WriteAttributeString("showpartybar", _showPlayerBar.ToString());
-            writer.WriteAttributeString("showmarkers", _showMarkers.ToString());
-            writer.WriteAttributeString("showmultis", _showMultis.ToString());
-        }
-
+        
         private void BuildGump()
         {
             BuildContextMenu();
-
+            _coords?.Dispose();
             Add(_coords = new Label("", true, 1001, font: 1, style: FontStyle.BlackBorder)
             {
                 X = 10,
@@ -242,6 +247,8 @@ namespace ClassicUO.Game.UI.Gumps
             _options["show_party_name"] = new ContextMenuItemEntry("Show group name", () => { _showGroupName = !_showGroupName; }, true, _showGroupName);
             _options["show_party_healthbar"] = new ContextMenuItemEntry("Show group healthbar", () => { _showGroupBar = !_showGroupBar; }, true, _showGroupBar);
             _options["show_coordinates"] = new ContextMenuItemEntry("Show your coordinates", () => { _showCoordinates = !_showCoordinates; }, true, _showCoordinates);
+
+            _options["saveclose"] = new ContextMenuItemEntry("Save & Close", Dispose);
         }
 
         private void BuildContextMenu()
@@ -304,7 +311,7 @@ namespace ClassicUO.Game.UI.Gumps
             ContextMenu.Add(_options["show_multis"]);
             ContextMenu.Add(_options["show_coordinates"]);
             ContextMenu.Add("", null);
-            ContextMenu.Add("Close", Dispose);
+            ContextMenu.Add(_options["saveclose"]);
         }
 
 
@@ -1362,6 +1369,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         public override void Dispose()
         {
+            SaveSettings();
             World.WMapManager.SetEnable(false);
 
             UIManager.GameCursor.IsDraggingCursorForced = false;
