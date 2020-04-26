@@ -66,15 +66,21 @@ namespace ClassicUO.IO.Resources
                 }
                 else
                 {
-                    //Changed these filenames to be all lower-case as it was causing problems with File.Exists on iOS
-                    //Checked a few shard installations, these files seem to be all lower-case anyways
                     path = UOFileManager.GetUOFilePath("gumpart.mul");
                     string pathidx = UOFileManager.GetUOFilePath("gumpidx.mul");
 
-                    if (File.Exists(path) && File.Exists(pathidx))
+                    if (!File.Exists(path))
                     {
-                        _file = new UOFileMul(path, pathidx, Constants.MAX_GUMP_DATA_INDEX_COUNT, 12);
+                        path = UOFileManager.GetUOFilePath("Gumpart.mul");
                     }
+
+                    if (!File.Exists(pathidx))
+                    {
+                        pathidx = UOFileManager.GetUOFilePath("Gumpidx.mul");
+                    }
+
+                    _file = new UOFileMul(path, pathidx, Constants.MAX_GUMP_DATA_INDEX_COUNT, 12);
+
                     Client.UseUOPGumps = false;
                 }
                 _file.FillEntries(ref Entries);

@@ -804,5 +804,11 @@ namespace SDL2
         public static void SDL_RestoreWindow(IntPtr windowHandle)
         {
         }
+
+        //NOTE: Not implemented properly on purpose. Any usages so far are not relevant to MobileUO
+        public static string SDL_GetPlatform()
+        {
+            return string.Empty;
+        }
     }
 }
