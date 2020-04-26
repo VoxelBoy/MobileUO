@@ -43,6 +43,7 @@ public class DownloadState : IState
 
     public void Enter()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         serverConfiguration = ServerConfigurationModel.ActiveConfiguration;
         pathToSaveFiles = serverConfiguration.GetPathToSaveFiles();
         Debug.Log($"Downloading files to {pathToSaveFiles}");
@@ -181,6 +182,7 @@ public class DownloadState : IState
 
     public void Exit()
     {
+        Screen.sleepTimeout = SleepTimeout.SystemSetting;
         downloadPresenter.ClearFileList();
         downloadPresenter.gameObject.SetActive(false);
         downloadAttemptsPerFile.Clear();

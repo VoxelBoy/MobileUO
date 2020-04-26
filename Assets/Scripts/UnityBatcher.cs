@@ -47,12 +47,12 @@ namespace ClassicUO.Renderer
         public CustomDynamicAtlas smallTexturesAtlas;
         private int smallTexturesAtlasSize = 2048;
 
-        public Mesh drawSpriteMesh;
-        private int spriteMeshCustomVertexWriteIndex = 0;
-        private CustomVertex[] _customVertices;
-        private const int spriteMeshQuadCount = 800;
-        private const int spriteMeshVertexCount = spriteMeshQuadCount * 4;
-        private const int spriteMeshTriangleIndexCount = spriteMeshVertexCount * 3;
+        // public Mesh drawSpriteMesh;
+        // private int spriteMeshCustomVertexWriteIndex = 0;
+        // private CustomVertex[] _customVertices;
+        // private const int spriteMeshQuadCount = 800;
+        // private const int spriteMeshVertexCount = spriteMeshQuadCount * 4;
+        // private const int spriteMeshTriangleIndexCount = spriteMeshVertexCount * 3;
 
         private Mesh draw2DMesh;
         private static readonly int SrcBlend = Shader.PropertyToID("_SrcBlend");
@@ -99,31 +99,31 @@ namespace ClassicUO.Renderer
                     nameof(smallTexturesAtlas));
             }
 
-            drawSpriteMesh = new Mesh();
-            //Initialize draw sprite mesh with a lot of quads quads
-            drawSpriteMesh.SetVertexBufferParams(spriteMeshVertexCount,
-                new VertexAttributeDescriptor(VertexAttribute.Position),
-                new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2));
-                // new VertexAttributeDescriptor(VertexAttribute.Color));
-
-            _customVertices = new CustomVertex[spriteMeshVertexCount];
-
-            drawSpriteMesh.SetIndexBufferParams(spriteMeshTriangleIndexCount, IndexFormat.UInt16);
-
-            var indexBufferData = new ushort[spriteMeshTriangleIndexCount];
-            var index = 0;
-            for (int i = 0; i < spriteMeshQuadCount; i++)
-            {
-                var vertexIndex = i * 4;
-                indexBufferData[index] = (ushort) vertexIndex;
-                indexBufferData[index+1] = (ushort) (vertexIndex+1);
-                indexBufferData[index+2] = (ushort) (vertexIndex+2);
-                indexBufferData[index+3] = (ushort) (vertexIndex+2);
-                indexBufferData[index+4] = (ushort) (vertexIndex+1);
-                indexBufferData[index+5] = (ushort) (vertexIndex+3);
-                index += 6;
-            }
-            drawSpriteMesh.SetIndexBufferData(indexBufferData, 0, 0, spriteMeshTriangleIndexCount, (MeshUpdateFlags) 15);
+            // drawSpriteMesh = new Mesh();
+            // //Initialize draw sprite mesh with a lot of quads quads
+            // drawSpriteMesh.SetVertexBufferParams(spriteMeshVertexCount,
+            //     new VertexAttributeDescriptor(VertexAttribute.Position),
+            //     new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2));
+            //     // new VertexAttributeDescriptor(VertexAttribute.Color));
+            //
+            // _customVertices = new CustomVertex[spriteMeshVertexCount];
+            //
+            // drawSpriteMesh.SetIndexBufferParams(spriteMeshTriangleIndexCount, IndexFormat.UInt16);
+            //
+            // var indexBufferData = new ushort[spriteMeshTriangleIndexCount];
+            // var index = 0;
+            // for (int i = 0; i < spriteMeshQuadCount; i++)
+            // {
+            //     var vertexIndex = i * 4;
+            //     indexBufferData[index] = (ushort) vertexIndex;
+            //     indexBufferData[index+1] = (ushort) (vertexIndex+1);
+            //     indexBufferData[index+2] = (ushort) (vertexIndex+2);
+            //     indexBufferData[index+3] = (ushort) (vertexIndex+2);
+            //     indexBufferData[index+4] = (ushort) (vertexIndex+1);
+            //     indexBufferData[index+5] = (ushort) (vertexIndex+3);
+            //     index += 6;
+            // }
+            // drawSpriteMesh.SetIndexBufferData(indexBufferData, 0, 0, spriteMeshTriangleIndexCount, (MeshUpdateFlags) 15);
         }
 
         private MatrixEffect DefaultEffect { get; }

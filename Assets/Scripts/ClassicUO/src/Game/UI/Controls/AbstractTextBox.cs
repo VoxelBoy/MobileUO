@@ -40,7 +40,15 @@ namespace ClassicUO.Game.UI.Controls
             {
                 SetKeyboardFocus();
                 //NOTE: Show touchscreen keyboard when abstract text box is selected
-                GameController.TouchScreenKeyboard = UnityEngine.TouchScreenKeyboard.Open(EntryValue.Text, UnityEngine.TouchScreenKeyboardType.Default, false, false, false);
+#if UNITY_2019_3_OR_NEWER
+                //This code seems to be necessary on 2019.3 and newer to fix the touchscreen keyboard not re-appearing if previously dismissed by clicking somewhere on the screen instead of by clicking the OK/Done button
+                if (GameController.TouchScreenKeyboard != null)
+                {
+                    GameController.TouchScreenKeyboard.active = false;
+                    GameController.TouchScreenKeyboard = null;
+                }
+#endif
+                GameController.TouchScreenKeyboard = UnityEngine.TouchScreenKeyboard.Open(EntryValue.Text, UnityEngine.TouchScreenKeyboardType.Default, false, false, (this as TextBox)?.IsPassword ?? false);
                 EntryValue?.OnMouseClick(x, y);
             }
 
