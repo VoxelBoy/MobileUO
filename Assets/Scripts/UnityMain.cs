@@ -16,9 +16,6 @@ using Vector2 = UnityEngine.Vector2;
 
 public class UnityMain : MonoBehaviour
 {
-	[SerializeField] private Texture2D hueTex1;
-	[SerializeField] private Texture2D hueTex2;
-
 	[SerializeField]
 	private bool useDynamicAtlas;
 	[SerializeField]
@@ -27,9 +24,6 @@ public class UnityMain : MonoBehaviour
 	private bool forceEnterWorld;
 	[SerializeField]
 	private bool saveAllTextures;
-
-	[SerializeField]
-	private bool useImportedXnaHueTextures;
 
 	[SerializeField]
 	private bool scaleGameToFitScreen;
@@ -88,9 +82,6 @@ public class UnityMain : MonoBehaviour
 	private int lastScreenWidth;
 	private int lastScreenHeight;
 
-	private Texture2D generatedHueTexture1;
-	private Texture2D generatedHueTexture2;
-
 	public Action<string> OnError;
 
 	void Start ()
@@ -125,6 +116,7 @@ public class UnityMain : MonoBehaviour
 		}
 
 		float deltaTime = UnityEngine.Time.deltaTime;
+		//Is this necessary? Wouldn't it slow down the game even further when it dips below 20 FPS?
         if(deltaTime > 0.050f)
         {
             deltaTime = 0.050f;
@@ -165,10 +157,7 @@ public class UnityMain : MonoBehaviour
 	    if (Client.Game == null)
 		    return;
 
-	    Client.Game.GraphicsDevice.Textures[1].UnityTexture = useImportedXnaHueTextures ? hueTex1 : generatedHueTexture1;
-	    Client.Game.GraphicsDevice.Textures[2].UnityTexture = useImportedXnaHueTextures ? hueTex2 : generatedHueTexture2;
-
-        GL.LoadPixelMatrix( 0, Screen.width, Screen.height, 0 );
+	    GL.LoadPixelMatrix( 0, Screen.width, Screen.height, 0 );
 
         Client.Game.Batcher.UseDynamicAtlas = useDynamicAtlas;
         Client.Game.Batcher.UseGraphicsDrawTexture = useGraphicsDrawTexture;
@@ -235,9 +224,6 @@ public class UnityMain : MonoBehaviour
 	    try
 	    {
 		    Client.Run();
-		    
-		    generatedHueTexture1 = (Texture2D) Client.Game.GraphicsDevice.Textures[1].UnityTexture;
-		    generatedHueTexture2 = (Texture2D) Client.Game.GraphicsDevice.Textures[2].UnityTexture;
 
 		    Client.Game.sceneChanged += OnSceneChanged;
 		    ApplyScalingFactor();

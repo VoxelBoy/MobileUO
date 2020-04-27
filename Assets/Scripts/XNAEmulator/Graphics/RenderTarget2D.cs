@@ -8,7 +8,6 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             UnityTexture = new RenderTexture( width, height,24);
             UnityTexture.wrapMode = TextureWrapMode.Clamp;
-            GraphicDevice = graphicsDevice;
             Hash = UnityTexture.GetHashCode();
         }
     }

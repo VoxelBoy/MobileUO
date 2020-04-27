@@ -6,12 +6,14 @@ namespace Microsoft.Xna.Framework.Graphics
 {
     public class Texture2D : IDisposable
     {
+        //This hash doesn't work as intended since it's not based on the contents of the UnityTexture but its instanceID
+        //which will be different as old textures are discarded and new ones are created 
         public int Hash = -1;
-        public Texture UnityTexture { get; set; }
+        public Texture UnityTexture { get; protected set; }
 
-        private static byte[] byteArray = new byte[4];
+        private static readonly byte[] byteArray = new byte[4];
 
-        public Texture2D()
+        protected Texture2D()
         {
         }
 
@@ -21,21 +23,18 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             UnityTexture = new UnityEngine.Texture2D(width, height, TextureFormat.ARGB32, false, false);
             UnityTexture.wrapMode = TextureWrapMode.Clamp;
-            GraphicDevice = graphicsDevice;
         }
-
-        public GraphicsDevice GraphicDevice { get; set; }
 
         public Texture2D(GraphicsDevice graphicsDevice, int width, int height, bool v, SurfaceFormat surfaceFormat) :
             this(graphicsDevice, width, height)
         {
         }
 
-        public int Width => UnityTexture?.width ?? 0;
+        public int Width => UnityTexture != null ? UnityTexture.width : 0;
 
-        public int Height => UnityTexture?.height ?? 0;
+        public int Height => UnityTexture != null ? UnityTexture.height : 0;
 
-        public bool IsDisposed { get; internal set; }
+        public bool IsDisposed { get; private set; }
 
         public void Dispose()
         {
@@ -69,15 +68,55 @@ namespace Microsoft.Xna.Framework.Graphics
 
         internal void SetData(ushort[] data)
         {
-            SetData(data, data.Length);
+            var dataLength = data.Length;
+            var destText = UnityTexture as UnityEngine.Texture2D;
+            var dst = destText.GetRawTextureData<uint>();
+            var tmp = new uint[dataLength];
+            var textureWidth = UnityTexture.width;
+
+            for (int i = 0; i < dataLength; i++)
+            {
+                int x = i % textureWidth;
+                int y = i / textureWidth;
+                y *= textureWidth;
+                var index = y + (textureWidth - x - 1);
+                tmp[i] = (uint) u16Tou32(data[dataLength - index - 1]);
+            }
+
+            dst.CopyFrom(tmp);
+
+            destText.Apply();
+
+            Hash = UnityTexture.GetHashCode();
         }
 
         internal void SetData(Color[] data)
         {
-            SetData(data, data.Length);
+            var dataLength = data.Length;
+            var destText = UnityTexture as UnityEngine.Texture2D;
+            var dst = destText.GetRawTextureData<uint>();
+            var tmp = new uint[dataLength];
+            var textureWidth = UnityTexture.width;
+
+            for (int i = 0; i < dataLength; i++)
+            {
+                int x = i % textureWidth;
+                int y = i / textureWidth;
+                y *= textureWidth;
+                var index = y + (textureWidth - x - 1);
+                var color = data[dataLength - index - 1];
+                //argb -> rgba
+                tmp[i] = (uint)(color.R << 24 | color.G << 16 | color.B << 8 | color.A);
+            }
+
+            dst.CopyFrom(tmp);
+
+            destText.Apply();
+
+            Hash = UnityTexture.GetHashCode();
         }
 
-        public static unsafe int u16Tou32(ushort color)
+        private static unsafe int u16Tou32(ushort color)
         {
             //Bgra5551
             if (color == 0)
@@ -98,29 +137,6 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
-        internal void SetData(ushort[] data, int elementCount)
-        {
-            var destText = UnityTexture as UnityEngine.Texture2D;
-            var dst = destText.GetRawTextureData<uint>();
-            var tmp = new uint[elementCount];
-            var textureWidth = UnityTexture.width;
-
-            for (int i = 0; i < elementCount; i++)
-            {
-                int x = i % textureWidth;
-                int y = i / textureWidth;
-                y *= textureWidth;
-                var index = y + (textureWidth - x - 1);
-                tmp[i] = (uint) u16Tou32(data[elementCount - index - 1]);
-            }
-
-            dst.CopyFrom(tmp);
-
-            destText.Apply();
-
-            Hash = UnityTexture.GetHashCode();
-        }
-
         internal void SetData(uint[] data, int startOffset = 0, int elementCount = 0)
         {
             var textureWidth = UnityTexture.width;
@@ -133,7 +149,6 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 elementCount *= textureWidth;
             }
-            // startOffset *= textureWidth;
 
             var destText = UnityTexture as UnityEngine.Texture2D;
             var dst = destText.GetRawTextureData<uint>();
@@ -149,38 +164,13 @@ namespace Microsoft.Xna.Framework.Graphics
                 var index = y + (textureWidth - x - 1);
                 if (index < elementCount && i < dstLength)
                 {
-                    var u = data[dataLength - startOffset - index - 1];
+                    var u = data[elementCount + startOffset - index - 1];
                     uint firstByte = u & 0xff;
                     uint secondByte = (u >> 8) & 0xff;
                     uint thirdByte = (u >> 16) & 0xff;
                     uint fourthByte = (u >> 24) & 0xff;
                     tmp[i] = thirdByte << 24 | secondByte << 16 | firstByte << 8 | fourthByte;
                 }
-            }
-
-            dst.CopyFrom(tmp);
-
-            destText.Apply();
-
-            Hash = UnityTexture.GetHashCode();
-        }
-
-        internal void SetData(Color[] data, int elementCount)
-        {
-            var destText = UnityTexture as UnityEngine.Texture2D;
-            var dst = destText.GetRawTextureData<uint>();
-            var tmp = new uint[elementCount];
-            var textureWidth = UnityTexture.width;
-
-            for (int i = 0; i < elementCount; i++)
-            {
-                int x = i % textureWidth;
-                int y = i / textureWidth;
-                y *= textureWidth;
-                var index = y + (textureWidth - x - 1);
-                var color = data[elementCount - index - 1];
-                //argb -> rgba
-                tmp[i] = (uint)(color.R << 24 | color.G << 16 | color.B << 8 | color.A);
             }
 
             dst.CopyFrom(tmp);
@@ -203,7 +193,7 @@ namespace Microsoft.Xna.Framework.Graphics
             height = requestedHeight;
             pixels = new[] {(byte)0};
         }
-
+        
         public override int GetHashCode()
         {
             return Hash;

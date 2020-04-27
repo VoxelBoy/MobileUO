@@ -887,11 +887,36 @@ namespace ClassicUO
                 Mouse.End();
             }
 
-            foreach ( UnityEngine.KeyCode kcode in _keyCodeEnumValues)
+            var keymod = SDL.SDL_Keymod.KMOD_NONE;
+            if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftAlt))
             {
-                if (UnityEngine.Input.GetKeyDown(kcode))
+                keymod |= SDL_Keymod.KMOD_LALT;
+            }
+            if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.RightAlt))
+            {
+                keymod |= SDL_Keymod.KMOD_RALT;
+            }
+            if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftShift))
+            {
+                keymod |= SDL_Keymod.KMOD_LSHIFT;
+            }
+            if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.RightShift))
+            {
+                keymod |= SDL_Keymod.KMOD_RSHIFT;
+            }
+            if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftControl))
+            {
+                keymod |= SDL_Keymod.KMOD_LCTRL;
+            }
+            if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.RightControl))
+            {
+                keymod |= SDL_Keymod.KMOD_RCTRL;
+            }
+            foreach (var keyCode in _keyCodeEnumValues)
+            {
+                if (UnityEngine.Input.GetKeyDown(keyCode))
                 {
-                    var key = new SDL_KeyboardEvent() {keysym = new SDL_Keysym() {sym = (SDL_Keycode) kcode}};
+                    var key = new SDL_KeyboardEvent() {keysym = new SDL_Keysym() {sym = (SDL_Keycode) keyCode, mod = keymod}};
                     Keyboard.OnKeyDown(key);
 
                     if (Plugin.ProcessHotkeys((int) key.keysym.sym, (int) key.keysym.mod, true))
@@ -907,9 +932,9 @@ namespace ClassicUO
                     else
                         _ignoreNextTextInput = true;
                 }
-                if (UnityEngine.Input.GetKeyUp(kcode))
+                if (UnityEngine.Input.GetKeyUp(keyCode))
                 {
-                    var key = new SDL_KeyboardEvent() {keysym = new SDL_Keysym() {sym = (SDL_Keycode) kcode}};
+                    var key = new SDL_KeyboardEvent() {keysym = new SDL_Keysym() {sym = (SDL_Keycode) keyCode}};
                     Keyboard.OnKeyUp(key);
                     UIManager.KeyboardFocusControl?.InvokeKeyUp(key.keysym.sym, key.keysym.mod);
                     _scene.OnKeyUp(key);

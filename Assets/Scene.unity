@@ -646,13 +646,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eb4856eb9acbbb41b91f5d29f54e5d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hueTex1: {fileID: 2800000, guid: 971a699c1236d4fccb409108a56cffc2, type: 3}
-  hueTex2: {fileID: 2800000, guid: ea4d2bdaefb6b4e5cb0b7fa8fa47bc7f, type: 3}
   useDynamicAtlas: 0
   useGraphicsDrawTexture: 1
   forceEnterWorld: 0
   saveAllTextures: 0
-  useImportedXnaHueTextures: 1
   scaleGameToFitScreen: 1
   movementJoystick: {fileID: 90313485}
   showMovementJoystickOnNonMobilePlatforms: 0
@@ -2021,7 +2018,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &525914056
