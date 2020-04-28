@@ -25,7 +25,7 @@ public class DownloadState : IState
 
     private readonly bool forceDownloadsInEditor;
     
-    private const string H_REF_PATTERN = @"href\s*=\s*(?:[""'](?<1>[^""']*)[""']|(?<1>\S+))";
+    private const string H_REF_PATTERN = @"<a\shref=[^>]*>([^<]*)<\/a>";
     private const int MAX_CONCURRENT_DOWNLOADS = 1;
     private const int MAX_DOWNLOAD_ATTEMPTS = 3;
 
@@ -57,8 +57,8 @@ public class DownloadState : IState
         {
             downloadPresenter.gameObject.SetActive(true);
             //Get list of files to download from server
-            var uriBuilder = new UriBuilder("http",serverConfiguration.FileDownloadServerUrl, port);
-            var request = UnityWebRequest.Get(uriBuilder.Uri);
+            var uri = GetUri(serverConfiguration.FileDownloadServerUrl, port);
+            var request = UnityWebRequest.Get(uri);
             request.SendWebRequest().completed += operation =>
             {
                 if (request.isHttpError || request.isNetworkError)
@@ -75,12 +75,24 @@ public class DownloadState : IState
                     .Where(text => text.Contains(".") &&
                                    text.Contains(".exe") == false &&
                                    text.Contains(".app") == false &&
+                                   text.Contains(".dll") == false &&
+                                   text.Contains(".pdb") == false &&
                                    text.Contains("/") == false));
                 numberOfFilesToDownload = downloadingFilesList.Count;
                 downloadPresenter.SetFileList(downloadingFilesList);
                 downloadCoroutine = downloadPresenter.StartCoroutine(DownloadFiles());
             };
         }
+    }
+
+    private static Uri GetUri(string serverUrl, int port, string fileName = null)
+    {
+        var httpPort = port == 80;
+        var httpsPort = port == 443;
+        var defaultPort = httpPort || httpsPort;
+        var scheme = httpsPort ? "https" : "http";
+        var uriBuilder = new UriBuilder(scheme, serverUrl, defaultPort ? - 1 : port, fileName);
+        return uriBuilder.Uri;
     }
 
     private IEnumerator DownloadFiles()
@@ -131,8 +143,8 @@ public class DownloadState : IState
 
     private void DownloadFile(string fileName)
     {
-        var uriBuilder = new UriBuilder("http", serverConfiguration.FileDownloadServerUrl, port, fileName);
-        var request = UnityWebRequest.Get(uriBuilder.Uri);
+        var uri = GetUri(serverConfiguration.FileDownloadServerUrl, port, fileName);
+        var request = UnityWebRequest.Get(uri);
         var filePath = Path.Combine(pathToSaveFiles, fileName);
         var fileDownloadHandler = new DownloadHandlerFile(filePath) {removeFileOnAbort = true};
         request.downloadHandler = fileDownloadHandler;

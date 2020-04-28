@@ -89,9 +89,9 @@ namespace ClassicUO.IO
 
         public virtual void Dispose()
         {
-            _accessor.SafeMemoryMappedViewHandle.ReleasePointer();
-            _accessor.Dispose();
-            _file.Dispose();
+            _accessor?.SafeMemoryMappedViewHandle.ReleasePointer();
+            _accessor?.Dispose();
+            _file?.Dispose();
             Log.Trace( $"Unloaded:\t\t{FilePath}");
         }
 
