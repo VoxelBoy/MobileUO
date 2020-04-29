@@ -345,6 +345,8 @@ namespace ClassicUO.Game.Scenes
             Settings.GlobalSettings.WindowSize = new Point(Client.Game.Window.ClientBounds.Width, Client.Game.Window.ClientBounds.Height);
             Settings.GlobalSettings.IsWindowMaximized = Client.Game.IsWindowMaximized();
             Client.Game.SetWindowBorderless(false);
+            
+            CircleOfTransparency.Dispose();
 
             base.Unload();
         }

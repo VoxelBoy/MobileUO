@@ -41,7 +41,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        private static ProfessionLoader _instance;
+        public static ProfessionLoader _instance;
         public static ProfessionLoader Instance
         {
             get
@@ -353,6 +353,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            Professions.Clear();
             _instance = null;
         }
 

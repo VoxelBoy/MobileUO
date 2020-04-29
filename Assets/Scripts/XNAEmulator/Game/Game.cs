@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SDL2;
 
@@ -100,6 +99,7 @@ namespace Microsoft.Xna.Framework
         }
         public virtual void Exit()
         {
+	        Exiting?.Invoke(this, EventArgs.Empty);
         }
 
         // TODO
@@ -115,7 +115,7 @@ namespace Microsoft.Xna.Framework
         }
         public void Dispose()
         {
-            Dispose(true);
+	        Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -186,7 +186,7 @@ namespace Microsoft.Xna.Framework
         {
         }
 
-        protected virtual void UnloadContent()
+        public virtual void UnloadContent()
         {
         }
 

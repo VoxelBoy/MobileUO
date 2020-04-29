@@ -100,6 +100,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _entries.Clear();
             _instance = null;
         }
 

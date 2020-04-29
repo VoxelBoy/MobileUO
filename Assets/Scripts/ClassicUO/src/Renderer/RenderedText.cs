@@ -305,5 +305,14 @@ namespace ClassicUO.Renderer
 
             _pool.Enqueue(this);
         }
+
+        public static void Dispose()
+        {
+            foreach (var renderedText in _pool)
+            {
+                renderedText?._texture?.Dispose();
+            }
+            _pool.Clear();
+        }
     }
 }

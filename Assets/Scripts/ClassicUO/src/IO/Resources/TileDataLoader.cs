@@ -312,6 +312,8 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _staticData = null;
+            _landData = null;
             _instance = null;
         }
     }

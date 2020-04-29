@@ -185,6 +185,46 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            for (int i = 0; i < _filesIdxStatics.Length; i++)
+            {
+                _filesIdxStatics[i]?.Dispose();
+                _filesIdxStatics[i] = null;
+            }
+            for (int i = 0; i < _filesMap.Length; i++)
+            {
+                _filesMap[i]?.Dispose();
+                _filesMap[i] = null;
+            }
+            for (int i = 0; i < _filesStatics.Length; i++)
+            {
+                _filesStatics[i]?.Dispose();
+                _filesStatics[i] = null;
+            }
+            for (int i = 0; i < _mapDif.Length; i++)
+            {
+                _mapDif[i]?.Dispose();
+                _mapDif[i] = null;
+            }
+            for (int i = 0; i < _mapDifl.Length; i++)
+            {
+                _mapDifl[i]?.Dispose();
+                _mapDifl[i] = null;
+            }
+            for (int i = 0; i < _staDif.Length; i++)
+            {
+                _staDif[i]?.Dispose();
+                _staDif[i] = null;
+            }
+            for (int i = 0; i < _staDifi.Length; i++)
+            {
+                _staDifi[i]?.Dispose();
+                _staDifi[i] = null;
+            }
+            for (int i = 0; i < _staDifl.Length; i++)
+            {
+                _staDifl[i]?.Dispose();
+                _staDifl[i] = null;
+            } 
             _instance = null;
         }
 

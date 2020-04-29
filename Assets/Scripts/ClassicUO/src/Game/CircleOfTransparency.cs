@@ -135,5 +135,11 @@ namespace ClassicUO.Game
             _texture = new Texture2D(Client.Game.GraphicsDevice, _width, _height);
             _texture.SetData(pixels);
         }
+
+        public static void Dispose()
+        {
+            _texture?.Dispose();
+            _texture = null;
+        }
     }
 }

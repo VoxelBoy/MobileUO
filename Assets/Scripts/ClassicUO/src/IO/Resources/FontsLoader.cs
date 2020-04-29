@@ -205,6 +205,7 @@ namespace ClassicUO.IO.Resources
 
         public override void CleanResources()
         {
+            _webLinks.Clear();
             _instance = null;
         }
 

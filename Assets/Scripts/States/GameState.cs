@@ -10,14 +10,15 @@ public class GameState : IState
     }
     public void Enter()
     {
-        errorPresenter.BackButtonClicked += OnErrorUiBackButtonClicked;
-        
+        errorPresenter.BackButtonClicked += GoBackToServerConfigurationState;
+        unityMain.OnExiting += GoBackToServerConfigurationState;
         unityMain.OnError += OnError;
+        
         unityMain.enabled = true;
         unityMain.StartGame(ServerConfigurationModel.ActiveConfiguration);
     }
 
-    private void OnErrorUiBackButtonClicked()
+    private void GoBackToServerConfigurationState()
     {
         StateManager.GoToState<ServerConfigurationState>();
     }
@@ -33,7 +34,9 @@ public class GameState : IState
     {
         unityMain.enabled = false;
         errorPresenter.gameObject.SetActive(false);
-        errorPresenter.BackButtonClicked -= OnErrorUiBackButtonClicked;
+        
+        errorPresenter.BackButtonClicked -= GoBackToServerConfigurationState;
+        unityMain.OnExiting -= GoBackToServerConfigurationState;
         unityMain.OnError -= OnError;
     }
 }

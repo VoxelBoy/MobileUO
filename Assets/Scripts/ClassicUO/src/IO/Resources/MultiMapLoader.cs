@@ -258,6 +258,12 @@ namespace ClassicUO.IO.Resources
         public override void CleanResources()
         {
             _file?.Dispose();
+            _file = null;
+            for (int i = 0; i < _facets.Length; i++)
+            {
+                _facets[i]?.Dispose();
+                _facets[i] = null;
+            }
             _instance = null;
         }
     }

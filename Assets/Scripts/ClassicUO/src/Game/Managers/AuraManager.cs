@@ -108,5 +108,11 @@ namespace ClassicUO.Game.Managers
             batcher.Draw2D(AuraTexture, x, y, ref _auraHueVector);
             //batcher.SetBlendState(null);
         }
+
+        public static void Dispose()
+        {
+            AuraTexture?.Dispose();
+            AuraTexture = null;
+        }
     }
 }

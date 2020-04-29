@@ -86,7 +86,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         fileDownloadServerPortInputField.text = serverConfigurationToEdit?.FileDownloadServerPort ?? "8080";
         clientVersionInputField.text = serverConfigurationToEdit?.ClientVersion ?? "";
         clientPathForUnityEditorInputField.text = serverConfigurationToEdit?.ClientPathForUnityEditor ?? "";
-        clientPathForUnityEditorParent.SetActive(Application.isEditor);
+        clientPathForUnityEditorParent.SetActive(Application.isMobilePlatform == false);
         
         deleteServerConfigurationButtonOriginalText = deleteServerConfigurationButtonText.text;
         deleteServerFilesButtonOriginalText = deleteServerFilesButtonText.text;
@@ -203,8 +203,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         deleteServerFilesButtonClickCount = 0;
         if (ServerConfigurationToEdit != null)
         {
-            deleteServerFilesButton.gameObject.SetActive(ServerConfigurationToEdit.AllFilesDownloaded ||
-                                                         serverConfigurationToEdit.SaveDirectoryContainsFiles());
+            deleteServerFilesButton.gameObject.SetActive(ServerConfigurationToEdit.AllFilesDownloaded);
             markFilesAsDownloadedButton.gameObject.SetActive(deleteServerFilesButton.gameObject.activeSelf == false);
         }
     }

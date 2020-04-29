@@ -690,6 +690,8 @@ namespace ClassicUO.Game
             ActiveSpellIcons.Clear();
 
             SkillsRequested = false;
+            
+            Land.Dispose();
         }
 
         private static void InternalMapChangeClear(bool noplayer)

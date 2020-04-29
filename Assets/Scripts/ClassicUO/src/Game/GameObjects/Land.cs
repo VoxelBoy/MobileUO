@@ -339,5 +339,15 @@ namespace ClassicUO.Game.GameObjects
 
             Vector3.Normalize(ref v, out v);
         }
+
+        public static void Dispose()
+        {
+            foreach (var land in _pool)
+            {
+                land.Clear();
+                land.RemoveFromTile();
+                land.TextContainer?.Clear();
+            }
+        }
     }
 }

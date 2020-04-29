@@ -142,6 +142,7 @@ namespace ClassicUO.Game.Scenes
             NetClient.PacketReceived -= NetClient_PacketReceived;
 
             UIManager.GameCursor.IsLoading = false;
+            UIManager.Clear();
             base.Unload();
         }
 

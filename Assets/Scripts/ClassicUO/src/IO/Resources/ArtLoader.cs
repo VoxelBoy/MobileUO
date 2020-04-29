@@ -164,6 +164,7 @@ namespace ClassicUO.IO.Resources
             }
 
             _file?.Dispose();
+            _file = null;
             _instance = null;
         }
 

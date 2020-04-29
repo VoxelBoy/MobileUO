@@ -53,7 +53,7 @@ namespace ClassicUO.Game
             }
         };
 
-        private readonly Texture2D _aura;
+        private Texture2D _aura;
         private readonly int[,] _cursorOffset = new int[2, 16];
         private readonly IntPtr[,] _cursorPixels = new IntPtr[2, 16];
         private readonly Tooltip _tooltip;
@@ -687,6 +687,12 @@ namespace ClassicUO.Game
 
             public readonly int Width, Height;
             public readonly IntPtr CursorPtr;
+        }
+
+        public void Dispose()
+        {
+            _aura?.Dispose();
+            _aura = null;
         }
     }
 }

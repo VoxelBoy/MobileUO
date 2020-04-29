@@ -258,6 +258,10 @@ namespace ClassicUO.Game.UI.Gumps
         public override void Dispose()
         {
             MessageManager.MessageReceived -= ChatOnMessageReceived;
+            foreach (var chatLineTime in _textEntries)
+            {
+                chatLineTime?.Destroy();
+            }
             base.Dispose();
         }
 

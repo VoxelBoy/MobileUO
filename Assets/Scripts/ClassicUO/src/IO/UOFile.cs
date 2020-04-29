@@ -91,7 +91,9 @@ namespace ClassicUO.IO
         {
             _accessor?.SafeMemoryMappedViewHandle.ReleasePointer();
             _accessor?.Dispose();
+            _accessor = null;
             _file?.Dispose();
+            _file = null;
             Log.Trace( $"Unloaded:\t\t{FilePath}");
         }
 

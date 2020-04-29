@@ -41,5 +41,14 @@ namespace ClassicUO.Renderer
 
             return t;
         }
+
+        public static void Dispose()
+        {
+            foreach (var keyValuePair in _textures)
+            {
+                keyValuePair.Value?.Dispose();
+            }
+            _textures.Clear();
+        }
     }
 }

@@ -96,6 +96,7 @@ namespace ClassicUO.IO.Resources
         public override void CleanResources()
         {
             _file?.Dispose();
+            _file = null;
             _instance = null;
         }
     }

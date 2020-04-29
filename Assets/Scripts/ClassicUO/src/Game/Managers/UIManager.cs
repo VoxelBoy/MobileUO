@@ -956,6 +956,29 @@ namespace ClassicUO.Game.Managers
             {
                 s.Dispose();
             }
+            
+            Gumps.Clear();
+            
+            for (int i = 0; i < _mouseDownControls.Length; i++)
+            {
+                _mouseDownControls[i] = null;
+            }
+        }
+
+        public static void Dispose()
+        {
+            GameCursor?.Dispose();
+            GameCursor = null;
+
+            _keyboardFocusControl = null;
+            _validForDClick = null;
+            _lastFocus = null;
+
+            MouseOverControl = null;
+            DraggingControl = null;
+            PopupMenu = null;
+            SystemChat = null;
+            ContextMenu = null;
         }
 
 

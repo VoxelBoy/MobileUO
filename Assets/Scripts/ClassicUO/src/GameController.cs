@@ -131,14 +131,23 @@ namespace ClassicUO
             SetWindowPositionBySettings();
         }
 
-        protected override void UnloadContent()
+        public override void UnloadContent()
         {
             SDL.SDL_GetWindowBordersSize(Window.Handle, out int top, out int left, out int bottom, out int right);
             Settings.GlobalSettings.WindowPosition = new Point(Math.Max(0, Window.ClientBounds.X - left), Math.Max(0, Window.ClientBounds.Y - top));
             
-            _scene?.Unload();
             Settings.GlobalSettings.Save();
             Plugin.OnClosing();
+            
+            GraphicsDevice.Textures[1]?.Dispose();
+            GraphicsDevice.Textures[1] = null;
+            GraphicsDevice.Textures[2]?.Dispose();
+            GraphicsDevice.Textures[2] = null;
+            _scene?.Dispose();
+            AuraManager.Dispose();
+            UIManager.Dispose();
+            Texture2DCache.Dispose();
+
             base.UnloadContent();
         }
 

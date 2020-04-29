@@ -4,6 +4,7 @@ using UnityEngine;
 using ClassicUO;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Configuration;
+using ClassicUO.Data;
 using ClassicUO.Game;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Scenes;
@@ -41,6 +42,13 @@ public class UnityMain : MonoBehaviour
 			}
 		}
 	}
+	
+	[Header("Controls")]
+	[SerializeField]
+	private MobileJoystick movementJoystick;
+
+	[SerializeField]
+	private bool showMovementJoystickOnNonMobilePlatforms;
 
 	private ScaleSizes customScaleSize = ScaleSizes.Default;
 
@@ -72,17 +80,15 @@ public class UnityMain : MonoBehaviour
 		}
 	}
 
-	[Header("Controls")]
-	[SerializeField]
-	private MobileJoystick movementJoystick;
-
-	[SerializeField]
-	private bool showMovementJoystickOnNonMobilePlatforms;
-
 	private int lastScreenWidth;
 	private int lastScreenHeight;
+	
+	private static readonly List<RaycastResult> tempRaycastResults = new List<RaycastResult>(10);
+	private static PointerEventData tempPointerEventData;
+	private static EventSystem tempEventSystem;
 
 	public Action<string> OnError;
+	public Action OnExiting;
 
 	void Start ()
     {
@@ -150,6 +156,7 @@ public class UnityMain : MonoBehaviour
 		LightsLoader._instance?.Dispose();
 		SoundsLoader._instance?.Dispose();
 		MultiMapLoader._instance?.Dispose();
+		ProfessionLoader._instance?.Dispose();
 	}
 
 	private void OnPostRender()
@@ -195,19 +202,29 @@ public class UnityMain : MonoBehaviour
 	    Settings.GlobalSettings = JsonConvert.DeserializeObject<Settings>(Resources.Load<TextAsset>("settings").text);
 	    Settings.GlobalSettings.IP = config.UoServerUrl;
 	    Settings.GlobalSettings.Port = ushort.Parse(config.UoServerPort);
+	    
 	    //If connecting to UO Outlands, set shard type to 2 for outlands
 	    Settings.GlobalSettings.ShardType = config.UoServerUrl.ToLower().Contains("ououtlands") ? 2 : 0;
 
-	    if (Application.isEditor)
+	    //Try to detect old client version to set ShardType to 1, for using StatusGumpOld. Otherwise, it's possible
+	    //to get null-refs in StatusGumpModern.
+	    if (ClientVersionHelper.IsClientVersionValid(config.ClientVersion, out var clientVersion))
+	    {
+		    if (clientVersion < ClientVersion.CV_308Z)
+		    {
+			    Settings.GlobalSettings.ShardType = 1;
+		    }
+	    }
+
+	    Settings.GlobalSettings.ClientVersion = config.ClientVersion;
+	    
+	    if (Application.isMobilePlatform == false && string.IsNullOrEmpty(config.ClientPathForUnityEditor) == false)
 	    {
 		    Settings.GlobalSettings.UltimaOnlineDirectory = config.ClientPathForUnityEditor;
-		    //Empty client version loaded from settings.json so that CUO detects the actual version from client.exe
-		    Settings.GlobalSettings.ClientVersion = "";
 	    }
 	    else
 	    {
-		    Settings.GlobalSettings.UltimaOnlineDirectory = CUOEnviroment.ExecutablePath;
-		    Settings.GlobalSettings.ClientVersion = config.ClientVersion;
+		    Settings.GlobalSettings.UltimaOnlineDirectory = config.GetPathToSaveFiles();
 	    }
 
 	    //This flag is tied to whether the GameCursor gets drawn, in a convoluted way
@@ -226,6 +243,7 @@ public class UnityMain : MonoBehaviour
 		    Client.Run();
 
 		    Client.Game.sceneChanged += OnSceneChanged;
+		    Client.Game.Exiting += OnGameExiting;
 		    ApplyScalingFactor();
 	    }
 	    catch (Exception e)
@@ -240,7 +258,7 @@ public class UnityMain : MonoBehaviour
 	    //Disable auto move on mobile platform
 	    ProfileManager.Current.DisableAutoMove = Application.isMobilePlatform;
 	    //Prevent stack split gump from appearing on mobile
-	    ProfileManager.Current.HoldShiftToSplitStack = Application.isMobilePlatform;
+	    //ProfileManager.Current.HoldShiftToSplitStack = Application.isMobilePlatform;
 	    //Scale items inside containers by default on mobile (won't have any effect if container scale isn't changed)
 	    ProfileManager.Current.ScaleItemsInsideContainers = Application.isMobilePlatform;
     }
@@ -279,10 +297,6 @@ public class UnityMain : MonoBehaviour
 	    Client.Game.scale = scale;
     }
 
-    private static readonly List<RaycastResult> tempRaycastResults = new List<RaycastResult>(10);
-    private static PointerEventData tempPointerEventData;
-    private static EventSystem tempEventSystem;
-
     private static bool PointOverGui(Vector2 screenPosition)
     {
 	    tempRaycastResults.Clear();
@@ -310,5 +324,12 @@ public class UnityMain : MonoBehaviour
 	    currentEventSystem.RaycastAll(tempPointerEventData, tempRaycastResults);
 
 	    return tempRaycastResults.Count > 0;
+    }
+    
+    private void OnGameExiting(object sender, EventArgs e)
+    {
+	    Client.Game.UnloadContent();
+	    Client.Game.Dispose();
+	    OnExiting?.Invoke();
     }
 }

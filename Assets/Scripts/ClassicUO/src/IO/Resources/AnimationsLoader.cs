@@ -941,6 +941,68 @@ namespace ClassicUO.IO.Resources
         public override void CleanResources()
         {
             _instance = null;
+            _animationSequenceReplacing.Clear();
+            _animDimensionCache.Clear();
+            _equipConv.Clear();
+            for (int i = 0; i < _files.Length; i++)
+            {
+                _files[i]?.Dispose();
+                _files[i] = null;
+            }
+            for (int i = 0; i < _filesUop.Length; i++)
+            {
+                _filesUop[i]?.Dispose();
+                _filesUop[i] = null;
+            }
+            for (int i = 0; i < DataIndex.Length; i++)
+            {
+                var dataIndex = DataIndex[i];
+                if (dataIndex?.BodyConvGroups != null)
+                {
+                    for (int j = 0; j < dataIndex.BodyConvGroups.Length; j++)
+                    {
+                        var bodyConvGroup = dataIndex.BodyConvGroups[j];
+                        if (bodyConvGroup?.Direction != null)
+                        {
+                            for (int k = 0; k < bodyConvGroup.Direction.Length; k++)
+                            {
+                                var direction = bodyConvGroup.Direction[k];
+                                if (direction?.Frames != null)
+                                {
+                                    for (int l = 0; l < direction.Frames.Length; l++)
+                                    {
+                                        direction.Frames[l]?.Dispose();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (dataIndex?.Groups != null)
+                {
+                    for (int j = 0; j < dataIndex.Groups.Length; j++)
+                    {
+                        var group = dataIndex.Groups[j];
+                        if (group?.Direction != null)
+                        {
+                            for (int k = 0; k < group.Direction.Length; k++)
+                            {
+                                var direction = group.Direction[k];
+                                if (direction?.Frames != null)
+                                {
+                                    for (int l = 0; l < direction.Frames.Length; l++)
+                                    {
+                                        direction.Frames[l]?.Dispose();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                DataIndex[i] = null;
+            }
         }
 
         public void UpdateAnimationTable(uint flags)
@@ -1632,10 +1694,15 @@ namespace ClassicUO.IO.Resources
                 x = y = w = h = 0;
         }
 
-        public void CleaUnusedResources(int maxCount)
+        public void CleaUnusedResources(int maxCount, bool fullClear = false)
         {
             int count = 0;
             long ticks = Time.Ticks - Constants.CLEAR_TEXTURES_DELAY;
+            if (fullClear)
+            {
+                ticks = long.MaxValue;
+                maxCount = int.MaxValue;
+            }
 
             var first = _usedTextures.First;
 

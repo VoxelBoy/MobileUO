@@ -311,11 +311,12 @@ namespace ClassicUO.IO.Resources
             _mMusicData.Clear();
             foreach (var keyValuePair in _sounds)
             {
-                keyValuePair.Value.Dispose();
+                keyValuePair.Value?.Dispose();
             }
             _sounds.Clear();
             
             _file?.Dispose();
+            _file = null;
             
             _instance = null;
         }
