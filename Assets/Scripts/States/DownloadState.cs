@@ -195,11 +195,22 @@ public class DownloadState : IState
     public void Exit()
     {
         Screen.sleepTimeout = SleepTimeout.SystemSetting;
+        
+        if (downloadCoroutine != null)
+        {
+            downloadPresenter.StopCoroutine(downloadCoroutine);
+            downloadCoroutine = null;
+        }
         downloadPresenter.ClearFileList();
         downloadPresenter.gameObject.SetActive(false);
+        
         downloadAttemptsPerFile.Clear();
         downloadingFilesList = null;
         activeRequestAndFileNameTupleList.Clear();
         serverConfiguration = null;
+
+        concurrentDownloadCounter = 0;
+        numberOfFilesDownloaded = 0;
+        numberOfFilesToDownload = 0;
     }
 }
