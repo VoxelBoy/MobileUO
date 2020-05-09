@@ -145,10 +145,10 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 elementCount = data.Length;
             }
-            else
-            {
-                elementCount *= textureWidth;
-            }
+            // else
+            // {
+            //     elementCount *= textureWidth;
+            // }
 
             var destText = UnityTexture as UnityEngine.Texture2D;
             var dst = destText.GetRawTextureData<uint>();

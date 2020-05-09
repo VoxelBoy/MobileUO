@@ -19,7 +19,6 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-#define DEV_BUILD
 
 using System;
 using System.IO;
@@ -90,6 +89,7 @@ namespace ClassicUO
             _graphicDeviceManager.SynchronizeWithVerticalRetrace = false; // TODO: V-Sync option
             _graphicDeviceManager.ApplyChanges();
 
+
             Window.ClientSizeChanged += WindowOnClientSizeChanged;
             Window.AllowUserResizing = true;
             Window.Title = $"ClassicUO - {CUOEnviroment.Version}";
@@ -107,25 +107,42 @@ namespace ClassicUO
             base.Initialize();
         }
 
+        private readonly Texture2D[] _hues_sampler = new Texture2D[2];
+
         protected override void LoadContent()
         {
+            base.LoadContent();
+
             Client.Load();
 
-            uint[] hues = HuesLoader.Instance.CreateShaderColors();
+            uint[] buffer = new uint[32 * 3000 * 2];
+            HuesLoader.Instance.CreateShaderColors(buffer);
 
-            int size = HuesLoader.Instance.HuesCount;
 
-            Texture2D texture0 = new Texture2D(GraphicsDevice, 32, size * 2);
-            texture0.SetData(hues, 0, size * 2);
-            Texture2D texture1 = new Texture2D(GraphicsDevice, 32, size);
-            texture1.SetData(hues, size, size);
-            GraphicsDevice.Textures[1] = texture0;
-            GraphicsDevice.Textures[2] = texture1;
+            _hues_sampler[0] = new Texture2D(
+                                          GraphicsDevice,
+                                          32,
+                                          3000);
+            _hues_sampler[0].SetData(buffer, 0, buffer.Length / 2);
+           
+           
+            _hues_sampler[1] = new Texture2D(
+                                          GraphicsDevice,
+                                          32,
+                                          3000);
+            _hues_sampler[1].SetData(buffer, (buffer.Length / 2) - 1, buffer.Length / 2);
+
+
+            GraphicsDevice.Textures[1] = _hues_sampler[0];
+            GraphicsDevice.Textures[2] = _hues_sampler[1];
+            
+            // File.WriteAllBytes(Path.Combine(UnityEngine.Application.persistentDataPath, "hue1.png"), UnityEngine.ImageConversion.EncodeToPNG(GraphicsDevice.Textures[1].UnityTexture as UnityEngine.Texture2D));
+            // File.WriteAllBytes(Path.Combine(UnityEngine.Application.persistentDataPath, "hue2.png"), UnityEngine.ImageConversion.EncodeToPNG(GraphicsDevice.Textures[2].UnityTexture as UnityEngine.Texture2D));
 
             AuraManager.CreateAuraTexture();
             UIManager.InitializeGameCursor();
 
-            base.LoadContent();
+
 
             SetScene(new LoginScene());
             SetWindowPositionBySettings();

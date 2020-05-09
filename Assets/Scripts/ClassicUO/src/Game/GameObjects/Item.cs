@@ -88,7 +88,6 @@ namespace ClassicUO.Game.GameObjects
                 i.AlphaHue = 0;
                 i.Name = null;
                 i.Direction = 0;
-                i.Equipment = null;
                 i.AnimIndex = 0;
                 i.Hits = 0;
                 i.HitsMax = 0;
@@ -376,7 +375,7 @@ namespace ClassicUO.Game.GameObjects
 
             //house.Generate();
 
-            UIManager.GetGump<MiniMapGump>()?.ForceUpdate();
+            UIManager.GetGump<MiniMapGump>()?.RequestUpdateContents();
 
             if (World.HouseManager.EntityIntoHouse(Serial, World.Player))
                 Client.Game.GetScene<GameScene>()?.UpdateMaxDrawZ(true);
@@ -792,7 +791,7 @@ namespace ClassicUO.Game.GameObjects
                     }
                     case 0x3ECE: // serpentine dragon
                     {
-
+                        graphic = 0x059A;
                         break;
                     }
 

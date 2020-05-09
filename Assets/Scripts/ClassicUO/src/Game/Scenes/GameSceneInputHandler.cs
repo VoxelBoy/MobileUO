@@ -526,7 +526,6 @@ namespace ClassicUO.Game.Scenes
                         result = true;
                         if (!GameActions.OpenCorpse(item))
                             GameActions.DoubleClick(item);
-
                         break;
 
                     case Mobile mob:
@@ -536,13 +535,14 @@ namespace ClassicUO.Game.Scenes
                             GameActions.Attack(mob);
                         else
                             GameActions.DoubleClick(mob);
-
                         break;
 
                     case TextOverhead msg when msg.Owner is Entity entity:
                         result = true;
                         GameActions.DoubleClick(entity);
-
+                        break;
+                    default:
+                        World.LastObject = 0;
                         break;
                 }
             }
@@ -685,9 +685,9 @@ namespace ClassicUO.Game.Scenes
                             }
                             UIManager.AttemptDragControl(customgump, Mouse.Position, true);
                         }
-                        else
+                        else if (obj is Item item)
                         {
-                            PickupItemBegin(obj as Item, Mouse.Position.X, Mouse.Position.Y);
+                            PickupItemBegin(item, Mouse.Position.X, Mouse.Position.Y);
                         }
                     }
 

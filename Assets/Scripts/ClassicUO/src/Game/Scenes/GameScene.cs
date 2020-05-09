@@ -739,7 +739,7 @@ namespace ClassicUO.Game.Scenes
                 }
                 else if (Time.Ticks - _holdMouse2secOverItemTime >= 1000)
                 {
-                    if (PickupItemBegin(SelectedObject.LastObject as Item, 0, 0))
+                    if (SelectedObject.LastObject is Item it && PickupItemBegin(it.Serial, 0, 0))
                     {
                         _isMouseLeftDown = false;
                         _holdMouse2secOverItemTime = 0;

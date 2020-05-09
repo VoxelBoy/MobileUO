@@ -1530,7 +1530,6 @@ namespace ClassicUO.Renderer
             GraphicsDevice.DepthStencilState = _stencil;
             GraphicsDevice.RasterizerState = _useScissor ? _rasterizerState : RasterizerState.CullNone;
             GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
-
             GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
             GraphicsDevice.SamplerStates[2] = SamplerState.PointClamp;
 
@@ -1696,10 +1695,6 @@ namespace ClassicUO.Renderer
                 Brighlight = Parameters["Brightlight"];
 
                 CurrentTechnique = Techniques["HueTechnique"];
-            }
-
-            protected IsometricEffect(Effect cloneSource) : base(cloneSource)
-            {
             }
 
 

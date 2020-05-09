@@ -52,7 +52,7 @@ namespace ClassicUO.Game.UI.Gumps
         private ScrollAreaItem _activeChatArea;
         private Combobox _autoOpenCorpseOptions;
         private TextBox _autoOpenCorpseRange;
-        private Checkbox _buffBarTime,_castSpellsByOneClick, _queryBeforAttackCheckbox, _spellColoringCheckbox, _spellFormatCheckbox;
+        private Checkbox _buffBarTime,_castSpellsByOneClick, _queryBeforAttackCheckbox, _queryBeforeBeneficialCheckbox, _spellColoringCheckbox, _spellFormatCheckbox;
         private HSliderBar _cellSize;
 
         // video
@@ -69,6 +69,7 @@ namespace ClassicUO.Game.UI.Gumps
         //experimental
         private Checkbox _enableSelectionArea, _debugGumpIsDisabled, _restoreLastGameSize, _autoOpenDoors, _autoOpenCorpse, _skipEmptyCorpse, _disableTabBtn, _disableCtrlQWBtn, _disableDefaultHotkeys, _disableArrowBtn, _disableAutoMove, _overrideContainerLocation, _smoothDoors, _showTargetRangeIndicator, _customBars, _customBarsBBG, _saveHealthbars;
         private Combobox _overrideContainerLocationSetting;
+        private Checkbox _use_smooth_boat_movement;
 
         // sounds
         private Checkbox _enableSounds, _enableMusic, _footStepsSound, _combatMusic, _musicInBackground, _loginMusic;
@@ -1001,6 +1002,8 @@ namespace ClassicUO.Game.UI.Gumps
             ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
 
             _queryBeforAttackCheckbox = CreateCheckBox(rightArea, "Query before attack", ProfileManager.Current.EnabledCriminalActionQuery, 0, 0);
+            _queryBeforeBeneficialCheckbox = CreateCheckBox(rightArea, "Query before beneficial criminal action", ProfileManager.Current.EnabledBeneficialCriminalActionQuery, 0, 0);
+            _queryBeforeBeneficialCheckbox.SetTooltip("Query before performing beneficial acts on Murderers, Criminals, Grays (Monsters/Animals)");
             _spellFormatCheckbox = CreateCheckBox(rightArea, "Enable Overhead Spell Format", ProfileManager.Current.EnabledSpellFormat, 0, 0);
             _spellColoringCheckbox = CreateCheckBox(rightArea, "Enable Overhead Spell Hue", ProfileManager.Current.EnabledSpellHue, 0, 0);
             _castSpellsByOneClick = CreateCheckBox(rightArea, "Cast spells by one click", ProfileManager.Current.CastSpellsByOneClick, 0, 0);
@@ -1129,6 +1132,8 @@ namespace ClassicUO.Game.UI.Gumps
             const int PAGE = 10;
             ScrollArea rightArea = new ScrollArea(190, 20, WIDTH - 210, 420, true);
 
+            _use_smooth_boat_movement = CreateCheckBox(rightArea, "Smooth boat movements", ProfileManager.Current.UseSmoothBoatMovement, 0, 0);
+            _use_smooth_boat_movement.IsVisible = Client.Version >= ClientVersion.CV_7090; 
             _enableSelectionArea = CreateCheckBox(rightArea, "Enable Text Selection Area", ProfileManager.Current.EnableSelectionArea, 0, 0);
 
             _debugGumpIsDisabled = CreateCheckBox(rightArea, "Disable Debug Gump", ProfileManager.Current.DebugGumpIsDisabled, 0, 0);
@@ -1565,6 +1570,7 @@ namespace ClassicUO.Game.UI.Gumps
                     _murdererColorPickerBox.SetColor(0x0023, HuesLoader.Instance.GetPolygoneColor(12, 0x0023));
                     _enemyColorPickerBox.SetColor(0x0031, HuesLoader.Instance.GetPolygoneColor(12, 0x0031));
                     _queryBeforAttackCheckbox.IsChecked = true;
+                    _queryBeforeBeneficialCheckbox.IsChecked = false;
                     _castSpellsByOneClick.IsChecked = false;
                     _buffBarTime.IsChecked = false;
                     _beneficColorPickerBox.SetColor(0x0059, HuesLoader.Instance.GetPolygoneColor(12, 0x0059));
@@ -1590,6 +1596,7 @@ namespace ClassicUO.Game.UI.Gumps
                     break;
 
                 case 10:
+                    _use_smooth_boat_movement.IsChecked = false;
                     _enableSelectionArea.IsChecked = false;
                     _debugGumpIsDisabled.IsChecked = false;
                     _restoreLastGameSize.IsChecked = false;
@@ -1924,6 +1931,7 @@ namespace ClassicUO.Game.UI.Gumps
             ProfileManager.Current.EnemyHue = _enemyColorPickerBox.Hue;
             ProfileManager.Current.MurdererHue = _murdererColorPickerBox.Hue;
             ProfileManager.Current.EnabledCriminalActionQuery = _queryBeforAttackCheckbox.IsChecked;
+            ProfileManager.Current.EnabledBeneficialCriminalActionQuery = _queryBeforeBeneficialCheckbox.IsChecked;
             ProfileManager.Current.CastSpellsByOneClick = _castSpellsByOneClick.IsChecked;
             ProfileManager.Current.BuffBarTime = _buffBarTime.IsChecked;
 
@@ -1970,6 +1978,7 @@ namespace ClassicUO.Game.UI.Gumps
             }
 
             // experimental
+            ProfileManager.Current.UseSmoothBoatMovement = _use_smooth_boat_movement.IsChecked;
             ProfileManager.Current.EnableSelectionArea = _enableSelectionArea.IsChecked;
             ProfileManager.Current.RestoreLastGameSize = _restoreLastGameSize.IsChecked;
 

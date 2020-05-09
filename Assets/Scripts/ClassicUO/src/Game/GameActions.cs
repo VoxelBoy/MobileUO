@@ -39,14 +39,12 @@ namespace ClassicUO.Game
 {
     internal static class GameActions
     {
-        private static Func<Item, int, int, int?, Point?, bool> _pickUpAction;
+        private static Func<uint, int, int, int?, Point?, bool> _pickUpAction;
 
         public static int LastSpellIndex { get; set; } = 1;
         public static int LastSkillIndex { get; set; } = 1;
 
-        public static uint LastObject { get; set; }
-
-        internal static void Initialize(Func<Item, int, int, int?, Point?, bool> onPickUpAction)
+        internal static void Initialize(Func<uint, int, int, int?, Point?, bool> onPickUpAction)
         {
             _pickUpAction = onPickUpAction;
         }
@@ -137,9 +135,12 @@ namespace ClassicUO.Game
             else
             {
                 Socket.Send(new PDoubleClickRequest(serial));
-                if (SerialHelper.IsItem(serial))
-                    LastObject = serial;
             }
+
+            if (SerialHelper.IsItem(serial))
+                World.LastObject = serial;
+            else
+                World.LastObject = 0;
         }
 
         public static void SingleClick(uint serial)
@@ -207,19 +208,19 @@ namespace ClassicUO.Game
             Socket.Send(new PPartyChangeLootTypeRequest(isLootable));
         }
 
-        public static void PickUp(uint item, Point point, int? amount = null)
+        public static void PickUp(uint serial, Point point, int? amount = null)
         {
-            PickUp(item, point.X, point.Y, amount);
+            PickUp(serial, point.X, point.Y, amount);
         }
 
-        public static void PickUp(uint item, int x, int y, int? amount = null, Point? offset = null)
+        public static void PickUp(uint serial, int x, int y, int? amount = null, Point? offset = null)
         {
-            _pickUpAction(World.Items.Get(item), x, y, amount, offset);
+            _pickUpAction(serial, x, y, amount, offset);
         }
 
-        public static void PickUp(uint item, int? amount = null, Point? offset = null)
+        public static void PickUp(uint serial, int? amount = null, Point? offset = null)
         {
-            _pickUpAction(World.Items.Get(item), 0, 0, amount, offset);
+            _pickUpAction(serial, 0, 0, amount, offset);
         }
 
         public static void DropItem(uint serial, int x, int y, int z, uint container)
@@ -411,16 +412,21 @@ namespace ClassicUO.Game
         {
             Socket.Send(new PPickUpRequest(serial, amount));
 
+            Item backpack = World.Player.FindItemByLayer(Layer.Backpack);
+
+            if (backpack == null)
+                return;
+
             if(bag == 0)
                 bag = ProfileManager.Current.GrabBagSerial == 0
-                    ? World.Player.Equipment[(int) Layer.Backpack].Serial
+                    ? backpack.Serial
                     : ProfileManager.Current.GrabBagSerial;
 
             if (!World.Items.Contains(bag))
             {
-                GameActions.Print("Grab Bag not found, setting to Backpack.");
+                Print("Grab Bag not found, setting to Backpack.");
                 ProfileManager.Current.GrabBagSerial = 0;
-                bag = World.Player.Equipment[(int) Layer.Backpack].Serial;
+                bag = backpack.Serial;
             }
             DropItem(serial, 0xFFFF, 0xFFFF, 0, bag);
         }

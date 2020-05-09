@@ -51,9 +51,14 @@ namespace ClassicUO.Game.Scenes
             }
         }
 
-        private bool PickupItemBegin(Item item, int x, int y, int? amount = null, Point? offset = null)
+        private bool PickupItemBegin(uint serial, int x, int y, int? amount = null, Point? offset = null)
         {
-            if (World.Player.IsDead || ItemHold.Enabled || item == null || item.IsDestroyed || item.IsMulti || item.OnGround && (item.IsLocked || item.Distance > Constants.DRAG_ITEMS_DISTANCE))
+            if (World.Player.IsDead || ItemHold.Enabled)
+                return false;
+
+            Item item = World.Items.Get(serial);
+
+            if (item == null || item.IsDestroyed || item.IsMulti || item.OnGround && (item.IsLocked || item.Distance > Constants.DRAG_ITEMS_DISTANCE))
                 return false;
 
             if (!amount.HasValue && item.Amount > 1 && item.ItemData.IsStackable)
@@ -93,12 +98,12 @@ namespace ClassicUO.Game.Scenes
 
             if (!item.OnGround)
             {
-                Entity entity = World.Get(item.Container);
+                //Entity entity = World.Get(item.Container);
                 //item.Container = Serial.INVALID;
                 //entity.Items.Remove(item);
 
-                if (entity != null && entity.HasEquipment)
-                    entity.Equipment[(int) item.Layer] = null;
+                //if (entity != null && entity.HasEquipment)
+                //    entity.FindItemByLayer( item.Layer] = null;
 
                 //entity.Items.ProcessDelta();
             }
@@ -251,7 +256,7 @@ namespace ClassicUO.Game.Scenes
                 if (!SerialHelper.IsValid(serial))
                     serial = World.Player;
 
-                GameActions.Equip(ItemHold.Serial, (Layer) TileDataLoader.Instance.StaticData[ItemHold.Graphic].Layer, serial);
+                GameActions.Equip(ItemHold.Serial, (Layer) ItemHold.ItemData.Layer, serial);
                 ItemHold.Enabled = false;
                 ItemHold.Dropped = true;
             }

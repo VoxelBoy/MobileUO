@@ -35,7 +35,6 @@ namespace ClassicUO.Game.GameObjects
     internal abstract class Entity : GameObject, IEquatable<Entity>
     {
         private Direction _direction;
-        private Item[] _equipment;
 
         protected Entity(uint serial)
         {
@@ -44,25 +43,11 @@ namespace ClassicUO.Game.GameObjects
 
 
         public uint LastStepTime;
-
         protected long LastAnimationChangeTime;
-
-
-        public bool HasEquipment => _equipment != null;
-
-        public Item[] Equipment
-        {
-            get => _equipment ?? (_equipment = new Item[(int) Layer.Bank + 0x11]);
-            set => _equipment = value;
-        }
-
         public uint Serial;
         public bool IsClicked;
-
         public ushort Hits;
-
         public ushort HitsMax;
-
         public string Name;
 
         public bool IsHidden => (Flags & Flags.Hidden) != 0;
@@ -107,11 +92,12 @@ namespace ClassicUO.Game.GameObjects
 
             if (UseObjectHandles && !ObjectHandlesOpened)
             {
-                // TODO: this is not sent by client. There is a particular situation when standard client sends it. Disabled for the moment
-                //if (SerialHelper.IsMobile(Serial) && string.IsNullOrEmpty(Name))
-                //{
-                //    Socket.Send(new PNameRequest(Serial));
-                //}
+                // TODO: Some servers may not want to receive this (causing original client to not send it),
+                //but all servers tested (latest POL, old POL, ServUO, Outlands) do.
+                if (SerialHelper.IsMobile(Serial))
+                {
+                    Socket.Send(new PNameRequest(Serial));
+                }
 
                 UIManager.Add(new NameOverheadGump(this));
 
@@ -269,13 +255,6 @@ namespace ClassicUO.Game.GameObjects
                 Items = new_first;
 
             }
-        }
-
-
-        public override void Destroy()
-        {
-            _equipment = null;
-            base.Destroy();
         }
 
 

@@ -796,6 +796,30 @@ namespace SDL2
             public int w;
             public int h;
         }
+        
+        public struct SDL_Surface
+        {
+            public uint flags;
+            public IntPtr format;
+            public int w;
+            public int h;
+            public int pitch;
+            public IntPtr pixels;
+            public IntPtr userdata;
+            public int locked;
+            public IntPtr lock_data;
+            public SDL.SDL_Rect clip_rect;
+            public IntPtr map;
+            public int refcount;
+        }
+        
+        public struct SDL_Rect
+        {
+            public int x;
+            public int y;
+            public int w;
+            public int h;
+        }
 
         public static void SDL_MaximizeWindow(IntPtr windowHandle)
         {

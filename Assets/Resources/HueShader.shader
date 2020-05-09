@@ -32,9 +32,8 @@
             static const int SPECTRAL = 10;
             static const int SHADOW = 12;
             static const int LIGHTS = 13;
-            static const int COLOR_SWAP = 32;
+            static const int GUMP = 20;
 
-            static const int HUES_DELTA = 3000;
             static const float3 LIGHT_DIRECTION = float3(-1.0f, -1.0f, .5f);
             static const float3 VEC3_ZERO = float3(0, 0, 0);
 
@@ -66,17 +65,22 @@
             sampler2D _HueTex1;
             sampler2D _HueTex2;
 
-            float3 get_rgb(float red, float hue, bool swap)
+            float3 get_rgb(float red, float hue)
             {
-                if (hue < HUES_DELTA)
+                if (hue <= 3000)
                 {
-                    if (swap)
-                        hue += HUES_DELTA;
+                    float2 texcoord = float2(red % 32, hue / 3000);
                     //NOTE: We invert the y coordinate to read from the proper place in the hue texture
-                    return tex2D(_HueTex1, float2(red, 1 - hue / 6000.0f)).rgb;
+                    texcoord.y = 1 - texcoord.y;
+                    return tex2D(_HueTex1, texcoord).rgb;
                 }
-                //NOTE: We invert the y coordinate to read from the proper place in the hue texture
-                return tex2D(_HueTex2, float2(red, 1 - (hue - 3000.0f) / 3000.0f)).rgb;
+                else
+                {
+                    float2 texcoord = float2(red % 32, (hue - 3000) / 3000);
+                    //NOTE: We invert the y coordinate to read from the proper place in the hue texture
+                    texcoord.y = 1 - texcoord.y;
+                    return tex2D(_HueTex2, texcoord).rgb;
+                }
             }
 
             float3 get_light(float3 norm)
@@ -124,26 +128,28 @@
 
                 int mode = int(_Hue.y);
                 float alpha = 1 - _Hue.z;
+                float red = color.r;
 
                 if (mode > NOCOLOR)
                 {
-                    bool swap = false;
-                    if (mode >= COLOR_SWAP)
+                    float hue = _Hue.x;
+                    if (mode >= GUMP)
                     {
-                        mode -= COLOR_SWAP;
-                        swap = true;
+                        mode -= GUMP;
+                        if (color.r < 0.02f)
+                        {
+                            hue = 0;
+                        }
                     }
 
                     if (mode == COLOR || (mode == PARTIAL_COLOR && color.r == color.g && color.r == color.b))
                     {
-                        color.rgb = get_rgb(color.r, _Hue.x, swap);
+                        color.rgb = get_rgb(red, hue);
                     }
                     else if (mode > 5)
                     {
                         if (mode > 9)
                         {
-                            float red = color.r;
-
                             if (mode > 10)
                             {
                                 if (mode > 11)
@@ -152,7 +158,7 @@
                                     {
                                         if (_Hue.x != 0.0f)
                                         {
-                                            color.rgb *= get_rgb(color.r, _Hue.x, swap);
+                                            color.rgb *= get_rgb(color.r, hue);
                                         }
                                         return color * alpha;
                                     }
@@ -178,7 +184,7 @@
 
                             if (mode > 6)
                             {
-                                color.rgb = get_rgb(color.r, _Hue.x, swap) * norm;
+                                color.rgb = get_rgb(red, hue) * norm;
                             }
                             else
                             {
@@ -188,7 +194,7 @@
                     }
                     else if (mode == 4 || (mode == 3 && (color.r > 0.08 || color.g > 0.08 || color.b > 0.08)) || (mode == 5 && color.r > 0.08))
                     {
-                        color.rgb = get_rgb(color.r + 90, _Hue.x, swap);
+                        color.rgb = get_rgb(31, hue);
                     }
                 }
 

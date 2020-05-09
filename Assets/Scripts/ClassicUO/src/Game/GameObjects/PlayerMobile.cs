@@ -176,7 +176,7 @@ namespace ClassicUO.Game.GameObjects
 
         public Item FindBandage()
         {
-            Item backpack = Equipment[(int) Layer.Backpack];
+            Item backpack = FindItemByLayer(Layer.Backpack);
             Item item = null;
 
             if (backpack != null)
@@ -187,7 +187,7 @@ namespace ClassicUO.Game.GameObjects
 
         public Item FindItemByGraphic(ushort graphic)
         {
-            Item backpack = Equipment[(int)Layer.Backpack];
+            Item backpack = FindItemByLayer(Layer.Backpack);
 
             if (backpack != null)
             {
@@ -242,13 +242,13 @@ namespace ClassicUO.Game.GameObjects
         {
             ushort equippedGraphic = 0;
 
-            Item layerObject = Equipment[(int) Layer.OneHanded];
+            Item layerObject = FindItemByLayer(Layer.OneHanded);
 
             if (layerObject != null)
                 equippedGraphic = layerObject.Graphic;
             else
             {
-                layerObject = Equipment[(int) Layer.TwoHanded];
+                layerObject = FindItemByLayer(Layer.TwoHanded);
 
                 if (layerObject != null)
                     equippedGraphic = layerObject.Graphic;
@@ -1212,6 +1212,15 @@ namespace ClassicUO.Game.GameObjects
                                 Abilities[0] = Ability.BleedAttack;
                                 Abilities[1] = Ability.WhirlwindAttack;
                                 goto done;
+
+                            case 0x08FF: // Boomerang
+                                Abilities[0] = Ability.MysticArc;
+                                Abilities[1] = Ability.ConcussionBlow;
+                                break;
+                            case 0x090A: // Soul Glaive
+                                Abilities[0] = Ability.ArmorIgnore;
+                                Abilities[1] = Ability.MortalStrike;
+                                break;
                         }
                     }
                 }
@@ -1290,7 +1299,7 @@ namespace ClassicUO.Game.GameObjects
 
         public void CloseBank()
         {
-            Item bank = HasEquipment ? Equipment[(int) Layer.Bank] : null;
+            Item bank = FindItemByLayer(Layer.Bank);
 
             if (bank != null && bank.Opened)
             {
@@ -1461,7 +1470,12 @@ namespace ClassicUO.Game.GameObjects
                     x = newX;
                     y = newY;
                     z = newZ;
-                    walkTime = (ushort) MovementSpeed.TimeToCompleteMovement(this, run);
+                    walkTime = (ushort) MovementSpeed.TimeToCompleteMovement(run,
+                                                                             IsMounted || 
+                                                                             SpeedMode == CharacterSpeedType.FastUnmount || 
+                                                                             SpeedMode == CharacterSpeedType.FastUnmountAndCantRun || 
+                                                                             IsFlying
+                                                                             );
                 }
             }
             else
@@ -1482,7 +1496,11 @@ namespace ClassicUO.Game.GameObjects
                     x = newX;
                     y = newY;
                     z = newZ;
-                    walkTime = (ushort) MovementSpeed.TimeToCompleteMovement(this, run);
+                    walkTime = (ushort) MovementSpeed.TimeToCompleteMovement(run,
+                                                                             IsMounted ||
+                                                                             SpeedMode == CharacterSpeedType.FastUnmount ||
+                                                                             SpeedMode == CharacterSpeedType.FastUnmountAndCantRun ||
+                                                                             IsFlying);
                 }
 
                 direction = newDir;
