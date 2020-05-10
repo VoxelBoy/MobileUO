@@ -792,6 +792,7 @@ namespace ClassicUO
 
         private void UnityInputUpdate()
         {
+            //Mouse handling
             var oneOverScale = 1f / scale;
 
             Mouse.Position.X = UnityEngine.Mathf.RoundToInt(UnityEngine.Input.mousePosition.x * oneOverScale);
@@ -914,6 +915,22 @@ namespace ClassicUO
                 Mouse.End();
             }
 
+            if (mouseMotion)
+            {
+                if (Mouse.IsDragging)
+                {
+                    UIManager.OnMouseDragging();
+                    _scene.OnMouseDragging();
+                }
+
+                if (Mouse.IsDragging && !_dragStarted)
+                {
+                    _dragStarted = true;
+                }
+            }
+
+            //Keyboard handling
+
             var keymod = SDL.SDL_Keymod.KMOD_NONE;
             if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftAlt))
             {
@@ -1001,17 +1018,6 @@ namespace ClassicUO
                     UIManager.KeyboardFocusControl?.InvokeTextInput(text);
                     _scene.OnTextInput(text);
                 }
-            }
-
-            if (Mouse.IsDragging)
-            {
-                UIManager.OnMouseDragging();
-                _scene.OnMouseDragging();
-            }
-
-            if ( Mouse.IsDragging && !_dragStarted && mouseMotion)
-            {
-                _dragStarted = true;
             }
         }
     }
