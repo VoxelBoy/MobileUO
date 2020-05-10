@@ -86,6 +86,7 @@ public class UnityMain : MonoBehaviour
 		//Force update game viewport render texture
 		if (Client.Game != null && Client.Game.Scene is GameScene gameScene)
 		{
+			gameScene.UpdateDrawPosition = true;
 			gameScene.GetViewPort();
 		}
 	}

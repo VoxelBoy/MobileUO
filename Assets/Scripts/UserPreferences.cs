@@ -12,8 +12,12 @@ public static class UserPreferences
         get => customScaleSize;
         set
         {
-            customScaleSize = value;
-            PlayerPrefs.SetString(customScaleSizePrefKey, customScaleSize.ToString());
+            if (customScaleSize != value)
+            {
+                customScaleSize = value;
+                PlayerPrefs.SetString(customScaleSizePrefKey, customScaleSize.ToString());
+                CustomScaleSizeChanged?.Invoke();
+            }
         }
     }
 
@@ -21,7 +25,6 @@ public static class UserPreferences
 
     public static void Initialize()
     {
-        customScaleSize = (ScaleSizes) Enum.Parse(typeof(ScaleSizes), PlayerPrefs.GetString(customScaleSizePrefKey, customScaleSizeDefaultKey));
-        CustomScaleSizeChanged?.Invoke();
+        CustomScaleSize = (ScaleSizes) Enum.Parse(typeof(ScaleSizes), PlayerPrefs.GetString(customScaleSizePrefKey, customScaleSizeDefaultKey));
     }
 }
