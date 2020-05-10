@@ -789,6 +789,7 @@ namespace ClassicUO
 
         private readonly UnityEngine.KeyCode[] _keyCodeEnumValues = (UnityEngine.KeyCode[]) Enum.GetValues(typeof(UnityEngine.KeyCode));
         private UnityEngine.Vector3 lastMousePosition;
+        private bool mouseWasDown = false;
 
         private void UnityInputUpdate()
         {
@@ -826,7 +827,11 @@ namespace ClassicUO
             Mouse.IsDragging = Mouse.LButtonPressed || Mouse.RButtonPressed || Mouse.MButtonPressed;
             Mouse.RealPosition = Mouse.Position;
 
-            var mouseMotion = UnityEngine.Input.mousePosition != lastMousePosition;
+            //Added additional check for mouseWasDown because otherwise, on mobile, tapping somewhere would immediately
+            //set mouseMotion to true since the previous tap position was almost guaranteed to be at another position
+            //due to input inaccuracy. We do not want a new tap to be recognized as a mouseMotion.
+            var mouseMotion = UnityEngine.Input.mousePosition != lastMousePosition && mouseWasDown;
+            
             lastMousePosition = UnityEngine.Input.mousePosition;
 
             if (_dragStarted && !Mouse.LButtonPressed)
@@ -836,6 +841,7 @@ namespace ClassicUO
 
             if (leftMouseDown)
             {
+                mouseWasDown = true;
                 Mouse.Begin();
                 Mouse.LDropPosition = Mouse.Position;
                 Mouse.CancelDoubleClick = false;
@@ -865,6 +871,7 @@ namespace ClassicUO
             }
             else if(leftMouseUp)
             {
+                mouseWasDown = false;
                 if (Mouse.LastLeftButtonClickTime != 0xFFFF_FFFF)
                 {
                     if (!UIManager.HadMouseDownOnGump(MouseButtonType.Left))
