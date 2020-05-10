@@ -1002,11 +1002,11 @@ namespace ClassicUO.Network
 
                     if (first == null)
                     {
-                        Log.Warn("buy item not found");
+                        //Log.Warn("buy item not found");
                         continue;
                     }
 
-                    bool reverse = (first as Item)?.X != 1;
+                    bool reverse = item.Graphic != 0x2AF8; //hardcoded logic in original client that we must match
 
                     if (reverse)
                     {
@@ -2019,12 +2019,20 @@ namespace ClassicUO.Network
                 if (first == null)
                     return;
 
-                bool reverse = (first as Item)?.X != 1;
-
-                if (reverse)
+                bool reverse = false;
+                if (container.Graphic == 0x2AF8) //hardcoded logic in original client that we must match
                 {
+                    //sort the contents
+                    first = container.SortContents<Item>((x, y) => x.X - y.X);
+                }
+                else
+                {
+                    //skip to last item and read in reverse later
+                    reverse = true;
                     while (first?.Next != null)
-                        first = first.Next;
+                    {
+                        first = first.Next; 
+                    }
                 }
 
                 for (int i = 0; i < count; i++)
@@ -4367,8 +4375,32 @@ namespace ClassicUO.Network
                                           movingDirection, 
                                           facingDirection, 
                                           x, y, (sbyte) z);
-            else 
-                UpdateGameObject(serial, multi.Graphic, 0, multi.Amount, x, y, (sbyte) z, facingDirection, multi.Hue, multi.Flags, 0, 2, 1);
+            else
+            {
+
+                //UpdateGameObject(serial, 
+                //                 multi.Graphic, 
+                //                 0,
+                //                 multi.Amount, 
+                //                 x, 
+                //                 y, 
+                //                 (sbyte) z,
+                //                 facingDirection,
+                //                 multi.Hue, 
+                //                 multi.Flags, 
+                //                 0, 
+                //                 2, 
+                //                 1);
+                multi.X = x;
+                multi.Y = y;
+                multi.Z = (sbyte) z;
+                multi.AddToTile();
+                multi.UpdateScreenPosition();
+                if (World.HouseManager.TryGetHouse(serial, out var house))
+                {
+                    house.Generate(true, true, true);
+                }
+            }
 
 
             int count = p.ReadUShort();
@@ -4415,20 +4447,36 @@ namespace ClassicUO.Network
                     (sbyte) (z - cz));
                 else
                 {
-                    UpdateGameObject(cSerial,
+                    if (cSerial == World.Player)
+                    {
+                        UpdatePlayer(cSerial, 
                                      ent.Graphic,
                                      0, 
-                                     0,
-                                     cx,
+                                     ent.Hue,
+                                     ent.Flags, 
+                                     cx, 
                                      cy,
                                      (sbyte) cz,
-                                     SerialHelper.IsMobile(ent) ?
-                                         ((Mobile) ent).Direction : 0,
-                                     ent.Hue,
-                                     ent.Flags,
-                                     0,
-                                     0,
-                                     1);
+                                     0, 
+                                     World.Player.Direction);
+                    }
+                    else
+                    {
+                        UpdateGameObject(cSerial,
+                                         ent.Graphic,
+                                         0,
+                                         0,
+                                         cx,
+                                         cy,
+                                         (sbyte) cz,
+                                         SerialHelper.IsMobile(ent) ?
+                                             ((Mobile) ent).Direction : 0,
+                                         ent.Hue,
+                                         ent.Flags,
+                                         0,
+                                         0,
+                                         1);
+                    }
                 }
             }
         }

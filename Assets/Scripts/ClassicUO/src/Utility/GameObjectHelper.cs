@@ -54,8 +54,7 @@ namespace ClassicUO.Utility
                     return true;
 
                 ref readonly StaticTiles data = ref TileDataLoader.Instance.StaticData[g];
-
-                if (!data.IsNoDiagonal || data.IsAnimated && World.Player != null && World.Player.Race == RaceType.GARGOYLE) 
+                if (!data.IsNoDiagonal || (data.IsAnimated && World.Player != null && World.Player.Race == RaceType.GARGOYLE))
                     return false;
             }
 
