@@ -22,6 +22,8 @@ public class Init : MonoBehaviour
         ConsoleRedirect.Redirect();
         Application.targetFrameRate = 60;
         
+        UserPreferences.Initialize();
+
         StateManager.AddState(new BootState());
         StateManager.AddState(new ServerConfigurationState(serverConfigurationUiParent));
         StateManager.AddState(new DownloadState(downloadPresenter, forceDownloadsInEditor));

@@ -123,7 +123,7 @@ namespace ClassicUO.IO.Resources
             });
         }
 
-        public override UOTexture16 GetTexture(uint g)
+        public override UOTexture16 GetTexture(uint g, bool keepData = false)
         {
             if (g >= Resources.Length)
                 return null;
@@ -138,7 +138,7 @@ namespace ClassicUO.IO.Resources
                     return null;
 
                 texture = new UOTexture16(w, h);
-                texture.PushData(pixels);
+                texture.PushData(pixels, keepData);
 
                 SaveID(g);
             }

@@ -172,7 +172,7 @@ namespace ClassicUO.Game.UI.Gumps
         private void GenerateVirtualTextures()
         {
             _shopGumpParts = new UOTexture[12];
-            UOTexture16 t = GumpsLoader.Instance.GetTexture(0x0870);
+            UOTexture16 t = GumpsLoader.Instance.GetTexture(0x0870, true);
             UOTexture[][] splits = new UOTexture[4][];
 
             splits[0] = Utility.GraphicHelper.SplitTexture16(t,
@@ -182,7 +182,7 @@ namespace ClassicUO.Game.UI.Gumps
                                                                  {0, 64, t.Width, 124},
                                                                  {0, 124, t.Width, t.Height - 124}
                                                              });
-            t = GumpsLoader.Instance.GetTexture(0x0871);
+            t = GumpsLoader.Instance.GetTexture(0x0871, true);
 
             splits[1] = Utility.GraphicHelper.SplitTexture16(t,
                                                              new int[3, 4]
@@ -191,7 +191,7 @@ namespace ClassicUO.Game.UI.Gumps
                                                                  {0, 64, t.Width, 94},
                                                                  {0, 94, t.Width, t.Height - 94}
                                                              });
-            t = GumpsLoader.Instance.GetTexture(0x0872);
+            t = GumpsLoader.Instance.GetTexture(0x0872, true);
 
             splits[2] = Utility.GraphicHelper.SplitTexture16(t,
                                                              new int[3, 4]
@@ -200,7 +200,7 @@ namespace ClassicUO.Game.UI.Gumps
                                                                  {0, 64, t.Width, 124},
                                                                  {0, 124, t.Width, t.Height - 124}
                                                              });
-            t = GumpsLoader.Instance.GetTexture(0x0873);
+            t = GumpsLoader.Instance.GetTexture(0x0873, true);
 
             splits[3] = Utility.GraphicHelper.SplitTexture16(t,
                                                              new int[3, 4]

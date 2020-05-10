@@ -243,97 +243,8 @@ namespace ClassicUO.Renderer
             SeenTextures.Add(texture);
 #endif
 
-            var vertex = new PositionTextureColor4();
-
             int w = texture.Width;
             int h = texture.Height;
-
-            if (mirror)
-            {
-                vertex.Position0.x = x + w;
-                vertex.Position0.y = y + h;
-                vertex.Position0.z = 0;
-                vertex.Normal0.x = 0;
-                vertex.Normal0.y = 0;
-                vertex.Normal0.z = 1;
-                vertex.TextureCoordinate0.x = 0;
-                vertex.TextureCoordinate0.y = 1;
-                vertex.TextureCoordinate0.z = 0;
-
-                vertex.Position1.x = x;
-                vertex.Position1.y = y + h;
-                vertex.Position0.z = 0;
-                vertex.Normal1.x = 0;
-                vertex.Normal1.y = 0;
-                vertex.Normal1.z = 1;
-                vertex.TextureCoordinate1.x = 1;
-                vertex.TextureCoordinate1.y = 1;
-                vertex.TextureCoordinate1.z = 0;
-
-                vertex.Position2.x = x + w;
-                vertex.Position2.y = y;
-                vertex.Position2.z = 0;
-                vertex.Normal2.x = 0;
-                vertex.Normal2.y = 0;
-                vertex.Normal2.z = 1;
-                vertex.TextureCoordinate2.x = 0;
-                vertex.TextureCoordinate2.y = 0;
-                vertex.TextureCoordinate2.z = 0;
-
-                vertex.Position3.x = x;
-                vertex.Position3.y = y;
-                vertex.Position3.z = 0;
-                vertex.Normal3.x = 0;
-                vertex.Normal3.y = 0;
-                vertex.Normal3.z = 1;
-                vertex.TextureCoordinate3.x = 1;
-                vertex.TextureCoordinate3.y = 0;
-                vertex.TextureCoordinate3.z = 0;
-            }
-            else
-            {
-                vertex.Position0.x = x;
-                vertex.Position0.y = y + h;
-                vertex.Position0.z = 0;
-                vertex.Normal0.x = 0;
-                vertex.Normal0.y = 0;
-                vertex.Normal0.z = 1;
-                vertex.TextureCoordinate0.x = 0;
-                vertex.TextureCoordinate0.y = 1;
-                vertex.TextureCoordinate0.z = 0;
-
-                vertex.Position1.x = x + w;
-                vertex.Position1.y = y + h;
-                vertex.Position1.z = 0;
-                vertex.Normal1.x = 0;
-                vertex.Normal1.y = 0;
-                vertex.Normal1.z = 1;
-                vertex.TextureCoordinate1.x = 1;
-                vertex.TextureCoordinate1.y = 1;
-                vertex.TextureCoordinate1.z = 0;
-
-                vertex.Position2.x = x;
-                vertex.Position2.y = y;
-                vertex.Position2.z = 0;
-                vertex.Normal2.x = 0;
-                vertex.Normal2.y = 0;
-                vertex.Normal2.z = 1;
-                vertex.TextureCoordinate2.x = 0;
-                vertex.TextureCoordinate2.y = 0;
-                vertex.TextureCoordinate2.z = 0;
-
-                vertex.Position3.x = x + w;
-                vertex.Position3.y = y;
-                vertex.Position3.z = 0;
-                vertex.Normal3.x = 0;
-                vertex.Normal3.y = 0;
-                vertex.Normal3.z = 1;
-                vertex.TextureCoordinate3.x = 1;
-                vertex.TextureCoordinate3.y = 0;
-                vertex.TextureCoordinate3.z = 0;
-            }
-
-            vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
 
             if (UseGraphicsDrawTexture)
             {
@@ -346,6 +257,95 @@ namespace ClassicUO.Renderer
             }
             else
             {
+                var vertex = new PositionTextureColor4();
+
+                if (mirror)
+                {
+                    vertex.Position0.x = x + w;
+                    vertex.Position0.y = y + h;
+                    vertex.Position0.z = 0;
+                    vertex.Normal0.x = 0;
+                    vertex.Normal0.y = 0;
+                    vertex.Normal0.z = 1;
+                    vertex.TextureCoordinate0.x = 0;
+                    vertex.TextureCoordinate0.y = 1;
+                    vertex.TextureCoordinate0.z = 0;
+
+                    vertex.Position1.x = x;
+                    vertex.Position1.y = y + h;
+                    vertex.Position0.z = 0;
+                    vertex.Normal1.x = 0;
+                    vertex.Normal1.y = 0;
+                    vertex.Normal1.z = 1;
+                    vertex.TextureCoordinate1.x = 1;
+                    vertex.TextureCoordinate1.y = 1;
+                    vertex.TextureCoordinate1.z = 0;
+
+                    vertex.Position2.x = x + w;
+                    vertex.Position2.y = y;
+                    vertex.Position2.z = 0;
+                    vertex.Normal2.x = 0;
+                    vertex.Normal2.y = 0;
+                    vertex.Normal2.z = 1;
+                    vertex.TextureCoordinate2.x = 0;
+                    vertex.TextureCoordinate2.y = 0;
+                    vertex.TextureCoordinate2.z = 0;
+
+                    vertex.Position3.x = x;
+                    vertex.Position3.y = y;
+                    vertex.Position3.z = 0;
+                    vertex.Normal3.x = 0;
+                    vertex.Normal3.y = 0;
+                    vertex.Normal3.z = 1;
+                    vertex.TextureCoordinate3.x = 1;
+                    vertex.TextureCoordinate3.y = 0;
+                    vertex.TextureCoordinate3.z = 0;
+                }
+                else
+                {
+                    vertex.Position0.x = x;
+                    vertex.Position0.y = y + h;
+                    vertex.Position0.z = 0;
+                    vertex.Normal0.x = 0;
+                    vertex.Normal0.y = 0;
+                    vertex.Normal0.z = 1;
+                    vertex.TextureCoordinate0.x = 0;
+                    vertex.TextureCoordinate0.y = 1;
+                    vertex.TextureCoordinate0.z = 0;
+
+                    vertex.Position1.x = x + w;
+                    vertex.Position1.y = y + h;
+                    vertex.Position1.z = 0;
+                    vertex.Normal1.x = 0;
+                    vertex.Normal1.y = 0;
+                    vertex.Normal1.z = 1;
+                    vertex.TextureCoordinate1.x = 1;
+                    vertex.TextureCoordinate1.y = 1;
+                    vertex.TextureCoordinate1.z = 0;
+
+                    vertex.Position2.x = x;
+                    vertex.Position2.y = y;
+                    vertex.Position2.z = 0;
+                    vertex.Normal2.x = 0;
+                    vertex.Normal2.y = 0;
+                    vertex.Normal2.z = 1;
+                    vertex.TextureCoordinate2.x = 0;
+                    vertex.TextureCoordinate2.y = 0;
+                    vertex.TextureCoordinate2.z = 0;
+
+                    vertex.Position3.x = x + w;
+                    vertex.Position3.y = y;
+                    vertex.Position3.z = 0;
+                    vertex.Normal3.x = 0;
+                    vertex.Normal3.y = 0;
+                    vertex.Normal3.z = 1;
+                    vertex.TextureCoordinate3.x = 1;
+                    vertex.TextureCoordinate3.y = 0;
+                    vertex.TextureCoordinate3.z = 0;
+                }
+
+                vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
+            
                 RenderVertex(vertex, texture, hue);
             }
 
@@ -1019,38 +1019,6 @@ namespace ClassicUO.Renderer
             SeenTextures.Add(texture);
 #endif
 
-            var vertex = new PositionTextureColor4();
-
-            vertex.Position0.x = x;
-            vertex.Position0.y = y;
-            vertex.Position0.z = 0;
-            vertex.TextureCoordinate0.x = 0;
-            vertex.TextureCoordinate0.y = 0;
-            vertex.TextureCoordinate0.z = 0;
-
-            vertex.Position1.x = x + texture.Width;
-            vertex.Position1.y = y;
-            vertex.Position1.z = 0;
-            vertex.TextureCoordinate1.x = 1;
-            vertex.TextureCoordinate1.y = 0;
-            vertex.TextureCoordinate1.z = 0;
-
-            vertex.Position2.x = x;
-            vertex.Position2.y = y + texture.Height;
-            vertex.Position2.z = 0;
-            vertex.TextureCoordinate2.x = 0;
-            vertex.TextureCoordinate2.y = 1;
-            vertex.TextureCoordinate2.z = 0;
-
-            vertex.Position3.x = x + texture.Width;
-            vertex.Position3.y = y + texture.Height;
-            vertex.Position3.z = 0;
-            vertex.TextureCoordinate3.x = 1;
-            vertex.TextureCoordinate3.y = 1;
-            vertex.TextureCoordinate3.z = 0;
-
-            vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
-
             if (UseGraphicsDrawTexture)
             {
                 var rect = new Rect(x * scale, y * scale, texture.Width * scale, texture.Height * scale);
@@ -1062,6 +1030,38 @@ namespace ClassicUO.Renderer
             }
             else
             {
+                var vertex = new PositionTextureColor4();
+
+                vertex.Position0.x = x;
+                vertex.Position0.y = y;
+                vertex.Position0.z = 0;
+                vertex.TextureCoordinate0.x = 0;
+                vertex.TextureCoordinate0.y = 0;
+                vertex.TextureCoordinate0.z = 0;
+
+                vertex.Position1.x = x + texture.Width;
+                vertex.Position1.y = y;
+                vertex.Position1.z = 0;
+                vertex.TextureCoordinate1.x = 1;
+                vertex.TextureCoordinate1.y = 0;
+                vertex.TextureCoordinate1.z = 0;
+
+                vertex.Position2.x = x;
+                vertex.Position2.y = y + texture.Height;
+                vertex.Position2.z = 0;
+                vertex.TextureCoordinate2.x = 0;
+                vertex.TextureCoordinate2.y = 1;
+                vertex.TextureCoordinate2.z = 0;
+
+                vertex.Position3.x = x + texture.Width;
+                vertex.Position3.y = y + texture.Height;
+                vertex.Position3.z = 0;
+                vertex.TextureCoordinate3.x = 1;
+                vertex.TextureCoordinate3.y = 1;
+                vertex.TextureCoordinate3.z = 0;
+
+                vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
+                
                 RenderVertex(vertex, texture, hue);
             }
 
@@ -1080,46 +1080,6 @@ namespace ClassicUO.Renderer
             float minY = sy / (float) texture.Height;
             float maxY = (sy + sheight) / texture.Height;
 
-            var vertex = new PositionTextureColor4();
-
-            vertex.Position0.x = x;
-            vertex.Position0.y = y;
-            vertex.Position0.z = 0;
-            vertex.Normal0.x = 0;
-            vertex.Normal0.y = 0;
-            vertex.Normal0.z = 1;
-            vertex.TextureCoordinate0.x = minX;
-            vertex.TextureCoordinate0.y = minY;
-            vertex.TextureCoordinate0.z = 0;
-            vertex.Position1.x = x + swidth;
-            vertex.Position1.y = y;
-            vertex.Position1.z = 0;
-            vertex.Normal1.x = 0;
-            vertex.Normal1.y = 0;
-            vertex.Normal1.z = 1;
-            vertex.TextureCoordinate1.x = maxX;
-            vertex.TextureCoordinate1.y = minY;
-            vertex.TextureCoordinate1.z = 0;
-            vertex.Position2.x = x;
-            vertex.Position2.y = y + sheight;
-            vertex.Position2.z = 0;
-            vertex.Normal2.x = 0;
-            vertex.Normal2.y = 0;
-            vertex.Normal2.z = 1;
-            vertex.TextureCoordinate2.x = minX;
-            vertex.TextureCoordinate2.y = maxY;
-            vertex.TextureCoordinate2.z = 0;
-            vertex.Position3.x = x + swidth;
-            vertex.Position3.y = y + sheight;
-            vertex.Position3.z = 0;
-            vertex.Normal3.x = 0;
-            vertex.Normal3.y = 0;
-            vertex.Normal3.z = 1;
-            vertex.TextureCoordinate3.x = maxX;
-            vertex.TextureCoordinate3.y = maxY;
-            vertex.TextureCoordinate3.z = 0;
-            vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
-
             if (UseGraphicsDrawTexture)
             {
                 hueMaterial.SetColor(Hue, new Color(hue.X,hue.Y,hue.Z));
@@ -1131,6 +1091,46 @@ namespace ClassicUO.Renderer
             }
             else
             {
+                var vertex = new PositionTextureColor4();
+
+                vertex.Position0.x = x;
+                vertex.Position0.y = y;
+                vertex.Position0.z = 0;
+                vertex.Normal0.x = 0;
+                vertex.Normal0.y = 0;
+                vertex.Normal0.z = 1;
+                vertex.TextureCoordinate0.x = minX;
+                vertex.TextureCoordinate0.y = minY;
+                vertex.TextureCoordinate0.z = 0;
+                vertex.Position1.x = x + swidth;
+                vertex.Position1.y = y;
+                vertex.Position1.z = 0;
+                vertex.Normal1.x = 0;
+                vertex.Normal1.y = 0;
+                vertex.Normal1.z = 1;
+                vertex.TextureCoordinate1.x = maxX;
+                vertex.TextureCoordinate1.y = minY;
+                vertex.TextureCoordinate1.z = 0;
+                vertex.Position2.x = x;
+                vertex.Position2.y = y + sheight;
+                vertex.Position2.z = 0;
+                vertex.Normal2.x = 0;
+                vertex.Normal2.y = 0;
+                vertex.Normal2.z = 1;
+                vertex.TextureCoordinate2.x = minX;
+                vertex.TextureCoordinate2.y = maxY;
+                vertex.TextureCoordinate2.z = 0;
+                vertex.Position3.x = x + swidth;
+                vertex.Position3.y = y + sheight;
+                vertex.Position3.z = 0;
+                vertex.Normal3.x = 0;
+                vertex.Normal3.y = 0;
+                vertex.Normal3.z = 1;
+                vertex.TextureCoordinate3.x = maxX;
+                vertex.TextureCoordinate3.y = maxY;
+                vertex.TextureCoordinate3.z = 0;
+                vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
+                
                 RenderVertex(vertex, texture, hue);
             }
         }
@@ -1272,50 +1272,6 @@ namespace ClassicUO.Renderer
 #if BATCHER_DEBUG
             SeenTextures.Add(texture);
 #endif
-            var vertex = new PositionTextureColor4();
-
-            vertex.Position0.x = x;
-            vertex.Position0.y = y;
-            vertex.Position0.z = 0;
-            vertex.Normal0.x = 0;
-            vertex.Normal0.y = 0;
-            vertex.Normal0.z = 1;
-            vertex.TextureCoordinate0.x = 0;
-            vertex.TextureCoordinate0.y = 0;
-            vertex.TextureCoordinate0.z = 0;
-
-            vertex.Position1.x = x + width;
-            vertex.Position1.y = y;
-            vertex.Position1.z = 0;
-            vertex.Normal1.x = 0;
-            vertex.Normal1.y = 0;
-            vertex.Normal1.z = 1;
-            vertex.TextureCoordinate1.x = 1;
-            vertex.TextureCoordinate1.y = 0;
-            vertex.TextureCoordinate1.z = 0;
-
-            vertex.Position2.x = x;
-            vertex.Position2.y = y + height;
-            vertex.Position2.z = 0;
-            vertex.Normal2.x = 0;
-            vertex.Normal2.y = 0;
-            vertex.Normal2.z = 1;
-            vertex.TextureCoordinate2.x = 0;
-            vertex.TextureCoordinate2.y = 1;
-            vertex.TextureCoordinate2.z = 0;
-
-            vertex.Position3.x = x + width;
-            vertex.Position3.y = y + height;
-            vertex.Position3.z = 0;
-            vertex.Normal3.x = 0;
-            vertex.Normal3.y = 0;
-            vertex.Normal3.z = 1;
-            vertex.TextureCoordinate3.x = 1;
-            vertex.TextureCoordinate3.y = 1;
-            vertex.TextureCoordinate3.z = 0;
-
-            vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
-
             if (UseGraphicsDrawTexture)
             {
                 hueMaterial.SetColor(Hue, new Color(hue.X,hue.Y,hue.Z));
@@ -1324,6 +1280,50 @@ namespace ClassicUO.Renderer
             }
             else
             {
+                var vertex = new PositionTextureColor4();
+
+                vertex.Position0.x = x;
+                vertex.Position0.y = y;
+                vertex.Position0.z = 0;
+                vertex.Normal0.x = 0;
+                vertex.Normal0.y = 0;
+                vertex.Normal0.z = 1;
+                vertex.TextureCoordinate0.x = 0;
+                vertex.TextureCoordinate0.y = 0;
+                vertex.TextureCoordinate0.z = 0;
+
+                vertex.Position1.x = x + width;
+                vertex.Position1.y = y;
+                vertex.Position1.z = 0;
+                vertex.Normal1.x = 0;
+                vertex.Normal1.y = 0;
+                vertex.Normal1.z = 1;
+                vertex.TextureCoordinate1.x = 1;
+                vertex.TextureCoordinate1.y = 0;
+                vertex.TextureCoordinate1.z = 0;
+
+                vertex.Position2.x = x;
+                vertex.Position2.y = y + height;
+                vertex.Position2.z = 0;
+                vertex.Normal2.x = 0;
+                vertex.Normal2.y = 0;
+                vertex.Normal2.z = 1;
+                vertex.TextureCoordinate2.x = 0;
+                vertex.TextureCoordinate2.y = 1;
+                vertex.TextureCoordinate2.z = 0;
+
+                vertex.Position3.x = x + width;
+                vertex.Position3.y = y + height;
+                vertex.Position3.z = 0;
+                vertex.Normal3.x = 0;
+                vertex.Normal3.y = 0;
+                vertex.Normal3.z = 1;
+                vertex.TextureCoordinate3.x = 1;
+                vertex.TextureCoordinate3.y = 1;
+                vertex.TextureCoordinate3.z = 0;
+
+                vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
+                
                 RenderVertex(vertex, texture, hue);
             }
 

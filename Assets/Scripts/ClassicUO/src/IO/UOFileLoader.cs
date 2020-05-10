@@ -72,7 +72,7 @@ namespace ClassicUO.IO
         }
 
         protected readonly T[] Resources;
-        public abstract T GetTexture(uint id);
+        public abstract T GetTexture(uint id, bool keepData = false);
 
         protected void SaveID(uint id)
             => _usedTextures.AddLast(id);

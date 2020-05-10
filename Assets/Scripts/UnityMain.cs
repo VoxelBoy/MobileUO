@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using ClassicUO;
@@ -50,23 +51,6 @@ public class UnityMain : MonoBehaviour
 	[SerializeField]
 	private bool showMovementJoystickOnNonMobilePlatforms;
 
-	private ScaleSizes customScaleSize = ScaleSizes.Default;
-
-	public ScaleSizes CustomScaleSize
-	{
-		get => customScaleSize;
-		set
-		{
-			customScaleSize = value;
-			ApplyScalingFactor();
-			//Force update game viewport render texture
-			if (Client.Game != null && Client.Game.Scene is GameScene gameScene)
-			{
-				gameScene.GetViewPort();
-			}
-		}
-	}
-
 	private static readonly int ScissorStateOverrideNameId = Shader.PropertyToID("ScissorStateOverride");
 
 	private ScissorStateOverride scissorStateOverride = ScissorStateOverride.On;
@@ -93,7 +77,18 @@ public class UnityMain : MonoBehaviour
 	void Start ()
     {
 	    movementJoystick.gameObject.SetActive(false);
+	    UserPreferences.CustomScaleSizeChanged += OnCustomScaleSizeChanged;
     }
+
+	private void OnCustomScaleSizeChanged()
+	{
+		ApplyScalingFactor();
+		//Force update game viewport render texture
+		if (Client.Game != null && Client.Game.Scene is GameScene gameScene)
+		{
+			gameScene.GetViewPort();
+		}
+	}
 
 	void Update ()
 	{
@@ -199,9 +194,21 @@ public class UnityMain : MonoBehaviour
 	    CUOEnviroment.ExecutablePath = config.GetPathToSaveFiles();
 
 	    //Load and adjust settings
-	    Settings.GlobalSettings = JsonConvert.DeserializeObject<Settings>(Resources.Load<TextAsset>("settings").text);
+	    var settingsFilePath = Settings.GetSettingsFilepath();
+	    if (File.Exists(settingsFilePath))
+	    {
+		    Settings.GlobalSettings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(settingsFilePath));
+	    }
+	    else
+	    {
+		    Settings.GlobalSettings = JsonConvert.DeserializeObject<Settings>(Resources.Load<TextAsset>("settings").text);
+	    }
+
 	    Settings.GlobalSettings.IP = config.UoServerUrl;
 	    Settings.GlobalSettings.Port = ushort.Parse(config.UoServerPort);
+	    
+	    //Empty the plugins array because no plugins are working at the moment
+	    Settings.GlobalSettings.Plugins = new string[0];
 	    
 	    //If connecting to UO Outlands, set shard type to 2 for outlands
 	    Settings.GlobalSettings.ShardType = config.UoServerUrl.ToLower().Contains("ououtlands") ? 2 : 0;
@@ -255,6 +262,8 @@ public class UnityMain : MonoBehaviour
 
     private void OnProfileLoaded()
     {
+	    //Disable XBR as MobileUO does not yet support that effect
+	    ProfileManager.Current.UseXBR = false;
 	    //Disable auto move on mobile platform
 	    ProfileManager.Current.DisableAutoMove = Application.isMobilePlatform;
 	    //Prevent stack split gump from appearing on mobile
@@ -287,9 +296,9 @@ public class UnityMain : MonoBehaviour
 		    scale = isGameScene ? gameScale : loginScale;
 	    }
 
-	    if (CustomScaleSize != ScaleSizes.Default && isGameScene)
+	    if (UserPreferences.CustomScaleSize != ScaleSizes.Default && isGameScene)
 	    {
-		    scale *= (int)CustomScaleSize / 100f;
+		    scale *= (int)UserPreferences.CustomScaleSize / 100f;
 	    }
 
 	    ((UnityGameWindow) Client.Game.Window).Scale = scale;

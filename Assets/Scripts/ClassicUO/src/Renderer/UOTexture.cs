@@ -37,9 +37,13 @@ namespace ClassicUO.Renderer
 
         }
 
-        public void PushData(ushort[] data)
+        public void PushData(ushort[] data, bool keepData = false)
         {
-            _data = data;
+            if (keepData)
+            {
+                _data = data;
+            }
+
             SetData(data);
         }
 
@@ -64,18 +68,38 @@ namespace ClassicUO.Renderer
 
         public override bool Contains(int x, int y, bool pixelCheck = true)
         {
-            if (_data != null && x >= 0 && y >= 0 && x < Width && y < Height)
+            if (UnityTexture != null && x >= 0 && y >= 0 && x < Width && y < Height)
             {
                 if (!pixelCheck)
                     return true;
 
                 int pos = y * Width + x;
-
-                if (pos < _data.Length)
-                    return _data[pos] != 0;
+                
+                return GetDataAtPos(pos) != 0;
             }
 
             return false;
+        }
+        
+        //Used for Contains checks in texture using Unity's own texture data, instead of keeping a copy of the data in _data field
+        private uint GetDataAtPos(int pos)
+        {
+            //The index calculation here is the same as in Texture2D.SetData
+            var width = UnityTexture.width;
+            int x = pos % width;
+            int y = pos / width;
+            y *= width;
+            var index = y + (width - x - 1);
+            
+            var data = (UnityTexture as UnityEngine.Texture2D).GetRawTextureData<uint>();
+            //We reverse the index because we had already reversed it in Texture2D.SetData
+            var reversedIndex = data.Length - index - 1;
+            if (reversedIndex < data.Length && reversedIndex >= 0)
+            {
+                return data[reversedIndex];
+            }
+
+            return 0;
         }
     }
 

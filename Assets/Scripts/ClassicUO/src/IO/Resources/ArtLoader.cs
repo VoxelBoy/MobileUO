@@ -89,7 +89,7 @@ namespace ClassicUO.IO.Resources
             });
         }
 
-        public override ArtTexture GetTexture(uint g)
+        public override ArtTexture GetTexture(uint g, bool keepData = false)
         {
             if (g >= Resources.Length)
                 return null;

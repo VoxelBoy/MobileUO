@@ -136,8 +136,8 @@ namespace ClassicUO
             GraphicsDevice.Textures[1] = _hues_sampler[0];
             GraphicsDevice.Textures[2] = _hues_sampler[1];
             
-            // File.WriteAllBytes(Path.Combine(UnityEngine.Application.persistentDataPath, "hue1.png"), UnityEngine.ImageConversion.EncodeToPNG(GraphicsDevice.Textures[1].UnityTexture as UnityEngine.Texture2D));
-            // File.WriteAllBytes(Path.Combine(UnityEngine.Application.persistentDataPath, "hue2.png"), UnityEngine.ImageConversion.EncodeToPNG(GraphicsDevice.Textures[2].UnityTexture as UnityEngine.Texture2D));
+            // File.WriteAllBytes(Path.Combine(UnityEngine.Application.persistentDataPath, "hue1.png"), UnityEngine.ImageConversion.EncodeToPNG(_hues_sampler[0].UnityTexture as UnityEngine.Texture2D));
+            // File.WriteAllBytes(Path.Combine(UnityEngine.Application.persistentDataPath, "hue2.png"), UnityEngine.ImageConversion.EncodeToPNG(_hues_sampler[1].UnityTexture as UnityEngine.Texture2D));
 
             AuraManager.CreateAuraTexture();
             UIManager.InitializeGameCursor();
@@ -156,10 +156,10 @@ namespace ClassicUO
             Settings.GlobalSettings.Save();
             Plugin.OnClosing();
             
-            GraphicsDevice.Textures[1]?.Dispose();
-            GraphicsDevice.Textures[1] = null;
-            GraphicsDevice.Textures[2]?.Dispose();
-            GraphicsDevice.Textures[2] = null;
+            _hues_sampler[0]?.Dispose();
+            _hues_sampler[0] = null;
+            _hues_sampler[1]?.Dispose();
+            _hues_sampler[1] = null;
             _scene?.Dispose();
             AuraManager.Dispose();
             UIManager.Dispose();
@@ -796,6 +796,7 @@ namespace ClassicUO
 
             Mouse.Position.X = UnityEngine.Mathf.RoundToInt(UnityEngine.Input.mousePosition.x * oneOverScale);
             Mouse.Position.Y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - UnityEngine.Input.mousePosition.y) * oneOverScale);
+            Mouse.RealPosition = Mouse.Position;
 
             var leftMouseDown = UnityEngine.Input.GetMouseButtonDown(0);
             var leftMouseHeld = UnityEngine.Input.GetMouseButton(0);

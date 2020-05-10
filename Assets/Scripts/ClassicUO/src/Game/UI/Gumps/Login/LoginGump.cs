@@ -189,6 +189,8 @@ namespace ClassicUO.Game.UI.Gumps.Login
                 });
             }
 
+            //Upscale arrow button on mobile
+            UpscaleNextArrow();
 
             // Account Text Input Background
             Add(new ResizePic(0x0BB8)
@@ -265,7 +267,19 @@ namespace ClassicUO.Game.UI.Gumps.Login
                 _textboxPassword.SetKeyboardFocus();
         }
 
-
+        private void UpscaleNextArrow()
+        {
+            //We use a size threshold because for some servers or client versions, the next arrow is actually a Login
+            //button and due to its size and position on screen, it doesn't make sense to scale it
+            const int sizeThreshold = 30;
+            if (UnityEngine.Application.isMobilePlatform && _nextArrow0.Width < sizeThreshold && _nextArrow0.Height < sizeThreshold)
+            {
+                const float upscaleFactor = 1.5f;
+                _nextArrow0.Width = UnityEngine.Mathf.RoundToInt(_nextArrow0.Width * upscaleFactor);
+                _nextArrow0.Height = UnityEngine.Mathf.RoundToInt(_nextArrow0.Height * upscaleFactor);
+                _nextArrow0.ContainsByBounds = true;
+            }
+        }
 
 
         public override void OnKeyboardReturn(int textID, string text)
@@ -294,6 +308,9 @@ namespace ClassicUO.Game.UI.Gumps.Login
             {
                 _time = (float) totalMS + 1000;
                 _nextArrow0.ButtonGraphicNormal = _nextArrow0.ButtonGraphicNormal == _buttonNormal ? _buttonOver : _buttonNormal;
+                
+                //Setting ButtonGraphicNormal resets the button's Width and Height so we need to apply the upscaling again
+                UpscaleNextArrow();
             }
 
             if (_textboxPassword.HasKeyboardFocus)

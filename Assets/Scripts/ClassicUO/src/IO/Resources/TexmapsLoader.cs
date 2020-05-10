@@ -142,7 +142,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public override UOTexture GetTexture(uint g)
+        public override UOTexture GetTexture(uint g, bool keepData = false)
         {
             if (g >= Resources.Length)
                 return null;

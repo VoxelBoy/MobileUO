@@ -75,7 +75,7 @@ namespace ClassicUO.IO.Resources
             _instance = null;
         }
 
-        public override UOTexture16 GetTexture(uint id)
+        public override UOTexture16 GetTexture(uint id, bool keepData = false)
         {
             if (id >= Resources.Length)
                 return null;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,9 +14,16 @@ public class ScaleButtonPresenter : MonoBehaviour
 
     void Awake()
     {
-        scaleSizesValues = System.Enum.GetValues(typeof(ScaleSizes));
+        scaleSizesValues = Enum.GetValues(typeof(ScaleSizes));
         scaleSizesValuesLength = scaleSizesValues.Length;
+        scaleSizeIndex = Enum.GetNames(typeof(ScaleSizes)).ToList().IndexOf(UserPreferences.CustomScaleSize.ToString());
         button.onClick.AddListener(OnButtonClicked);
+        UpdateButtonText();
+    }
+
+    private void UpdateButtonText()
+    {
+        text.text = $"Scale: {(int) UserPreferences.CustomScaleSize}%";
     }
 
     private void OnButtonClicked()
@@ -26,7 +34,8 @@ public class ScaleButtonPresenter : MonoBehaviour
             scaleSizeIndex -= scaleSizesValuesLength;
         }
         var scaleSize = (ScaleSizes) scaleSizesValues.GetValue(scaleSizeIndex);
-        FindObjectOfType<UnityMain>().CustomScaleSize = scaleSize;
-        text.text = $"Scale: {((int) scaleSize)}%";
+        UserPreferences.CustomScaleSize = scaleSize;
+        
+        UpdateButtonText();
     }
 }
