@@ -169,7 +169,7 @@ PlayerSettings:
     iPhone: com.saltedcaramelgames.mobileuo
     tvOS: 
   buildNumber:
-    iPhone: 0.17
+    iPhone: 0.18
   AndroidBundleVersionCode: 18
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
@@ -456,36 +456,6 @@ PlayerSettings:
       m_SubKind: iPad
     - m_Textures:
       - {fileID: 2800000, guid: 3daa15d9d8f59419d8d62d4a7d88d703, type: 3}
-      m_Width: 180
-      m_Height: 180
-      m_Kind: 0
-      m_SubKind: iPhone
-    - m_Textures:
-      - {fileID: 0}
-      m_Width: 120
-      m_Height: 120
-      m_Kind: 0
-      m_SubKind: iPhone
-    - m_Textures:
-      - {fileID: 2800000, guid: 3daa15d9d8f59419d8d62d4a7d88d703, type: 3}
-      m_Width: 167
-      m_Height: 167
-      m_Kind: 0
-      m_SubKind: iPad
-    - m_Textures:
-      - {fileID: 0}
-      m_Width: 152
-      m_Height: 152
-      m_Kind: 0
-      m_SubKind: iPad
-    - m_Textures:
-      - {fileID: 0}
-      m_Width: 76
-      m_Height: 76
-      m_Kind: 0
-      m_SubKind: iPad
-    - m_Textures:
-      - {fileID: 2800000, guid: 3daa15d9d8f59419d8d62d4a7d88d703, type: 3}
       m_Width: 60
       m_Height: 60
       m_Kind: 2
@@ -507,6 +477,34 @@ PlayerSettings:
       m_Width: 20
       m_Height: 20
       m_Kind: 2
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: 3daa15d9d8f59419d8d62d4a7d88d703, type: 3}
+      m_Width: 180
+      m_Height: 180
+      m_Kind: 0
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 0}
+      m_Width: 120
+      m_Height: 120
+      m_Kind: 0
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: 3daa15d9d8f59419d8d62d4a7d88d703, type: 3}
+      m_Width: 167
+      m_Height: 167
+      m_Kind: 0
+      m_SubKind: iPad
+    - m_Textures: []
+      m_Width: 152
+      m_Height: 152
+      m_Kind: 0
+      m_SubKind: iPad
+    - m_Textures: []
+      m_Width: 76
+      m_Height: 76
+      m_Kind: 0
       m_SubKind: iPad
   m_BuildTargetBatching:
   - m_BuildTarget: Web
@@ -591,7 +589,7 @@ PlayerSettings:
   actionOnDotNetUnhandledException: 1
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
-  enableCrashReportAPI: 0
+  enableCrashReportAPI: 1
   cameraUsageDescription: 
   locationUsageDescription: 
   microphoneUsageDescription: 
@@ -824,6 +822,7 @@ PlayerSettings:
     Android: 1
   managedStrippingLevel:
     Android: 3
+    iPhone: 3
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 1
   additionalIl2CppArgs: 
@@ -892,7 +891,8 @@ PlayerSettings:
     daydream:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    UNet: 1
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
