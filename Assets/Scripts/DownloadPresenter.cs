@@ -91,10 +91,9 @@ public class DownloadPresenter : MonoBehaviour
 
     public void SetDownloadProgress(string file, float progress)
     {
-        var fileNameView = fileNameToFileNameView[file];
-        if (fileNameView != null)
+        if (fileNameToFileNameView.TryGetValue(file, out var fileNameView))
         {
-            fileNameView.SetProgress(progress);
+            fileNameView?.SetProgress(progress);
         }
     }
 }
