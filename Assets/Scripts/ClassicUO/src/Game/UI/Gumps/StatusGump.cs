@@ -128,68 +128,52 @@ namespace ClassicUO.Game.UI.Gumps
         {
             StatusGumpBase gump;
 
-
-            switch (Settings.GlobalSettings.ShardType)
+            if (!CUOEnviroment.IsOutlands)
             {
-                case 0: // modern
-
-                    gump = UIManager.GetGump<StatusGumpModern>();
-
-                    break;
-
-                case 1: // old
-
+                if (ProfileManager.Current.UseOldStatusGump)
+                {
                     gump = UIManager.GetGump<StatusGumpOld>();
-
-                    break;
-
-                case 2: // outlands
-
-                    gump = UIManager.GetGump<StatusGumpOutlands>();
-
-                    break;
-
-                default:
-
-                    gump = UIManager.Gumps.OfType<StatusGumpBase>().FirstOrDefault();
-
-                    break;
+                }
+                else
+                {
+                    gump = UIManager.GetGump<StatusGumpModern>();
+                }
             }
+            else
+            {
+                gump = UIManager.GetGump<StatusGumpOutlands>();
+            }
+
 
             gump?.SetInScreen();
 
             return gump;
         }
 
-        public static void AddStatusGump(int x, int y)
+        public static StatusGumpBase AddStatusGump(int x, int y)
         {
-            switch (Settings.GlobalSettings.ShardType)
+            StatusGumpBase gump;
+
+            if (!CUOEnviroment.IsOutlands)
             {
-                case 0: // modern
-
-                    UIManager.Add(new StatusGumpModern
-                    { X = x, Y = y });
-
-                    break;
-
-                case 1: // old
-
-                    UIManager.Add(new StatusGumpOld
-                    { X = x, Y = y });
-
-                    break;
-
-                case 2: // outlands
-
-                    UIManager.Add(new StatusGumpOutlands
-                    { X = x, Y = y });
-
-                    break;
-
-                default:
-
-                    throw new NotImplementedException();
+                if (ProfileManager.Current.UseOldStatusGump)
+                {
+                    gump = new StatusGumpOld();
+                }
+                else
+                {
+                    gump = new StatusGumpModern();
+                }
             }
+            else
+            {
+                gump = new StatusGumpOutlands();
+            }
+
+            gump.X = x;
+            gump.Y = y;
+
+            return gump;
         }
 
         protected static ushort GetStatLockGraphic(Lock lockStatus)
@@ -216,13 +200,11 @@ namespace ClassicUO.Game.UI.Gumps
 
         protected override void UpdateContents()
         {
-            if (Settings.GlobalSettings.ShardType != 1)
+            for (int i = 0; i < 3; i++)
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    Lock status = i == 0 ? World.Player.StrLock : i == 1 ? World.Player.DexLock : World.Player.IntLock;
+                Lock status = i == 0 ? World.Player.StrLock : i == 1 ? World.Player.DexLock : World.Player.IntLock;
+                if (_lockers != null && _lockers[i] != null)
                     _lockers[i].Graphic = GetStatLockGraphic(status);
-                }
             }
         }
 
@@ -291,7 +273,7 @@ namespace ClassicUO.Game.UI.Gumps
             _labels[(int)MobileStats.Intelligence] = text;
             Add(text);
 
-            text = new Label(!World.Player.IsMale ? "F" : "M", false, 0x0386, font: 1)
+            text = new Label(World.Player.IsFemale ? "F" : "M", false, 0x0386, font: 1)
             {
                 X = 86,
                 Y = 97
@@ -363,7 +345,7 @@ namespace ClassicUO.Game.UI.Gumps
                 _labels[(int)MobileStats.Strength].Text = World.Player.Strength.ToString();
                 _labels[(int)MobileStats.Dexterity].Text = World.Player.Dexterity.ToString();
                 _labels[(int)MobileStats.Intelligence].Text = World.Player.Intelligence.ToString();
-                _labels[(int)MobileStats.Sex].Text = !World.Player.IsMale ? "F" : "M";
+                _labels[(int)MobileStats.Sex].Text = World.Player.IsFemale ? "F" : "M";
                 _labels[(int)MobileStats.AR].Text = World.Player.PhysicalResistance.ToString();
                 _labels[(int)MobileStats.HealthCurrent].Text = $"{World.Player.Hits}/{World.Player.HitsMax}";
                 _labels[(int)MobileStats.ManaCurrent].Text = $"{World.Player.Mana}/{World.Player.ManaMax}";
@@ -375,21 +357,6 @@ namespace ClassicUO.Game.UI.Gumps
             base.Update(totalMS, frameMS);
         }
 
-        public override void Restore(BinaryReader reader)
-        {
-            base.Restore(reader);
-
-            if (Settings.GlobalSettings.ShardType != 1)
-                Dispose();
-        }
-
-        public override void Restore(XmlElement xml)
-        {
-            base.Restore(xml);
-
-            if (Settings.GlobalSettings.ShardType != 1)
-                Dispose();
-        }
 
         private enum MobileStats
         {
@@ -722,22 +689,7 @@ namespace ClassicUO.Game.UI.Gumps
             base.Update(totalMS, frameMS);
         }
 
-        public override void Restore(BinaryReader reader)
-        {
-            base.Restore(reader);
-
-            if (Settings.GlobalSettings.ShardType != 0)
-                Dispose();
-        }
-
-        public override void Restore(XmlElement xml)
-        {
-            base.Restore(xml);
-
-            if (Settings.GlobalSettings.ShardType != 0)
-                Dispose();
-        }
-
+      
         private enum MobileStats
         {
             Name,
@@ -1122,21 +1074,6 @@ namespace ClassicUO.Game.UI.Gumps
             Add(label);
         }
 
-        public override void Restore(BinaryReader reader)
-        {
-            base.Restore(reader);
-
-            if (Settings.GlobalSettings.ShardType != 2)
-                Dispose();
-        }
-
-        public override void Restore(XmlElement xml)
-        {
-            base.Restore(xml);
-
-            if (Settings.GlobalSettings.ShardType != 2)
-                Dispose();
-        }
 
         private enum MobileStats
         {

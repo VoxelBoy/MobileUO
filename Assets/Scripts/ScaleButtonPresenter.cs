@@ -12,7 +12,7 @@ public class ScaleButtonPresenter : MonoBehaviour
     private Array scaleSizesValues;
     private int scaleSizesValuesLength;
 
-    void Awake()
+    private void Awake()
     {
         scaleSizesValues = Enum.GetValues(typeof(ScaleSizes));
         scaleSizesValuesLength = scaleSizesValues.Length;

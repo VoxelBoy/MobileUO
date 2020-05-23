@@ -468,6 +468,11 @@ namespace ClassicUO.Game.UI.Controls
         {
             foreach (Control c in Children)
             {
+                //NOTE: Prevent mobile close buttons from being disposed
+                if (IsMobileCloseButton())
+                {
+                    continue;
+                }
                 c.Dispose();
             }
         }
@@ -749,6 +754,11 @@ namespace ClassicUO.Game.UI.Controls
 
         public virtual void OnButtonClick(int buttonID)
         {
+            //NOTE: Mobile close button functionality
+            if (buttonID == Button.MOBILE_CLOSE_BUTTON_ID)
+            {
+                Parent?.CloseWithRightClick();
+            }
             Parent?.OnButtonClick(buttonID);
         }
 
@@ -775,6 +785,11 @@ namespace ClassicUO.Game.UI.Controls
             Children.Clear();
 
             IsDisposed = true;
+        }
+
+        public bool IsMobileCloseButton()
+        {
+            return this is Button button && button.ButtonID == Button.MOBILE_CLOSE_BUTTON_ID;
         }
     }
 }

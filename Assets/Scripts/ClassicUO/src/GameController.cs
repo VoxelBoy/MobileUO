@@ -62,7 +62,6 @@ namespace ClassicUO
         private Vector3 _hueVector;
 
         public event Action sceneChanged;
-        public bool MouseOverGui;
 
         public GameController()
         {
@@ -115,22 +114,29 @@ namespace ClassicUO
 
             Client.Load();
 
-            uint[] buffer = new uint[32 * 3000 * 2];
+            const int TEXTURE_WIDHT = 32;
+            const int TEXTURE_HEIGHT = 2048 * 1;
+
+            uint[] buffer = new uint[TEXTURE_WIDHT * TEXTURE_HEIGHT * 2];
             HuesLoader.Instance.CreateShaderColors(buffer);
 
 
             _hues_sampler[0] = new Texture2D(
                                           GraphicsDevice,
-                                          32,
-                                          3000);
-            _hues_sampler[0].SetData(buffer, 0, buffer.Length / 2);
+                                          TEXTURE_WIDHT,
+                                          TEXTURE_HEIGHT);
+            _hues_sampler[0].SetData(buffer, 0, TEXTURE_WIDHT * TEXTURE_HEIGHT);
            
            
+
+
             _hues_sampler[1] = new Texture2D(
                                           GraphicsDevice,
-                                          32,
-                                          3000);
-            _hues_sampler[1].SetData(buffer, (buffer.Length / 2) - 1, buffer.Length / 2);
+                                          TEXTURE_WIDHT,
+                                          TEXTURE_HEIGHT);
+            _hues_sampler[1].SetData(buffer, TEXTURE_WIDHT * TEXTURE_HEIGHT, TEXTURE_WIDHT * TEXTURE_HEIGHT);
+
+
 
 
             GraphicsDevice.Textures[1] = _hues_sampler[0];
@@ -141,8 +147,6 @@ namespace ClassicUO
 
             AuraManager.CreateAuraTexture();
             UIManager.InitializeGameCursor();
-
-
 
             SetScene(new LoginScene());
             SetWindowPositionBySettings();
@@ -323,13 +327,7 @@ namespace ClassicUO
             // Mouse.Update();
             UnityInputUpdate();
             OnNetworkUpdate(gameTime.TotalGameTime.TotalMilliseconds, gameTime.ElapsedGameTime.TotalMilliseconds);
-            UIManager.Update(gameTime.TotalGameTime.TotalMilliseconds, gameTime.ElapsedGameTime.TotalMilliseconds);
             Plugin.Tick();
-
-            //var p = Microsoft.Xna.Framework.Input.Mouse.GetState();
-            //Console.WriteLine("FNA MOUSE: {0},{1}", p.X, p.Y);
-            //Console.WriteLine("SDL MOUSE: {0},{1}", Mouse.Position.X, Mouse.Position.Y);
-
 
             if (_scene != null && _scene.IsLoaded && !_scene.IsDestroyed)
             {
@@ -337,6 +335,8 @@ namespace ClassicUO
                 _scene.Update(gameTime.TotalGameTime.TotalMilliseconds, gameTime.ElapsedGameTime.TotalMilliseconds);
                 Profiler.ExitContext("Update");
             }
+
+            UIManager.Update(gameTime.TotalGameTime.TotalMilliseconds, gameTime.ElapsedGameTime.TotalMilliseconds);
 
             _totalElapsed += gameTime.ElapsedGameTime.TotalMilliseconds;
             _currentFpsTime += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -580,8 +580,8 @@ namespace ClassicUO
 
                     if (Mouse.IsDragging)
                     {
-                        UIManager.OnMouseDragging();
-                        _scene.OnMouseDragging();
+                        if (!_scene.OnMouseDragging())
+                            UIManager.OnMouseDragging();
                     }
 
                     if (Mouse.IsDragging && !_dragStarted)
@@ -597,8 +597,8 @@ namespace ClassicUO
 
                     Plugin.ProcessMouse(0, e->wheel.y);
 
-                    UIManager.OnMouseWheel(isup);
-                    _scene.OnMouseWheel(isup);
+                    if (!_scene.OnMouseWheel(isup))
+                        UIManager.OnMouseWheel(isup);
 
                     break;
 
@@ -630,12 +630,12 @@ namespace ClassicUO
                                 {
                                     Mouse.LastLeftButtonClickTime = 0;
                                  
-                                    bool res = UIManager.ValidForDClick() ? UIManager.OnLeftMouseDoubleClick() : _scene.OnLeftMouseDoubleClick();
+                                    bool res = _scene.OnLeftMouseDoubleClick() || UIManager.OnLeftMouseDoubleClick();
 
                                     if (!res)
                                     {
-                                        _scene.OnLeftMouseDown();
-                                        UIManager.OnLeftMouseButtonDown();
+                                        if (!_scene.OnLeftMouseDown())
+                                            UIManager.OnLeftMouseButtonDown();
                                     }
                                     else
                                     {
@@ -645,8 +645,8 @@ namespace ClassicUO
                                     break;
                                 }
 
-                                _scene.OnLeftMouseDown();
-                                UIManager.OnLeftMouseButtonDown();
+                                if (!_scene.OnLeftMouseDown()) 
+                                    UIManager.OnLeftMouseButtonDown();
 
                                 Mouse.LastLeftButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
                             }
@@ -654,9 +654,8 @@ namespace ClassicUO
                             {
                                 if (Mouse.LastLeftButtonClickTime != 0xFFFF_FFFF)
                                 {
-                                    if (!UIManager.HadMouseDownOnGump(MouseButtonType.Left))
-                                        _scene.OnLeftMouseUp();
-                                    UIManager.OnLeftMouseButtonUp();
+                                    if (!_scene.OnLeftMouseUp() || UIManager.LastControlMouseDown(MouseButtonType.Left) != null)
+                                        UIManager.OnLeftMouseButtonUp();
                                 }
                                 Mouse.LButtonPressed = false;
                                 Mouse.End();
@@ -678,10 +677,16 @@ namespace ClassicUO
                                 {
                                     Mouse.LastMidButtonClickTime = 0;
 
-                                    if (!_scene.OnMiddleMouseDoubleClick())
+                                    bool res = _scene.OnMiddleMouseDoubleClick() || UIManager.OnMiddleMouseDoubleClick();
+
+                                    if (!res)
                                     {
-                                        _scene.OnMiddleMouseDown();
-                                        UIManager.OnMiddleMouseButtonDown();
+                                        if (!_scene.OnMiddleMouseDown())
+                                            UIManager.OnMiddleMouseButtonDown();
+                                    }
+                                    else
+                                    {
+                                        Mouse.LastMidButtonClickTime = 0xFFFF_FFFF;
                                     }
 
                                     break;
@@ -689,8 +694,8 @@ namespace ClassicUO
 
                                 Plugin.ProcessMouse(e->button.button, 0);
 
-                                _scene.OnMiddleMouseDown();
-                                UIManager.OnMiddleMouseButtonDown();
+                                if (!_scene.OnMiddleMouseDown())
+                                    UIManager.OnMiddleMouseButtonDown();
 
                                 Mouse.LastMidButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
                             }
@@ -698,9 +703,8 @@ namespace ClassicUO
                             {
                                 if (Mouse.LastMidButtonClickTime != 0xFFFF_FFFF)
                                 {
-                                    if (!UIManager.HadMouseDownOnGump(MouseButtonType.Middle))
-                                        _scene.OnMiddleMouseUp();
-                                    UIManager.OnMiddleMouseButtonUp();
+                                    if (!_scene.OnMiddleMouseUp())
+                                        UIManager.OnMiddleMouseButtonUp();
                                 }
 
                                 Mouse.MButtonPressed = false;
@@ -727,8 +731,8 @@ namespace ClassicUO
 
                                     if (!res)
                                     {
-                                        _scene.OnRightMouseDown();
-                                        UIManager.OnRightMouseButtonDown();
+                                        if (!_scene.OnRightMouseDown())
+                                            UIManager.OnRightMouseButtonDown();
                                     }
                                     else
                                     {
@@ -738,8 +742,8 @@ namespace ClassicUO
                                     break;
                                 }
 
-                                _scene.OnRightMouseDown();
-                                UIManager.OnRightMouseButtonDown();
+                                if (!_scene.OnRightMouseDown())
+                                    UIManager.OnRightMouseButtonDown();
 
                                 Mouse.LastRightButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
                             }
@@ -747,9 +751,8 @@ namespace ClassicUO
                             {
                                 if (Mouse.LastRightButtonClickTime != 0xFFFF_FFFF)
                                 {
-                                    if (!UIManager.HadMouseDownOnGump(MouseButtonType.Right))
-                                        _scene.OnRightMouseUp();
-                                    UIManager.OnRightMouseButtonUp();
+                                    if (!_scene.OnRightMouseUp())
+                                        UIManager.OnRightMouseButtonUp();
                                 }
                                 Mouse.RButtonPressed = false;
                                 Mouse.End();
@@ -765,14 +768,15 @@ namespace ClassicUO
                                 Mouse.XButtonPressed = true;
                                 Mouse.CancelDoubleClick = false;
                                 Plugin.ProcessMouse(e->button.button, 0);
-                                _scene.OnExtraMouseDown(mouse.button - 1);
-                                UIManager.OnExtraMouseButtonDown(mouse.button - 1);
+                                if (!_scene.OnExtraMouseDown(mouse.button - 1))
+                                    UIManager.OnExtraMouseButtonDown(mouse.button - 1);
+
+                                // TODO: doubleclick?
                             }
                             else
                             {
-                                if (!UIManager.HadMouseDownOnGump(MouseButtonType.XButton1) && !UIManager.HadMouseDownOnGump(MouseButtonType.XButton2))
-                                    _scene.OnExtraMouseUp(mouse.button - 1);
-                                UIManager.OnExtraMouseButtonUp(mouse.button - 1);
+                                if (!_scene.OnExtraMouseUp(mouse.button - 1))
+                                    UIManager.OnExtraMouseButtonUp(mouse.button - 1);
 
                                 Mouse.XButtonPressed = false;
                                 Mouse.End();
@@ -789,155 +793,63 @@ namespace ClassicUO
 
         private readonly UnityEngine.KeyCode[] _keyCodeEnumValues = (UnityEngine.KeyCode[]) Enum.GetValues(typeof(UnityEngine.KeyCode));
         private UnityEngine.Vector3 lastMousePosition;
-        private bool mouseWasDown = false;
 
         private void UnityInputUpdate()
         {
-            //Mouse handling
             var oneOverScale = 1f / scale;
 
-            Mouse.Position.X = UnityEngine.Mathf.RoundToInt(UnityEngine.Input.mousePosition.x * oneOverScale);
-            Mouse.Position.Y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - UnityEngine.Input.mousePosition.y) * oneOverScale);
-            Mouse.RealPosition = Mouse.Position;
-
-            var leftMouseDown = UnityEngine.Input.GetMouseButtonDown(0);
-            var leftMouseHeld = UnityEngine.Input.GetMouseButton(0);
-            var leftMouseUp = UnityEngine.Input.GetMouseButtonUp(0);
-
-            var rightMouseDown = UnityEngine.Input.GetMouseButtonDown(1);
-            var rightMouseHeld = UnityEngine.Input.GetMouseButton(1);
-            var rightMouseUp = UnityEngine.Input.GetMouseButtonUp(1);
-
-            if (MouseOverGui)
+            //Finger/mouse handling
+            if (UnityEngine.Application.isMobilePlatform)
             {
-                Mouse.Position.X = 0;
-                Mouse.Position.Y = 0;
-                leftMouseDown = false;
-                leftMouseHeld = false;
-                leftMouseUp = false;
-                rightMouseDown = false;
-                rightMouseHeld = false;
-                rightMouseUp = false;
-            }
+                var fingers = Lean.Touch.LeanTouch.GetFingers(true, false);
 
-            Mouse.LButtonPressed = leftMouseDown || leftMouseHeld;
-            Mouse.RButtonPressed = rightMouseDown || rightMouseHeld;
-            Mouse.MButtonPressed = UnityEngine.Input.GetMouseButtonDown(2) || UnityEngine.Input.GetMouseButton(2);
-
-            Mouse.IsDragging = Mouse.LButtonPressed || Mouse.RButtonPressed || Mouse.MButtonPressed;
-            Mouse.RealPosition = Mouse.Position;
-
-            //Added additional check for mouseWasDown because otherwise, on mobile, tapping somewhere would immediately
-            //set mouseMotion to true since the previous tap position was almost guaranteed to be at another position
-            //due to input inaccuracy. We do not want a new tap to be recognized as a mouseMotion.
-            var mouseMotion = UnityEngine.Input.mousePosition != lastMousePosition && mouseWasDown;
-            
-            lastMousePosition = UnityEngine.Input.mousePosition;
-
-            if (_dragStarted && !Mouse.LButtonPressed)
-            {
-                _dragStarted = false;
-            }
-
-            if (leftMouseDown)
-            {
-                mouseWasDown = true;
-                Mouse.Begin();
-                Mouse.LDropPosition = Mouse.Position;
-                Mouse.CancelDoubleClick = false;
-                uint ticks = Time.Ticks;
-                if (Mouse.LastLeftButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
+                foreach (var finger in fingers)
                 {
-                    Mouse.LastLeftButtonClickTime = 0;
+                    var leftMouseDown = finger.Down;
+                    var leftMouseHeld = finger.Set;
+                    var leftMouseUp = finger.Up;
+                    var rightMouseDown = false;
+                    var rightMouseHeld = false;
+                    var rightMouseUp = false;
+                    var mouseMotion = finger.ScreenPosition != finger.LastScreenPosition;
 
-                    bool res = UIManager.ValidForDClick() ? UIManager.OnLeftMouseDoubleClick() : _scene.OnLeftMouseDoubleClick();
+                    Mouse.Position.X = UnityEngine.Mathf.RoundToInt(finger.ScreenPosition.x * oneOverScale);
+                    Mouse.Position.Y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - finger.ScreenPosition.y) * oneOverScale);
 
-                    if (!res)
-                    {
-                        _scene.OnLeftMouseDown();
-                        UIManager.OnLeftMouseButtonDown();
-                    }
-                    else
-                    {
-                        Mouse.LastLeftButtonClickTime = 0xFFFF_FFFF;
-                    }
-                }
-                else
-                {
-                    _scene.OnLeftMouseDown();
-                    UIManager.OnLeftMouseButtonDown();
-                    Mouse.LastLeftButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
+                    SimulateMouse(leftMouseDown, leftMouseHeld, leftMouseUp, rightMouseDown, rightMouseHeld, rightMouseUp, mouseMotion);
                 }
             }
-            else if(leftMouseUp)
+            else
             {
-                mouseWasDown = false;
-                if (Mouse.LastLeftButtonClickTime != 0xFFFF_FFFF)
+                var leftMouseDown = UnityEngine.Input.GetMouseButtonDown(0);
+                var leftMouseHeld = UnityEngine.Input.GetMouseButton(0);
+                var leftMouseUp = UnityEngine.Input.GetMouseButtonUp(0);
+                var rightMouseDown = UnityEngine.Input.GetMouseButtonDown(1);
+                var rightMouseHeld = UnityEngine.Input.GetMouseButton(1);
+                var rightMouseUp = UnityEngine.Input.GetMouseButtonUp(1);
+                var mousePosition = UnityEngine.Input.mousePosition;
+                var mouseMotion = mousePosition != lastMousePosition;
+                lastMousePosition = mousePosition;
+                
+                if (Lean.Touch.LeanTouch.PointOverGui(mousePosition))
                 {
-                    if (!UIManager.HadMouseDownOnGump(MouseButtonType.Left))
-                        _scene.OnLeftMouseUp();
-                    UIManager.OnLeftMouseButtonUp();
-                }
-                Mouse.End();
-            }
-
-            if (rightMouseDown)
-            {
-                Mouse.Begin();
-                Mouse.RDropPosition = Mouse.Position;
-                Mouse.CancelDoubleClick = false;
-                uint ticks = Time.Ticks;
-
-                if (Mouse.LastRightButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
-                {
-                    Mouse.LastRightButtonClickTime = 0;
-
-                    bool res = _scene.OnRightMouseDoubleClick() || UIManager.OnRightMouseDoubleClick();
-
-                    if (!res)
-                    {
-                        _scene.OnRightMouseDown();
-                        UIManager.OnRightMouseButtonDown();
-                    }
-                    else
-                    {
-                        Mouse.LastRightButtonClickTime = 0xFFFF_FFFF;
-                    }
-                }
-                else
-                {
-                    _scene.OnRightMouseDown();
-                    UIManager.OnRightMouseButtonDown();
-                    Mouse.LastRightButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
-                }
-            }
-            else if(rightMouseUp)
-            {
-                if (Mouse.LastRightButtonClickTime != 0xFFFF_FFFF)
-                {
-                    if (!UIManager.HadMouseDownOnGump(MouseButtonType.Right))
-                        _scene.OnRightMouseUp();
-                    UIManager.OnRightMouseButtonUp();
-                }
-                Mouse.End();
-            }
-
-            if (mouseMotion)
-            {
-                if (Mouse.IsDragging)
-                {
-                    UIManager.OnMouseDragging();
-                    _scene.OnMouseDragging();
+                    Mouse.Position.X = 0;
+                    Mouse.Position.Y = 0;
+                    leftMouseDown = false;
+                    leftMouseHeld = false;
+                    leftMouseUp = false;
+                    rightMouseDown = false;
+                    rightMouseHeld = false;
+                    rightMouseUp = false;
                 }
 
-                if (Mouse.IsDragging && !_dragStarted)
-                {
-                    _dragStarted = true;
-                }
+                Mouse.Position.X = UnityEngine.Mathf.RoundToInt(mousePosition.x * oneOverScale);
+                Mouse.Position.Y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - mousePosition.y) * oneOverScale);
+
+                SimulateMouse(leftMouseDown, leftMouseHeld, leftMouseUp, rightMouseDown, rightMouseHeld, rightMouseUp, mouseMotion);
             }
 
             //Keyboard handling
-
             var keymod = SDL.SDL_Keymod.KMOD_NONE;
             if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftAlt))
             {
@@ -973,9 +885,7 @@ namespace ClassicUO
                     if (Plugin.ProcessHotkeys((int) key.keysym.sym, (int) key.keysym.mod, true))
                     {
                         _ignoreNextTextInput = false;
-
-                        //UIManager.MouseOverControl?.InvokeKeyDown(e.key.keysym.sym, e.key.keysym.mod);
-                        //if (UIManager.MouseOverControl != UIManager.KeyboardFocusControl)
+                        
                         UIManager.KeyboardFocusControl?.InvokeKeyDown(key.keysym.sym, key.keysym.mod);
 
                         _scene.OnKeyDown(key);
@@ -1024,6 +934,114 @@ namespace ClassicUO
                 {
                     UIManager.KeyboardFocusControl?.InvokeTextInput(text);
                     _scene.OnTextInput(text);
+                }
+            }
+        }
+
+        private void SimulateMouse(bool leftMouseDown, bool leftMouseHeld, bool leftMouseUp, bool rightMouseDown, bool rightMouseHeld, bool rightMouseUp, bool mouseMotion)
+        {
+            Mouse.LButtonPressed = leftMouseDown || leftMouseHeld;
+            Mouse.RButtonPressed = rightMouseDown || rightMouseHeld;
+            Mouse.IsDragging = Mouse.LButtonPressed || Mouse.RButtonPressed;
+            Mouse.RealPosition = Mouse.Position;
+            
+            if (_dragStarted && !Mouse.LButtonPressed)
+            {
+                _dragStarted = false;
+            }
+
+            if (leftMouseDown)
+            {
+                Mouse.Begin();
+                Mouse.LDropPosition = Mouse.Position;
+                Mouse.CancelDoubleClick = false;
+                uint ticks = Time.Ticks;
+                if (Mouse.LastLeftButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
+                {
+                    Mouse.LastLeftButtonClickTime = 0;
+
+                    bool res = _scene.OnLeftMouseDoubleClick() || UIManager.OnLeftMouseDoubleClick();
+
+                    if (!res)
+                    {
+                        if (!_scene.OnLeftMouseDown())
+                            UIManager.OnLeftMouseButtonDown();
+                    }
+                    else
+                    {
+                        Mouse.LastLeftButtonClickTime = 0xFFFF_FFFF;
+                    }
+                }
+                else
+                {
+                    if (!_scene.OnLeftMouseDown())
+                        UIManager.OnLeftMouseButtonDown();
+                    Mouse.LastLeftButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
+                }
+            }
+            else if (leftMouseUp)
+            {
+                if (Mouse.LastLeftButtonClickTime != 0xFFFF_FFFF)
+                {
+                    if (!_scene.OnLeftMouseUp() || UIManager.LastControlMouseDown(MouseButtonType.Left) != null)
+                        UIManager.OnLeftMouseButtonUp();
+                }
+
+                Mouse.End();
+            }
+
+            if (rightMouseDown)
+            {
+                Mouse.Begin();
+                Mouse.RDropPosition = Mouse.Position;
+                Mouse.CancelDoubleClick = false;
+                uint ticks = Time.Ticks;
+
+                if (Mouse.LastRightButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
+                {
+                    Mouse.LastRightButtonClickTime = 0;
+
+                    bool res = _scene.OnRightMouseDoubleClick() || UIManager.OnRightMouseDoubleClick();
+
+                    if (!res)
+                    {
+                        if (!_scene.OnRightMouseDown())
+                            UIManager.OnRightMouseButtonDown();
+                    }
+                    else
+                    {
+                        Mouse.LastRightButtonClickTime = 0xFFFF_FFFF;
+                    }
+                }
+                else
+                {
+                    if (!_scene.OnRightMouseDown())
+                        UIManager.OnRightMouseButtonDown();
+                    Mouse.LastRightButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
+                }
+            }
+            else if (rightMouseUp)
+            {
+                if (Mouse.LastRightButtonClickTime != 0xFFFF_FFFF)
+                {
+                    if (!_scene.OnRightMouseUp())
+                        UIManager.OnRightMouseButtonUp();
+                }
+
+                Mouse.End();
+            }
+
+            if (mouseMotion)
+            {
+                if (Mouse.IsDragging)
+                {
+                    if (!_scene.OnMouseDragging())
+                        UIManager.OnMouseDragging();
+                }
+
+                if (Mouse.IsDragging && !_dragStarted)
+                {
+                    _dragStarted = true;
                 }
             }
         }

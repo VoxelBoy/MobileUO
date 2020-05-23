@@ -76,7 +76,7 @@ namespace ClassicUO.Game.Scenes
 
         public GameScene() : base((int) SceneType.Game,
             true,
-            !ProfileManager.Current.RestoreLastGameSize,
+            true,
             true)
         {
 
@@ -127,24 +127,6 @@ namespace ClassicUO.Game.Scenes
         public override void Load()
         {
             base.Load();
-
-            if (!ProfileManager.Current.DebugGumpIsDisabled)
-            {
-                UIManager.Add(new DebugGump
-                {
-                    X = ProfileManager.Current.DebugGumpPosition.X,
-                    Y = ProfileManager.Current.DebugGumpPosition.Y
-                });
-            }
-
-            if (ProfileManager.Current.ShowNetworkStats)
-            {
-                UIManager.Add(new NetworkStatsGump
-                {
-                    X = ProfileManager.Current.NetworkStatsPosition.X,
-                    Y = ProfileManager.Current.NetworkStatsPosition.Y
-                });
-            }
 
             ItemHold.Clear();
             Hotkeys = new HotkeysManager();
@@ -208,9 +190,12 @@ namespace ClassicUO.Game.Scenes
 
                 Client.Game.SetWindowSize(w, h);
             }
-
+            
             CircleOfTransparency.Create(ProfileManager.Current.CircleOfTransparencyRadius);
             Plugin.OnConnected();
+
+           // UIManager.Add(new Hues_gump());
+
         }
 
         private void ChatOnMessageReceived(object sender, UOMessageEventArgs e)
@@ -238,7 +223,7 @@ namespace ClassicUO.Game.Scenes
                     break;
 
                 case MessageType.System:
-                    name = "System";
+                    name = string.IsNullOrEmpty(e.Name) || e.Name.ToLowerInvariant() == "system" ? "System" : e.Name;
                     text = e.Text;
 
                     break;
@@ -313,7 +298,7 @@ namespace ClassicUO.Game.Scenes
             TargetManager.ClearTargetingWithoutTargetCancelPacket();
 
             // special case for wmap. this allow us to save settings
-            UIManager.GetGump<WorldMapGump>()?.Dispose();
+            UIManager.GetGump<WorldMapGump>()?.SaveSettings();
 
             ProfileManager.Current?.Save(UIManager.Gumps.OfType<Gump>().Where(s => s.CanBeSaved).Reverse().ToList());
             Macros.Save();
@@ -415,8 +400,8 @@ namespace ClassicUO.Game.Scenes
 
                 ushort graphic = lightObject.Graphic;
 
-                if (graphic >= 0x3E02 && graphic <= 0x3E0B ||
-                    graphic >= 0x3914 && graphic <= 0x3929 ||
+                if ((graphic >= 0x3E02 && graphic <= 0x3E0B) ||
+                    (graphic >= 0x3914 && graphic <= 0x3929) ||
                     graphic == 0x0B1D)
                     light.ID = 2;
                 else
@@ -432,18 +417,15 @@ namespace ClassicUO.Game.Scenes
                         ref readonly var data = ref TileDataLoader.Instance.StaticData[obj.Graphic];
                         light.ID = data.Layer;
                     }
-                    //else if (GameObjectHelper.TryGetStaticData(lightObject, out StaticTiles data))
-                    //    light.ID = data.Layer;
-
-                    //else
-                    //    return;
                 }
-
 
                 if (light.ID >= Constants.MAX_LIGHTS_DATA_INDEX_COUNT)
                     return;
 
-                light.Color = ProfileManager.Current.UseColoredLights ? LightColors.GetHue(graphic) : (ushort) 0;
+                light.Color = (ushort) (ProfileManager.Current.UseColoredLights ? LightColors.GetHue(graphic) : (ushort) 0);
+
+                if (light.Color != 0)
+                    light.Color++;
 
                 light.DrawX = x;
                 light.DrawY = y;
@@ -876,6 +858,8 @@ namespace ClassicUO.Game.Scenes
             batcher.SetBlendState(BlendState.Additive);
 
             Vector3 hue = Vector3.Zero;
+            hue.Y = ShaderHuesTraslator.SHADER_LIGHTS;
+            hue.Z = 0;
 
             for (int i = 0; i < _lightCount; i++)
             {
@@ -884,9 +868,7 @@ namespace ClassicUO.Game.Scenes
                 UOTexture texture = LightsLoader.Instance.GetTexture(l.ID);
 
                 hue.X = l.Color;
-                hue.Y = ShaderHuesTraslator.SHADER_LIGHTS;
-                hue.Z = 0;
-
+                
                 batcher.DrawSprite(texture, l.DrawX - (texture.Width >> 1), l.DrawY - (texture.Height >> 1), false, ref hue);
             }
 

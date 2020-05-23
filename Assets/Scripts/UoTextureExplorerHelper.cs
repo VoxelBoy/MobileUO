@@ -1,11 +1,12 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using ClassicUO;
 using ClassicUO.Configuration;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
 using ClassicUO.Utility.Logging;
-using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
@@ -15,19 +16,36 @@ public static class UoTextureExplorerHelper
     private static bool loaded;
     public static void LoadArt()
     {
+        var defaultFolderPath = EditorPrefs.GetString("textureExplorerUoFolder", Application.dataPath);
+        var folderPath = EditorUtility.OpenFolderPanel("Choose UO folder", defaultFolderPath, string.Empty);
+        if (string.IsNullOrEmpty(folderPath))
+        {
+            return;
+        }
+
+        if (Directory.Exists(folderPath) == false)
+        {
+            return;
+        }
+        
+        EditorPrefs.SetString("textureExplorerUoFolder", folderPath);
+        
         ConsoleRedirect.Redirect();
         Log.Start( LogTypes.All );
-        Settings.GlobalSettings = JsonConvert.DeserializeObject<Settings>(Resources.Load<TextAsset>("settings").text);
+        Settings.GlobalSettings = new Settings();
+        Settings.GlobalSettings.UltimaOnlineDirectory = folderPath;
         Client.Game = new GameController();
         //Calling the getter to trigger the creation of GraphicsDevice
         var graphicsDevice = Client.Game.GraphicsDevice;
         ArtLoader.Instance.Load().Wait();
+        GumpsLoader.Instance.Load().Wait();
         loaded = true;
     }
 
     public static void UnloadArt()
     {
         Client.Game.Dispose();
+        loaded = false;
     }
 
     public static void TriggerFirstTexture()
@@ -90,7 +108,13 @@ public static class UoTextureExplorerHelper
     public static Texture2D GetLandTexture(uint g)
     {
         var uoTexture = ArtLoader.Instance.GetLandTexture(g);
-        return uoTexture.Contains(0, 0, false) ? uoTexture : null;
+        return uoTexture != null && uoTexture.UnityTexture != null ? uoTexture : null;
+    }
+
+    public static Texture2D GetGumpTexture(ushort g)
+    {
+        var uoTexture = GumpsLoader.Instance.GetTexture(g);
+        return uoTexture != null && uoTexture.UnityTexture != null ? uoTexture : null;
     }
 
     public static void MakeAtlas(int rangeMin, int rangeMax)

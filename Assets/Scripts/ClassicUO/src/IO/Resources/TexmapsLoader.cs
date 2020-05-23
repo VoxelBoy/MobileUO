@@ -187,7 +187,7 @@ namespace ClassicUO.IO.Resources
 
             ushort[] pixels;
 
-            if (entry.Extra == 0)
+            if (entry.Width == 0 && entry.Height == 0)
             {
                 size = 64;
                 pixels = _textmapPixels64;

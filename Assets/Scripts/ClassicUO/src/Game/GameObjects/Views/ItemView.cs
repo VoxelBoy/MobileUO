@@ -139,7 +139,7 @@ namespace ClassicUO.Game.GameObjects
             {
                 bool isPartial = ItemData.IsPartialHue;
 
-                if (SelectedObject.LastObject == this && !IsLocked && !IsMulti)
+                if (!IsLocked && !IsMulti && SelectedObject.LastObject == this)
                 {
                     // TODO: check why i put this.
                     //isPartial = ItemData.Weight == 0xFF;
@@ -176,12 +176,13 @@ namespace ClassicUO.Game.GameObjects
             posX += 22;
             posY += 22;
 
-            byte dir = (byte) ((byte) Layer & 0x7F & 7);
-            bool mirror = false;
-            AnimationsLoader.Instance.GetAnimDirection(ref dir, ref mirror);
-            IsFlipped = mirror;
-            AnimationsLoader.Instance.Direction = dir;
+            AnimationsLoader.Instance.Direction = (byte) (((byte) Layer & 0x7F) & 7);
+            AnimationsLoader.Instance.GetAnimDirection(ref AnimationsLoader.Instance.Direction, ref IsFlipped);
+
             byte animIndex = (byte) AnimIndex;
+            ushort graphic = GetGraphicForAnimation();
+            AnimationsLoader.Instance.ConvertBodyIfNeeded(ref graphic);
+            AnimationsLoader.Instance.AnimGroup = AnimationsLoader.Instance.GetDieGroupIndex(graphic, UsedLayer);
 
             bool ishuman = MathHelper.InRange(Amount, 0x0190, 0x0193) ||
                            MathHelper.InRange(Amount, 0x00B7, 0x00BA) ||
@@ -190,12 +191,12 @@ namespace ClassicUO.Game.GameObjects
                            MathHelper.InRange(Amount, 0x02B6, 0x02B7) ||
                            Amount == 0x03DB || Amount == 0x03DF || Amount == 0x03E2 || Amount == 0x02E8 || Amount == 0x02E9;
 
-            DrawLayer(batcher, posX, posY, Layer.Invalid, animIndex, ishuman);
+            DrawLayer(batcher, posX, posY, this, Layer.Invalid, animIndex, ishuman, Hue, IsFlipped);
 
             for (int i = 0; i < Constants.USED_LAYER_COUNT; i++)
             {
-                Layer layer = LayerOrder.UsedLayers[dir, i];
-                DrawLayer(batcher, posX, posY, layer, animIndex, ishuman);
+                Layer layer = LayerOrder.UsedLayers[AnimationsLoader.Instance.Direction, i];
+                DrawLayer(batcher, posX, posY, this, layer, animIndex, ishuman, 0, IsFlipped);
             }
 
             return true;
@@ -203,23 +204,20 @@ namespace ClassicUO.Game.GameObjects
 
         private static EquipConvData? _equipConvData;
 
-        private void DrawLayer(UltimaBatcher2D batcher, int posX, int posY, Layer layer, byte animIndex, bool ishuman)
+        private static void DrawLayer(UltimaBatcher2D batcher, int posX, int posY, Item owner, Layer layer, byte animIndex, bool ishuman, ushort color, bool flipped)
         {
             _equipConvData = null;
-            ushort graphic;
-            ushort color = 0;
             bool ispartialhue = false;
+
+            ushort graphic;
+            
             if (layer == Layer.Invalid)
             {
-                graphic = GetGraphicForAnimation();
-                AnimationsLoader.Instance.AnimGroup = AnimationsLoader.Instance.GetDieGroupIndex(graphic, UsedLayer);
-
-                if (color == 0)
-                    color = Hue;
+                graphic = owner.GetGraphicForAnimation();
             }
             else if (ishuman)
             {
-                Item itemEquip = FindItemByLayer(layer);
+                Item itemEquip = owner.FindItemByLayer(layer);
 
                 if (itemEquip == null) 
                     return;
@@ -227,10 +225,7 @@ namespace ClassicUO.Game.GameObjects
                 graphic = itemEquip.ItemData.AnimID;
                 ispartialhue = itemEquip.ItemData.IsPartialHue;
 
-                ushort mobGraphic = Amount;
-                AnimationsLoader.Instance.ConvertBodyIfNeeded(ref mobGraphic);
-
-                if (AnimationsLoader.Instance.EquipConversions.TryGetValue(mobGraphic, out Dictionary<ushort, EquipConvData> map))
+                if (AnimationsLoader.Instance.EquipConversions.TryGetValue(graphic, out Dictionary<ushort, EquipConvData> map))
                 {
                     if (map.TryGetValue(graphic, out EquipConvData data))
                     {
@@ -243,8 +238,6 @@ namespace ClassicUO.Game.GameObjects
             }
             else
                 return;
-
-
 
             byte animGroup = AnimationsLoader.Instance.AnimGroup;
             ushort newHue = 0;
@@ -281,7 +274,7 @@ namespace ClassicUO.Game.GameObjects
 
                 frame.Ticks = Time.Ticks;
 
-                if (IsFlipped)
+                if (flipped)
                     posX -= frame.Width - frame.CenterX;
                 else
                     posX -= frame.CenterX;
@@ -306,7 +299,7 @@ namespace ClassicUO.Game.GameObjects
 
                 ResetHueVector();
                 
-                if (ProfileManager.Current.NoColorObjectsOutOfRange && Distance > World.ClientViewRange)
+                if (ProfileManager.Current.NoColorObjectsOutOfRange && owner.Distance > World.ClientViewRange)
                 {
                     HueVector.X = Constants.OUT_RANGE_COLOR;
                     HueVector.Y = 1;
@@ -318,18 +311,18 @@ namespace ClassicUO.Game.GameObjects
                 }
                 else
                 {
-                    if (ProfileManager.Current.GridLootType > 0 && SelectedObject.CorpseObject == this)
+                    if (ProfileManager.Current.GridLootType > 0 && SelectedObject.CorpseObject == owner)
                         color = 0x0034;
-                    else if (ProfileManager.Current.HighlightGameObjects && SelectedObject.LastObject == this)
+                    else if (ProfileManager.Current.HighlightGameObjects && SelectedObject.LastObject == owner)
                         color = 0x0023;
 
                     ShaderHuesTraslator.GetHueVector(ref HueVector, color, ispartialhue, 0);
                 }
 
-                Texture = frame;
+                owner.Texture = frame;
                
-                batcher.DrawSprite(frame, posX, posY, IsFlipped, ref HueVector);
-                Select(IsFlipped ? posX + frame.Width - SelectedObject.TranslatedMousePositionByViewport.X : SelectedObject.TranslatedMousePositionByViewport.X - posX, SelectedObject.TranslatedMousePositionByViewport.Y - posY);
+                batcher.DrawSprite(frame, posX, posY, flipped, ref HueVector);
+                owner.Select(flipped ? posX + frame.Width - SelectedObject.TranslatedMousePositionByViewport.X : SelectedObject.TranslatedMousePositionByViewport.X - posX, SelectedObject.TranslatedMousePositionByViewport.Y - posY);
             }
         }
 

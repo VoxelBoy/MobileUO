@@ -33,6 +33,8 @@
             static const int SHADOW = 12;
             static const int LIGHTS = 13;
             static const int GUMP = 20;
+            
+            static const float HuesPerTexture = 2048;
 
             static const float3 LIGHT_DIRECTION = float3(-1.0f, -1.0f, .5f);
             static const float3 VEC3_ZERO = float3(0, 0, 0);
@@ -67,16 +69,16 @@
 
             float3 get_rgb(float red, float hue)
             {
-                if (hue <= 3000)
+                if (hue <= HuesPerTexture)
                 {
-                    float2 texcoord = float2(red % 32, hue / 3000);
+                    float2 texcoord = float2(red % 32, hue / HuesPerTexture);
                     //NOTE: We invert the y coordinate to read from the proper place in the hue texture
                     texcoord.y = 1 - texcoord.y;
                     return tex2D(_HueTex1, texcoord).rgb;
                 }
                 else
                 {
-                    float2 texcoord = float2(red % 32, (hue - 3000) / 3000);
+                    float2 texcoord = float2(red % 32, (hue - HuesPerTexture) / HuesPerTexture);
                     //NOTE: We invert the y coordinate to read from the proper place in the hue texture
                     texcoord.y = 1 - texcoord.y;
                     return tex2D(_HueTex2, texcoord).rgb;

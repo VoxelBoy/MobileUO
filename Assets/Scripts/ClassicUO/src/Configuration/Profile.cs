@@ -124,9 +124,12 @@ namespace ClassicUO.Configuration
         [JsonProperty] public bool EnableBlackWhiteEffect { get; set; } = true;
 
         // tooltip
-        [JsonProperty] public bool EnableTooltip { get; set; } = true;
-        [JsonProperty] public int DelayShowTooltip { get; set; } = 250;
+        [JsonProperty] public bool UseTooltip { get; set; } = true;
         [JsonProperty] public ushort TooltipTextHue { get; set; } = 0xFFFF;
+        [JsonProperty] public int TooltipDelayBeforeDisplay { get; set; } = 250;
+        [JsonProperty] public int TooltipDisplayZoom { get; set; } = 100;
+        [JsonProperty] public int TooltipBackgroundOpacity { get; set; } = 70;
+        [JsonProperty] public byte TooltipFont { get; set; } = 1;
 
         // movements
         [JsonProperty] public bool EnablePathfind { get; set; }
@@ -164,11 +167,6 @@ namespace ClassicUO.Configuration
         [JsonProperty] public bool HoldAltToMoveGumps { get; set; }
 
         // Experimental
-        [JsonProperty] public bool EnableSelectionArea { get; set; }
-        [JsonProperty] public bool DebugGumpIsDisabled { get; set; }
-        [JsonProperty] public Point DebugGumpPosition { get; set; } = new Point(25, 25);
-        [JsonProperty] public bool DebugGumpIsMinimized { get; set; } = true;
-        [JsonProperty] public bool RestoreLastGameSize { get; set; }
         [JsonProperty] public bool CastSpellsByOneClick { get; set; }
         [JsonProperty] public bool BuffBarTime { get; set; }
         [JsonProperty] public bool AutoOpenDoors { get; set; }
@@ -219,9 +217,6 @@ namespace ClassicUO.Configuration
         [JsonProperty] public bool ShadowsEnabled { get; set; } = true;
         [JsonProperty] public int AuraUnderFeetType { get; set; } // 0 = NO, 1 = in warmode, 2 = ctrl+shift, 3 = always
         [JsonProperty] public bool AuraOnMouse { get; set; } = true;
-        [JsonProperty] public bool ShowNetworkStats { get; set; }
-        [JsonProperty] public bool NetworkStatsMinimized { get; set; } = false;
-        [JsonProperty] public Point NetworkStatsPosition { get; set; } = new Point(25, 50);
 
         [JsonProperty] public bool PartyAura { get; set; }
 
@@ -255,6 +250,8 @@ namespace ClassicUO.Configuration
 
         [JsonProperty] public bool DoubleClickToLootInsideContainers { get; set; }
 
+        [JsonProperty] public bool UseLargeContainerGumps { get; set; } = false;
+
         [JsonProperty] public bool RelativeDragAndDropItems { get; set; }
 
         [JsonProperty] public bool ShowHouseContent { get; set; }
@@ -262,6 +259,8 @@ namespace ClassicUO.Configuration
         [JsonProperty] public bool TextFading { get; set; } = true;
 
         [JsonProperty] public bool UseSmoothBoatMovement { get; set; } = false;
+
+        [JsonProperty] public bool IgnoreStaminaCheck { get; set; } = false;
 
         [JsonProperty] public int WorldMapWidth { get; set; } = 400;
         [JsonProperty] public int WorldMapHeight { get; set; } = 400;
@@ -280,6 +279,9 @@ namespace ClassicUO.Configuration
         [JsonProperty] public bool WorldMapShowMarkers { get; set; } = true;
         [JsonProperty] public bool WorldMapShowMarkersNames { get; set; } = true;
         [JsonProperty] public bool WorldMapShowMultis { get; set; } = true;
+
+
+
 
         internal static string ProfilePath { get; } = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Profiles");
         internal static string DataPath { get; } = Path.Combine(CUOEnviroment.ExecutablePath, "Data");
@@ -326,19 +328,32 @@ namespace ClassicUO.Configuration
                 xml.WriteStartDocument(true);
                 xml.WriteStartElement("gumps");
 
-                foreach (Gump gump in gumps)
+                UIManager.AnchorManager.Save(xml);
+
+                for (int i = 0; i < gumps.Count; i++)
                 {
-                    xml.WriteStartElement("gump");
-                    gump.Save(xml);
-                    xml.WriteEndElement();
+                    var gump = gumps[i];
+
+                    if (gump.IsDisposed)
+                        continue;
+
+                    if (gump is AnchorableGump anchored && UIManager.AnchorManager[anchored] != null)
+                    {
+                        // do nothing
+                    }
+                    else
+                    {
+                        xml.WriteStartElement("gump");
+                        gump.Save(xml);
+                        xml.WriteEndElement();
+                    }
                 }
 
                 xml.WriteEndElement();
                 xml.WriteEndDocument();
             }
 
-            using (BinaryWriter writer = new BinaryWriter(File.Create(Path.Combine(path, "anchors.bin"))))
-                UIManager.AnchorManager.Save(writer);
+           
 
             SkillsGroupManager.Save();
         }
@@ -490,8 +505,10 @@ namespace ClassicUO.Configuration
 
                 if (root != null)
                 {
-                    foreach (XmlElement xml in root.GetElementsByTagName("gump"))
+                    foreach (XmlElement xml in root.ChildNodes/*.GetElementsByTagName("gump")*/)
                     {
+                        if (xml.Name != "gump")
+                            continue;
                         try
                         {
                             GUMP_TYPE type = (GUMP_TYPE) int.Parse(xml.GetAttribute("type"));
@@ -542,27 +559,7 @@ namespace ClassicUO.Configuration
                                     gump = new SpellbookGump();
                                     break;
                                 case GUMP_TYPE.GT_STATUSGUMP:
-                                    switch (Settings.GlobalSettings.ShardType)
-                                    {
-                                        default:
-                                        case 0: // modern
-
-                                            gump = new StatusGumpModern();
-
-                                            break;
-
-                                        case 1: // old
-
-                                            gump = new StatusGumpOld();
-
-                                            break;
-
-                                        case 2: // outlands
-
-                                            gump = new StatusGumpOutlands();
-
-                                            break;
-                                    }
+                                    gump = StatusGumpBase.AddStatusGump(0, 0);
                                     break;
                                 //case GUMP_TYPE.GT_TIPNOTICE: 
                                 //    gump = new TipNoticeGump();
@@ -581,6 +578,12 @@ namespace ClassicUO.Configuration
                                     break;
                                 case GUMP_TYPE.GT_WORLDMAP:
                                     gump = new WorldMapGump();
+                                    break;
+                                case GUMP_TYPE.GT_DEBUG:
+                                    gump = new DebugGump(100, 100);
+                                    break;
+                                case GUMP_TYPE.GT_NETSTATS:
+                                    gump = new NetworkStatsGump(100, 100);
                                     break;
                             }
 
@@ -608,26 +611,79 @@ namespace ClassicUO.Configuration
                             Log.Error(ex.ToString());
                         }
                     }
+
+                    foreach (XmlElement group in root.GetElementsByTagName("anchored_group_gump"))
+                    {
+                        int matrix_width = int.Parse(group.GetAttribute("matrix_w"));
+                        int matrix_height = int.Parse(group.GetAttribute("matrix_h"));
+
+                        AnchorManager.AnchorGroup ancoGroup = new AnchorManager.AnchorGroup();
+                        ancoGroup.ResizeMatrix(matrix_width, matrix_height, 0, 0);
+
+                        foreach (XmlElement xml in group.GetElementsByTagName("gump"))
+                        {
+                            try
+                            {
+                                GUMP_TYPE type = (GUMP_TYPE) int.Parse(xml.GetAttribute("type"));
+                                int x = int.Parse(xml.GetAttribute("x"));
+                                int y = int.Parse(xml.GetAttribute("y"));
+                                uint serial = uint.Parse(xml.GetAttribute("serial"));
+
+                                int matrix_x = int.Parse(xml.GetAttribute("matrix_x"));
+                                int matrix_y = int.Parse(xml.GetAttribute("matrix_y"));
+
+                                AnchorableGump gump = null;
+
+                                switch (type)
+                                {
+                                    case GUMP_TYPE.GT_SPELLBUTTON:
+                                        gump = new UseSpellButtonGump();
+                                        break;
+                                    case GUMP_TYPE.GT_SKILLBUTTON:
+                                        gump = new SkillButtonGump();
+                                        break;
+                                    case GUMP_TYPE.GT_HEALTHBAR:
+                                        if (CustomBarsToggled)
+                                            gump = new HealthBarGumpCustom();
+                                        else
+                                            gump = new HealthBarGump();
+                                        break;
+                                    case GUMP_TYPE.GT_ABILITYBUTTON:
+                                        gump = new UseAbilityButtonGump();
+                                        break;
+                                    case GUMP_TYPE.GT_MACROBUTTON:
+                                        gump = new MacroButtonGump();
+                                        break;
+                                }
+
+                                if (gump != null)
+                                {
+                                    gump.LocalSerial = serial;
+                                    gump.Restore(xml);
+                                    gump.X = x;
+                                    gump.Y = y;
+
+                                    if (!gump.IsDisposed)
+                                    {
+                                        if (UIManager.AnchorManager[gump] == null && ancoGroup.IsEmptyDirection(matrix_x, matrix_y))
+                                        {
+                                            gumps.Add(gump);
+                                            UIManager.AnchorManager[gump] = ancoGroup;
+                                            ancoGroup.AddControlToMatrix(matrix_x, matrix_y, gump);
+                                        }
+                                        else 
+                                            gump.Dispose();
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                        }
+                    }
                 }
             }
-
-          
-            // load anchors
-            string anchorsPath = Path.Combine(path, "anchors.bin");
-
-            if (File.Exists(anchorsPath))
-            {
-                try
-                {
-                    using (BinaryReader reader = new BinaryReader(File.OpenRead(anchorsPath)))
-                        UIManager.AnchorManager.Restore(reader, gumps);
-                }
-                catch (Exception e)
-                {
-                    Log.Error( e.StackTrace);
-                }
-            }
-
 
             return gumps;
         }

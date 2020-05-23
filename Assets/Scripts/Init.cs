@@ -19,7 +19,7 @@ public class Init : MonoBehaviour
     
     private void Awake()
     {
-        ConsoleRedirect.Redirect();
+        // ConsoleRedirect.Redirect();
         Application.targetFrameRate = 60;
         
         UserPreferences.Initialize();

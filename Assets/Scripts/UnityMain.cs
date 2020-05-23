@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
 using UnityEngine;
 using ClassicUO;
 using ClassicUO.Utility.Logging;
@@ -13,8 +12,6 @@ using Newtonsoft.Json;
 using ClassicUO.IO.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
-using UnityEngine.EventSystems;
-using Vector2 = UnityEngine.Vector2;
 
 public class UnityMain : MonoBehaviour
 {
@@ -67,10 +64,6 @@ public class UnityMain : MonoBehaviour
 	private int lastScreenWidth;
 	private int lastScreenHeight;
 	
-	private static readonly List<RaycastResult> tempRaycastResults = new List<RaycastResult>(10);
-	private static PointerEventData tempPointerEventData;
-	private static EventSystem tempEventSystem;
-
 	public Action<string> OnError;
 	public Action OnExiting;
 
@@ -128,9 +121,7 @@ public class UnityMain : MonoBehaviour
         {
 	        gameScene.JoystickInput = new Microsoft.Xna.Framework.Vector2(movementJoystick.Position.x, -1 * movementJoystick.Position.y);
         }
-
-        //NOTE: TODO: Use LeanTouch and StartedOverGui instead
-        Client.Game.MouseOverGui = PointOverGui(Input.mousePosition);
+        
         Client.Game.Tick(deltaTime);
 	}
 
@@ -207,6 +198,7 @@ public class UnityMain : MonoBehaviour
 
 	    Settings.GlobalSettings.IP = config.UoServerUrl;
 	    Settings.GlobalSettings.Port = ushort.Parse(config.UoServerPort);
+	    //Settings.GlobalSettings.Encryption = 1;
 	    
 	    //Empty the plugins array because no plugins are working at the moment
 	    Settings.GlobalSettings.Plugins = new string[0];
@@ -223,6 +215,8 @@ public class UnityMain : MonoBehaviour
 			    Settings.GlobalSettings.ShardType = 1;
 		    }
 	    }
+	    
+	    CUOEnviroment.IsOutlands = Settings.GlobalSettings.ShardType == 2;
 
 	    Settings.GlobalSettings.ClientVersion = config.ClientVersion;
 	    
@@ -307,35 +301,6 @@ public class UnityMain : MonoBehaviour
 	    Client.Game.scale = scale;
     }
 
-    private static bool PointOverGui(Vector2 screenPosition)
-    {
-	    tempRaycastResults.Clear();
-
-	    var currentEventSystem = EventSystem.current;
-
-	    // Create point event data for this event system?
-	    if (currentEventSystem != tempEventSystem)
-	    {
-		    tempEventSystem = currentEventSystem;
-
-		    if (tempPointerEventData == null)
-		    {
-			    tempPointerEventData = new PointerEventData(tempEventSystem);
-		    }
-		    else
-		    {
-			    tempPointerEventData.Reset();
-		    }
-	    }
-
-	    // Raycast event system at the specified point
-	    tempPointerEventData.position = screenPosition;
-
-	    currentEventSystem.RaycastAll(tempPointerEventData, tempRaycastResults);
-
-	    return tempRaycastResults.Count > 0;
-    }
-    
     private void OnGameExiting(object sender, EventArgs e)
     {
 	    Client.Game.UnloadContent();

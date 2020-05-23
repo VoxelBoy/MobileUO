@@ -56,16 +56,56 @@ namespace ClassicUO.Game.UI.Gumps
         GT_SKILLBUTTON,
         GT_RACIALBUTTON,
         GT_WORLDMAP,
+
+        GT_DEBUG,
+        GT_NETSTATS,
     }
 
     internal class Gump : Control
     {
+        private Button closeButton;
+        public static bool CloseButtonsEnabled;
+        
         public Gump(uint local, uint server)
         {
             LocalSerial = local;
             ServerSerial = server;
             AcceptMouseInput = false;
             AcceptKeyboardInput = false;
+        }
+
+        //NOTE: Make sure close button is always on top
+        protected override void OnChildAdded()
+        {
+            InitCloseButton();
+            if (closeButton != null)
+            {
+                closeButton.Parent = this;
+            }
+        }
+
+        private void InitCloseButton()
+        {
+            if ((closeButton == null || closeButton.IsDisposed) && CloseButtonsEnabled && (CanCloseWithRightClick || CanCloseWithEsc))
+            {
+                closeButton = new Button(Button.MOBILE_CLOSE_BUTTON_ID, 1150, 1152, 1151);
+                closeButton.Width = (int) Math.Round(closeButton.Width * 1.25f);
+                closeButton.Height = (int) Math.Round(closeButton.Height * 1.5f);
+                closeButton.ContainsByBounds = true;
+                closeButton.ButtonAction = ButtonAction.Activate;
+            }
+        }
+
+        public void ToggleCloseButtonEnabled()
+        {
+            InitCloseButton();
+            if (closeButton != null)
+            {
+                closeButton.IsEnabled = CloseButtonsEnabled && (CanCloseWithRightClick || CanCloseWithEsc);
+                closeButton.IsVisible = closeButton.IsEnabled;
+                //Force insert closeButton, might be needed if it was somehow removed from Children in the meanwhile
+                OnChildAdded();
+            }
         }
 
         public bool BlockMovement { get; set; }
@@ -105,6 +145,12 @@ namespace ClassicUO.Game.UI.Gumps
                 it.Opened = false;
 
             base.Dispose();
+
+            if (closeButton != null && closeButton.IsDisposed == false)
+            {
+                closeButton.Dispose();
+                closeButton = null;
+            }
         }
 
         public virtual void Save(BinaryWriter writer)

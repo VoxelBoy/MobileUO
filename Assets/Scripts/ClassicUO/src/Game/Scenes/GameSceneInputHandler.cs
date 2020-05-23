@@ -260,10 +260,13 @@ namespace ClassicUO.Game.Scenes
             _isSelectionActive = false;
         }
 
-        internal override void OnLeftMouseDown()
+        internal override bool OnLeftMouseDown()
         {
+            if (UIManager.PopupMenu != null && !UIManager.PopupMenu.Bounds.Contains(Mouse.Position.X, Mouse.Position.Y))
+                UIManager.ShowGamePopup(null);
+
             if (!IsMouseOverViewport)
-                return;
+                return false;
 
             if (World.CustomHouseManager != null)
             {
@@ -299,10 +302,15 @@ namespace ClassicUO.Game.Scenes
                     _holdMouse2secOverItemTime = Time.Ticks;
                 }
             }
+
+            return true;
         }
 
-        internal override void OnLeftMouseUp()
+        internal override bool OnLeftMouseUp()
         {
+            if (UIManager.PopupMenu != null && !UIManager.PopupMenu.Bounds.Contains(Mouse.Position.X, Mouse.Position.Y))
+                UIManager.ShowGamePopup(null);
+
             if (_isMouseLeftDown)
             {
                 _isMouseLeftDown = false;
@@ -317,7 +325,7 @@ namespace ClassicUO.Game.Scenes
             {
                 DoDragSelect();
 
-                return;
+                return true;
             }
 
             if (!IsMouseOverViewport)
@@ -325,8 +333,16 @@ namespace ClassicUO.Game.Scenes
                 if (ItemHold.Enabled)
                 {
                     UIManager.MouseOverControl?.InvokeMouseUp(Mouse.Position, MouseButtonType.Left);
+
+                    return true;
                 }
-                return;
+
+                return false;
+            }
+
+            if (UIManager.SystemChat != null && !UIManager.SystemChat.IsFocused)
+            {
+                UIManager.SystemChat.SetFocus();
             }
 
             if (!ProfileManager.Current.DisableAutoMove && _rightMousePressed)
@@ -336,7 +352,7 @@ namespace ClassicUO.Game.Scenes
                 _dragginObject = null;
 
             if (UIManager.IsDragging)
-                return;
+                return false;
 
             if (ItemHold.Enabled)
             {
@@ -383,7 +399,7 @@ namespace ClassicUO.Game.Scenes
                         default:
                             Log.Warn("Unhandled mouse inputs for GameObject type " + obj.GetType());
 
-                            return;
+                            return false;
                     }
                 }
                 else
@@ -470,7 +486,7 @@ namespace ClassicUO.Game.Scenes
                     case Static st:
                         string name = st.Name;
                         if (string.IsNullOrEmpty(name))
-                            name = ClilocLoader.Instance.GetString(1020000 + st.Graphic);
+                            name = ClilocLoader.Instance.GetString(1020000 + st.Graphic, st.ItemData.Name);
                         obj.AddMessage(MessageType.Label, name, 3, 1001, false);
 
 
@@ -482,7 +498,7 @@ namespace ClassicUO.Game.Scenes
                         name = multi.Name;
 
                         if (string.IsNullOrEmpty(name))
-                            name = ClilocLoader.Instance.GetString(1020000 + multi.Graphic);
+                            name = ClilocLoader.Instance.GetString(1020000 + multi.Graphic, multi.ItemData.Name);
                         obj.AddMessage(MessageType.Label, name, 3, 1001, false);
 
                         if (obj.TextContainer != null && obj.TextContainer.MaxSize == 5)
@@ -505,8 +521,9 @@ namespace ClassicUO.Game.Scenes
                         break;
                 }
             }
-        }
 
+            return true;
+        }
 
         internal override bool OnLeftMouseDoubleClick()
         {
@@ -515,6 +532,15 @@ namespace ClassicUO.Game.Scenes
             if (!IsMouseOverViewport)
             {
                 result = DelayedObjectClickManager.IsEnabled;
+
+                if (result)
+                {
+                    DelayedObjectClickManager.Clear();
+
+                    return false;
+                }
+
+                return false;
             }
             else
             {
@@ -556,19 +582,27 @@ namespace ClassicUO.Game.Scenes
         }
 
 
-        internal override void OnRightMouseDown()
+        internal override bool OnRightMouseDown()
         {
+            if (UIManager.PopupMenu != null && !UIManager.PopupMenu.Bounds.Contains(Mouse.Position.X, Mouse.Position.Y))
+                UIManager.ShowGamePopup(null);
+
             if (!IsMouseOverViewport)
-                return;
+                return false;
 
             _rightMousePressed = true;
             _continueRunning = false;
             StopFollowing();
+
+            return true;
         }
 
 
-        internal override void OnRightMouseUp()
+        internal override bool OnRightMouseUp()
         {
+            if (UIManager.PopupMenu != null && !UIManager.PopupMenu.Bounds.Contains(Mouse.Position.X, Mouse.Position.Y))
+                UIManager.ShowGamePopup(null);
+
             _rightMousePressed = false;
 
             if (_boatIsMoving)
@@ -576,6 +610,8 @@ namespace ClassicUO.Game.Scenes
                 _boatIsMoving = false;
                 BoatMovingManager.MoveRequest(World.Player.Direction, 0);
             }
+
+            return !IsMouseOverUI;
         }
 
 
@@ -622,29 +658,34 @@ namespace ClassicUO.Game.Scenes
 
 
 
-        internal override void OnMouseWheel(bool up)
+        internal override bool OnMouseWheel(bool up)
         {
             if (!IsMouseOverViewport)
-                return;
+                return false;
 
             if (ProfileManager.Current.EnableMousewheelScaleZoom)
             {
                 if (!Keyboard.Ctrl)
-                    return;
+                    return false;
 
                 if (!up)
                     ZoomOut();
                 else
                     ZoomIn();
+
+                return true;
             }
 
+            return false;
         }
 
 
-        internal override void OnMouseDragging()
+        internal override bool OnMouseDragging()
         {
             if (!IsMouseOverViewport)
-                return;
+                return false;
+
+            bool ok = true;
 
             if (Mouse.LButtonPressed && !ItemHold.Enabled)
             {
@@ -683,7 +724,9 @@ namespace ClassicUO.Game.Scenes
                                 Rectangle rect = GumpsLoader.Instance.GetTexture(0x0804).Bounds;
                                 UIManager.Add(customgump = new HealthBarGump(obj) { X = Mouse.LDropPosition.X - (rect.Width >> 1), Y = Mouse.LDropPosition.Y - (rect.Height >> 1) });
                             }
+
                             UIManager.AttemptDragControl(customgump, Mouse.Position, true);
+                            ok = false;
                         }
                         else if (obj is Item item)
                         {
@@ -694,6 +737,8 @@ namespace ClassicUO.Game.Scenes
                     _dragginObject = null;
                 }
             }
+
+            return ok;
         }
       
         internal override void OnKeyDown(SDL.SDL_KeyboardEvent e)

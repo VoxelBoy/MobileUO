@@ -463,7 +463,9 @@ namespace ClassicUO.Game.Managers
                                 case MacroSubType.Status:
 
                                     if (StatusGumpBase.GetStatusGump() == null)
-                                        StatusGumpBase.AddStatusGump(100, 100);
+                                    {
+                                        UIManager.Add(StatusGumpBase.AddStatusGump(100, 100));
+                                    }
 
                                     break;
 
@@ -542,7 +544,7 @@ namespace ClassicUO.Game.Managers
                                     break;
 
                                 case MacroSubType.Chat:
-                                    if (!UOChatManager.ChatIsEnabled)
+                                    if (UOChatManager.ChatIsEnabled != CHAT_STATUS.ENABLED)
                                     {
                                         break;
                                     }
@@ -708,8 +710,7 @@ namespace ClassicUO.Game.Managers
 
                                             if (healthbar != null)
                                             {
-                                                StatusGumpBase.AddStatusGump(healthbar.ScreenCoordinateX, healthbar.ScreenCoordinateY);
-
+                                               UIManager.Add(StatusGumpBase.AddStatusGump(healthbar.ScreenCoordinateX, healthbar.ScreenCoordinateY));
                                             }
                                         }
                                     }
@@ -975,13 +976,8 @@ namespace ClassicUO.Game.Managers
 
                     if (_itemsInHand[handIndex] != 0)
                     {
-                        Item item = World.Items.Get(_itemsInHand[handIndex]);
-
-                        if (item != null)
-                        {
-                            GameActions.PickUp(item, 1);
-                            gs.WearHeldItem(World.Player);
-                        }
+                        GameActions.PickUp(_itemsInHand[handIndex], 1);
+                        gs.WearHeldItem(World.Player);
 
                         _itemsInHand[handIndex] = 0;
                     }

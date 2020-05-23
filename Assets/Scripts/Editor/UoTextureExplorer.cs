@@ -8,6 +8,14 @@ public class UoTextureExplorer : EditorWindow
     private Vector2 scrollPos;
     private bool skipNullTextures;
 
+    private enum GraphicType
+    {
+        ArtGraphic,
+        GumpGraphic
+    }
+
+    private GraphicType graphicTypeToDisplay = GraphicType.ArtGraphic;
+
     [MenuItem("Tools/Uo Texture Explorer")]
     public new static void Show()
     {
@@ -42,6 +50,8 @@ public class UoTextureExplorer : EditorWindow
             UoTextureExplorerHelper.TriggerFirstTexture();
         }
 
+        graphicTypeToDisplay = (GraphicType) EditorGUILayout.EnumPopup(graphicTypeToDisplay);
+
         rangeMin = EditorGUILayout.IntField("Range Min", rangeMin);
         rangeMax = EditorGUILayout.IntField("Range Max", rangeMax);
         skipNullTextures = EditorGUILayout.Toggle("Skip null textures", skipNullTextures);
@@ -54,7 +64,15 @@ public class UoTextureExplorer : EditorWindow
         Rect rect = new Rect(0,0,widthRemaining, 44 + 2);
         for (int i = rangeMin; i <= rangeMax; i++)
         {
-            var texture = UoTextureExplorerHelper.GetLandTexture((uint)i);
+            Microsoft.Xna.Framework.Graphics.Texture2D texture = null;
+            if (graphicTypeToDisplay == GraphicType.ArtGraphic)
+            {
+                texture = UoTextureExplorerHelper.GetLandTexture((uint) i);
+            }
+            else if (graphicTypeToDisplay == GraphicType.GumpGraphic)
+            {
+                texture = UoTextureExplorerHelper.GetGumpTexture((ushort) i);
+            }
 
             if (widthRemaining < 44)
             {
