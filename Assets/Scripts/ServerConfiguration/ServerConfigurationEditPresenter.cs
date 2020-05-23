@@ -33,6 +33,9 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
     
     [SerializeField]
     private InputField clientVersionInputField;
+
+    [SerializeField]
+    private Toggle useEncryptionToggle;
     
     [SerializeField]
     private InputField clientPathForUnityEditorInputField;
@@ -85,6 +88,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         fileDownloadServerUrlInputField.text = serverConfigurationToEdit?.FileDownloadServerUrl ?? "";
         fileDownloadServerPortInputField.text = serverConfigurationToEdit?.FileDownloadServerPort ?? "8080";
         clientVersionInputField.text = serverConfigurationToEdit?.ClientVersion ?? "";
+        useEncryptionToggle.isOn = serverConfigurationToEdit?.UseEncryption ?? false;
         clientPathForUnityEditorInputField.text = serverConfigurationToEdit?.ClientPathForUnityEditor ?? "";
         clientPathForUnityEditorParent.SetActive(Application.isMobilePlatform == false);
         
@@ -136,6 +140,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         ServerConfigurationToEdit.FileDownloadServerUrl = fileDownloadServerUrlInputField.text;
         ServerConfigurationToEdit.FileDownloadServerPort = fileDownloadServerPortInputField.text;
         ServerConfigurationToEdit.ClientVersion = clientVersionInputField.text;
+        ServerConfigurationToEdit.UseEncryption = useEncryptionToggle.isOn;
         ServerConfigurationToEdit.ClientPathForUnityEditor = clientPathForUnityEditorInputField.text;
         
         OnConfigurationEditSaved?.Invoke();

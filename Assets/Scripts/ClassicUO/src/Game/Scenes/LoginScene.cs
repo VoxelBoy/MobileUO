@@ -141,6 +141,13 @@ namespace ClassicUO.Game.Scenes
             NetClient.LoginSocket.Disconnected -= Login_NetClient_Disconnected;
             NetClient.PacketReceived -= NetClient_PacketReceived;
 
+            //NOTE: We force the login socket to disconnect in case it hasn't already been disposed
+            //This is good practice since the Client can be quit while the socket is still active
+            if (NetClient.LoginSocket.IsDisposed == false)
+            {
+                NetClient.LoginSocket.Disconnect();
+            }
+
             UIManager.GameCursor.IsLoading = false;
             UIManager.Clear();
             base.Unload();

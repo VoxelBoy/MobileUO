@@ -10,6 +10,7 @@ using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Scenes;
 using Newtonsoft.Json;
 using ClassicUO.IO.Resources;
+using ClassicUO.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 
@@ -198,8 +199,11 @@ public class UnityMain : MonoBehaviour
 
 	    Settings.GlobalSettings.IP = config.UoServerUrl;
 	    Settings.GlobalSettings.Port = ushort.Parse(config.UoServerPort);
-	    //Settings.GlobalSettings.Encryption = 1;
 	    
+	    //Reset static encryption type variable
+	    EncryptionHelper.Type = ENCRYPTION_TYPE.NONE;
+	    Settings.GlobalSettings.Encryption = (byte) (config.UseEncryption ? 1 : 0);
+
 	    //Empty the plugins array because no plugins are working at the moment
 	    Settings.GlobalSettings.Plugins = new string[0];
 	    

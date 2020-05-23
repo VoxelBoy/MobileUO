@@ -11,6 +11,7 @@ public class ServerConfiguration
     public string FileDownloadServerUrl;
     public string FileDownloadServerPort = "8080";
     public string ClientVersion;
+    public bool UseEncryption;
     public string ClientPathForUnityEditor;
     public bool AllFilesDownloaded;
 

@@ -168,6 +168,17 @@ namespace ClassicUO
             AuraManager.Dispose();
             UIManager.Dispose();
             Texture2DCache.Dispose();
+            
+            //NOTE: We force the sockets to disconnect in case they haven't already been disposed
+            //This is good practice since the Client can be quit while the socket is still active
+            if (NetClient.LoginSocket.IsDisposed == false)
+            {
+                NetClient.LoginSocket.Disconnect();
+            }
+            if (NetClient.Socket.IsDisposed == false)
+            {
+                NetClient.Socket.Disconnect();
+            }
 
             base.UnloadContent();
         }
