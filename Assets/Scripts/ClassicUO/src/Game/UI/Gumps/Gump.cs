@@ -88,7 +88,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if ((closeButton == null || closeButton.IsDisposed) && CloseButtonsEnabled && (CanCloseWithRightClick || CanCloseWithEsc))
             {
-                closeButton = new Button(Button.MOBILE_CLOSE_BUTTON_ID, 1150, 1152, 1151);
+                closeButton = new Button(MOBILE_CLOSE_BUTTON_ID, 1150, 1152, 1151);
                 closeButton.Width = (int) Math.Round(closeButton.Width * 1.25f);
                 closeButton.Height = (int) Math.Round(closeButton.Height * 1.5f);
                 closeButton.ContainsByBounds = true;

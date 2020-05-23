@@ -60,6 +60,8 @@ namespace ClassicUO.Game.UI.Controls
 
         protected static Vector3 _hueVector = Vector3.Zero;
 
+        protected const int MOBILE_CLOSE_BUTTON_ID = -9999;
+
         protected static void ResetHueVector()
         {
             _hueVector.X = 0;
@@ -755,7 +757,7 @@ namespace ClassicUO.Game.UI.Controls
         public virtual void OnButtonClick(int buttonID)
         {
             //NOTE: Mobile close button functionality
-            if (buttonID == Button.MOBILE_CLOSE_BUTTON_ID)
+            if (buttonID == MOBILE_CLOSE_BUTTON_ID)
             {
                 Parent?.CloseWithRightClick();
             }
@@ -789,7 +791,7 @@ namespace ClassicUO.Game.UI.Controls
 
         public bool IsMobileCloseButton()
         {
-            return this is Button button && button.ButtonID == Button.MOBILE_CLOSE_BUTTON_ID;
+            return this is Button button && button.ButtonID == MOBILE_CLOSE_BUTTON_ID;
         }
     }
 }

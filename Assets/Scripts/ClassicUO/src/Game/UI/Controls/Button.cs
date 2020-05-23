@@ -48,8 +48,6 @@ namespace ClassicUO.Game.UI.Controls
 
         private bool _entered;
 
-        public const int MOBILE_CLOSE_BUTTON_ID = -9999;
-
         public Button(int buttonID, ushort normal, ushort pressed, ushort over = 0, string caption = "", byte font = 0, bool isunicode = true, ushort normalHue = ushort.MaxValue, ushort hoverHue = ushort.MaxValue)
         {
             ButtonID = buttonID;
