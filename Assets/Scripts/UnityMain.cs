@@ -295,7 +295,7 @@ public class UnityMain : MonoBehaviour
 		    scale = isGameScene ? gameScale : loginScale;
 	    }
 
-	    if (UserPreferences.CustomScaleSize != ScaleSizes.Default && isGameScene)
+	    if (UserPreferences.CustomScaleSize != UserPreferences.ScaleSizes.Default && isGameScene)
 	    {
 		    scale *= (int)UserPreferences.CustomScaleSize / 100f;
 	    }

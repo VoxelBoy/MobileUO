@@ -14,9 +14,9 @@ public class ScaleButtonPresenter : MonoBehaviour
 
     private void Awake()
     {
-        scaleSizesValues = Enum.GetValues(typeof(ScaleSizes));
+        scaleSizesValues = Enum.GetValues(typeof(UserPreferences.ScaleSizes));
         scaleSizesValuesLength = scaleSizesValues.Length;
-        scaleSizeIndex = Enum.GetNames(typeof(ScaleSizes)).ToList().IndexOf(UserPreferences.CustomScaleSize.ToString());
+        scaleSizeIndex = Enum.GetNames(typeof(UserPreferences.ScaleSizes)).ToList().IndexOf(UserPreferences.CustomScaleSize.ToString());
         button.onClick.AddListener(OnButtonClicked);
         UpdateButtonText();
     }
@@ -33,7 +33,7 @@ public class ScaleButtonPresenter : MonoBehaviour
         {
             scaleSizeIndex -= scaleSizesValuesLength;
         }
-        var scaleSize = (ScaleSizes) scaleSizesValues.GetValue(scaleSizeIndex);
+        var scaleSize = (UserPreferences.ScaleSizes) scaleSizesValues.GetValue(scaleSizeIndex);
         UserPreferences.CustomScaleSize = scaleSize;
         
         UpdateButtonText();

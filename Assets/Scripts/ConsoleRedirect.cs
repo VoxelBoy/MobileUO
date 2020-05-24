@@ -16,14 +16,14 @@ public class ConsoleRedirect : TextWriter
             buffer.Length = 0;
         }
 
-        UnityEngine.Debug.Log(str);
+        Debug.Log(str);
     }
 
     private void FlushNoLock()
     {
         string str = buffer.ToString();
         buffer.Length = 0;
-        UnityEngine.Debug.Log(str);
+        Debug.Log(str);
     }
 
     public override void Write(string value)
@@ -93,7 +93,7 @@ public class ConsoleRedirect : TextWriter
         get { return Encoding.Default; }
     }
 
-    [RuntimeInitializeOnLoadMethod]
+    //[RuntimeInitializeOnLoadMethod]
     public static void Redirect()
     {
         System.Console.SetOut(new ConsoleRedirect());

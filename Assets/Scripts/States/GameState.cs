@@ -1,12 +1,16 @@
+using UnityEngine;
+
 public class GameState : IState
 {
-    private UnityMain unityMain;
-    private ErrorPresenter errorPresenter;
+    private readonly UnityMain unityMain;
+    private readonly ErrorPresenter errorPresenter;
+    private readonly Canvas inGameDebugConsoleCanvas;
 
-    public GameState(UnityMain unityMain, ErrorPresenter errorPresenter)
+    public GameState(UnityMain unityMain, ErrorPresenter errorPresenter, Canvas inGameDebugConsoleCanvas)
     {
         this.unityMain = unityMain;
         this.errorPresenter = errorPresenter;
+        this.inGameDebugConsoleCanvas = inGameDebugConsoleCanvas;
     }
     public void Enter()
     {
@@ -20,6 +24,7 @@ public class GameState : IState
 
     private void GoBackToServerConfigurationState()
     {
+        inGameDebugConsoleCanvas.enabled = false;
         StateManager.GoToState<ServerConfigurationState>();
     }
 
@@ -28,6 +33,7 @@ public class GameState : IState
         unityMain.enabled = false;
         errorPresenter.gameObject.SetActive(true);
         errorPresenter.SetErrorText(error);
+        inGameDebugConsoleCanvas.enabled = true;
     }
 
     public void Exit()

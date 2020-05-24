@@ -9,7 +9,8 @@ public class StateManager
     public static void GoToState<T>() where T : IState
     {
         currentState?.Exit();
-        currentState = states.FirstOrDefault(x => x is T);
+        var newState = states.FirstOrDefault(x => x is T);
+        currentState = newState;
         currentState?.Enter();
     }
 

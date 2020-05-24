@@ -10,6 +10,7 @@ using UnityEngine.Networking;
 public class DownloadState : IState
 {
     private readonly DownloadPresenter downloadPresenter;
+    private readonly Canvas inGameDebugConsoleCanvas;
     
     private ServerConfiguration serverConfiguration;
     private string pathToSaveFiles;
@@ -29,15 +30,18 @@ public class DownloadState : IState
     private const int MAX_CONCURRENT_DOWNLOADS = 1;
     private const int MAX_DOWNLOAD_ATTEMPTS = 3;
 
-    public DownloadState(DownloadPresenter downloadPresenter, bool forceDownloadsInEditor)
+    public DownloadState(DownloadPresenter downloadPresenter, bool forceDownloadsInEditor, Canvas inGameDebugConsoleCanvas)
     {
         this.downloadPresenter = downloadPresenter;
+        this.inGameDebugConsoleCanvas = inGameDebugConsoleCanvas;
+        
         downloadPresenter.backButtonPressed += OnBackButtonPressed;
         this.forceDownloadsInEditor = forceDownloadsInEditor;
     }
 
     private void OnBackButtonPressed()
     {
+        inGameDebugConsoleCanvas.enabled = false;
         StateManager.GoToState<ServerConfigurationState>();
     }
 
@@ -190,6 +194,7 @@ public class DownloadState : IState
         downloadPresenter.StopCoroutine(downloadCoroutine);
         downloadPresenter.ShowError(error);
         downloadPresenter.ClearFileList();
+        inGameDebugConsoleCanvas.enabled = true;
     }
 
     public void Exit()
