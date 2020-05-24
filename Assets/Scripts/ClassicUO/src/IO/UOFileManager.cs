@@ -92,7 +92,7 @@ namespace ClassicUO.IO
                     for (int i = 0; i < Verdata.Patches.Length; i++)
                     {
                         ref UOFileIndex5D vh = ref Verdata.Patches[i];
-                        Log.Info($">>> patching  FileID: {vh.FileID}  -  BlockID: {vh.BlockID}");
+                        //Log.Info($">>> patching  FileID: {vh.FileID}  -  BlockID: {vh.BlockID}");
 
                         if (vh.FileID == 0)
                         {
