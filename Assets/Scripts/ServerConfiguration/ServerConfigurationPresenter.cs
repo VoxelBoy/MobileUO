@@ -4,10 +4,13 @@ public class ServerConfigurationPresenter : MonoBehaviour
 {
     [SerializeField] private ServerConfigurationListPresenter serverConfigurationListPresenter;
     [SerializeField] private ServerConfigurationEditPresenter serverConfigurationEditPresenter;
+    [SerializeField] private GameObject patreonParent;
 
     private void Start()
     {
         SwitchToList();
+        
+        patreonParent.SetActive(Application.platform != RuntimePlatform.IPhonePlayer);
 
         serverConfigurationListPresenter.AddNewConfigurationButtonClicked += OnAddNewConfigurationButtonClicked;
         serverConfigurationListPresenter.EditButtonClicked += OnEditButtonClicked;
