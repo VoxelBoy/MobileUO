@@ -17,6 +17,14 @@ public static class UserPreferences
         Thirty = 30,
         Sixty = 60
     }
+
+    public enum JoystickSizes
+    {
+        Small = 0,
+        Normal = 1,
+        Large = 2,
+        Custom = 3
+    }
     
     private const string customScaleSizePrefKey = "customScaleSize";
     private const string customScaleSizeDefaultValue = "Default";
@@ -57,9 +65,49 @@ public static class UserPreferences
         }
     }
 
+    private const string customJoystickPositionAndSizePrefKey = "customJoystickSizeAndPosition";
+    private static Vector3 customJoystickPositionAndSize;
+    public static Vector3 CustomJoystickPositionAndSize
+    {
+        get => customJoystickPositionAndSize;
+        set
+        {
+            if (customJoystickPositionAndSize != value)
+            {
+                customJoystickPositionAndSize = value;
+                PlayerPrefs.SetFloat(customJoystickPositionAndSizePrefKey + "X", customJoystickPositionAndSize.x);
+                PlayerPrefs.SetFloat(customJoystickPositionAndSizePrefKey + "Y", customJoystickPositionAndSize.y);
+                PlayerPrefs.SetFloat(customJoystickPositionAndSizePrefKey + "Z", customJoystickPositionAndSize.z);
+            }
+        }
+    }
+
+    private const string joystickSizePrefKey = "joystickSize";
+    private const string joystickSizeDefaultValue = "Normal";
+    private static JoystickSizes joystickSize;
+    public static Action JoystickSizeChanged;
+    public static JoystickSizes JoystickSize
+    {
+        get => joystickSize;
+        set
+        {
+            if (joystickSize != value)
+            {
+                joystickSize = value;
+                PlayerPrefs.SetString(joystickSizePrefKey, joystickSize.ToString());
+                JoystickSizeChanged?.Invoke();
+            }
+        }
+    }
+
     public static void Initialize()
     {
         CustomScaleSize = (ScaleSizes) Enum.Parse(typeof(ScaleSizes), PlayerPrefs.GetString(customScaleSizePrefKey, customScaleSizeDefaultValue));
         TargetFrameRate = (TargetFrameRates) PlayerPrefs.GetInt(targetFrameRatePrefKey, targetFrameRateDefaultValue);
+        JoystickSize = (JoystickSizes) Enum.Parse(typeof(JoystickSizes), PlayerPrefs.GetString(joystickSizePrefKey, joystickSizeDefaultValue));
+        
+        customJoystickPositionAndSize.x = PlayerPrefs.GetFloat(customJoystickPositionAndSizePrefKey + "X", -1f);
+        customJoystickPositionAndSize.y = PlayerPrefs.GetFloat(customJoystickPositionAndSizePrefKey + "Y", -1f);
+        customJoystickPositionAndSize.z = PlayerPrefs.GetFloat(customJoystickPositionAndSizePrefKey + "Z", -1f);
     }
 }

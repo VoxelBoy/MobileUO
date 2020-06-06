@@ -119,7 +119,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.19
+  bundleVersion: 0.20
   preloadedAssets: []
   metroInputSource: 1
   wsaTransparentSwapchain: 0
@@ -169,8 +169,8 @@ PlayerSettings:
     iPhone: com.saltedcaramelgames.mobileuo
     tvOS: 
   buildNumber:
-    iPhone: 0.19
-  AndroidBundleVersionCode: 19
+    iPhone: 0.20
+  AndroidBundleVersionCode: 20
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

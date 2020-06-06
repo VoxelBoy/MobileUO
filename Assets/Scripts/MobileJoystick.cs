@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
     private RectTransform Background;
+    [SerializeField]
+    private Image BackgroundImage;
     [SerializeField]
     private RectTransform Knob;
     [SerializeField]
@@ -39,5 +42,21 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
     public void OnPointerUp(PointerEventData eventData)
     {
         OnEndDrag(eventData);
+    }
+
+    public void SetSize(float size)
+    {
+        Background.sizeDelta = Vector2.one * size;
+        Knob.sizeDelta = Vector2.one * size * 0.5f;
+    }
+
+    private void OnEnable()
+    {
+        BackgroundImage.raycastTarget = true;
+    }
+
+    private void OnDisable()
+    {
+        BackgroundImage.raycastTarget = false;
     }
 }

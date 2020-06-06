@@ -13,6 +13,7 @@ using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
+using Vector2 = UnityEngine.Vector2;
 
 public class UnityMain : MonoBehaviour
 {
@@ -68,11 +69,20 @@ public class UnityMain : MonoBehaviour
 	public Action<string> OnError;
 	public Action OnExiting;
 
-	void Start ()
-    {
-	    movementJoystick.gameObject.SetActive(false);
+	private void Start ()
+	{
+		//Apply custom position and size to movementJoystick if set
+		var customJoystickPositionAndSize = UserPreferences.CustomJoystickPositionAndSize;
+		if (customJoystickPositionAndSize.x != -1)
+		{
+			((RectTransform)movementJoystick.transform).anchoredPosition = new Vector2(customJoystickPositionAndSize.x, customJoystickPositionAndSize.y);
+			movementJoystick.SetSize(customJoystickPositionAndSize.z);
+		}
+		movementJoystick.gameObject.SetActive(false);
+		
 	    UserPreferences.CustomScaleSizeChanged += OnCustomScaleSizeChanged;
-    }
+	    UserPreferences.JoystickSizeChanged += OnJoystickSizeChanged;
+	}
 
 	private void OnCustomScaleSizeChanged()
 	{
@@ -84,8 +94,36 @@ public class UnityMain : MonoBehaviour
 			gameScene.GetViewPort();
 		}
 	}
+	
+	private void OnJoystickSizeChanged()
+	{
+		var rectT = (RectTransform) movementJoystick.transform;
+		var sizeEnum = UserPreferences.JoystickSize;
+		var size = rectT.sizeDelta.x;
+		if (sizeEnum == UserPreferences.JoystickSizes.Small)
+		{
+			size = 120f;
+		}
+		else if (sizeEnum == UserPreferences.JoystickSizes.Normal)
+		{
+			size = 160f;
+		}
+		else if (sizeEnum == UserPreferences.JoystickSizes.Large)
+		{
+			size = 200f;
+		}
+		else if (sizeEnum == UserPreferences.JoystickSizes.Custom)
+		{
+			var customJoystickPositionAndSize = UserPreferences.CustomJoystickPositionAndSize;
+			if (customJoystickPositionAndSize.z != -1)
+			{
+				size = customJoystickPositionAndSize.z;
+			}
+		}
+		movementJoystick.SetSize(size);
+	}
 
-	void Update ()
+	private void Update ()
 	{
 		if (Client.Game == null)
 			return;
