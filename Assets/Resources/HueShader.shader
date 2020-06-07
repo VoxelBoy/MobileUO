@@ -72,15 +72,11 @@
                 if (hue <= HuesPerTexture)
                 {
                     float2 texcoord = float2(red % 32, hue / HuesPerTexture);
-                    //NOTE: We invert the y coordinate to read from the proper place in the hue texture
-                    texcoord.y = 1 - texcoord.y;
                     return tex2D(_HueTex1, texcoord).rgb;
                 }
                 else
                 {
                     float2 texcoord = float2(red % 32, (hue - HuesPerTexture) / HuesPerTexture);
-                    //NOTE: We invert the y coordinate to read from the proper place in the hue texture
-                    texcoord.y = 1 - texcoord.y;
                     return tex2D(_HueTex2, texcoord).rgb;
                 }
             }

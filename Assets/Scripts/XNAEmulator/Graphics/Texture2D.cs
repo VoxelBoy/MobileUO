@@ -21,7 +21,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public Texture2D(GraphicsDevice graphicsDevice, int width, int height)
         {
-            UnityTexture = new UnityEngine.Texture2D(width, height, TextureFormat.ARGB32, false, false);
+            UnityTexture = new UnityEngine.Texture2D(width, height, TextureFormat.RGBA32, false, false);
+            UnityTexture.filterMode = FilterMode.Point;
             UnityTexture.wrapMode = TextureWrapMode.Clamp;
         }
 
@@ -105,8 +106,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 y *= textureWidth;
                 var index = y + (textureWidth - x - 1);
                 var color = data[dataLength - index - 1];
-                //argb -> rgba
-                tmp[i] = (uint)(color.R << 24 | color.G << 16 | color.B << 8 | color.A);
+                tmp[i] = color.PackedValue;
             }
 
             dst.CopyFrom(tmp);
@@ -121,14 +121,14 @@ namespace Microsoft.Xna.Framework.Graphics
             //Bgra5551
             if (color == 0)
                 return 0;
-            byte alpha = (byte) ((color >> 15) * 255);
             byte red = (byte) (((color >> 0xA) & 0x1F) * 8.225806f);
             byte green = (byte) (((color >> 0x5) & 0x1F) * 8.225806f);
             byte blue = (byte) ((color & 0x1F) * 8.225806f);
-            byteArray[0] = alpha;
-            byteArray[1] = red;
-            byteArray[2] = green;
-            byteArray[3] = blue;
+            byte alpha = (byte) ((color >> 15) * 255);
+            byteArray[0] = red;
+            byteArray[1] = green;
+            byteArray[2] = blue;
+            byteArray[3] = alpha;
 
             //NOTE: code below is copied from BitConverter.ToInt32
             fixed (byte* numPtr = &byteArray[0])
@@ -137,39 +137,33 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
-        internal void SetData(uint[] data, int startOffset = 0, int elementCount = 0)
+        internal void SetData(uint[] data, int startOffset = 0, int elementCount = 0, bool invertY = false)
         {
             var textureWidth = UnityTexture.width;
+            var textureHeight = UnityTexture.height;
 
             if (elementCount == 0)
             {
                 elementCount = data.Length;
             }
-            // else
-            // {
-            //     elementCount *= textureWidth;
-            // }
 
             var destText = UnityTexture as UnityEngine.Texture2D;
             var dst = destText.GetRawTextureData<uint>();
             var dstLength = dst.Length;
             var tmp = new uint[dstLength];
-            var dataLength = data.Length;
 
             for (int i = 0; i < elementCount; i++)
             {
                 int x = i % textureWidth;
                 int y = i / textureWidth;
-                y *= textureWidth;
-                var index = y + (textureWidth - x - 1);
+                if (invertY)
+                {
+                    y = textureHeight - y - 1;
+                }
+                var index = (y * textureWidth) + (textureWidth - x - 1);
                 if (index < elementCount && i < dstLength)
                 {
-                    var u = data[elementCount + startOffset - index - 1];
-                    uint firstByte = u & 0xff;
-                    uint secondByte = (u >> 8) & 0xff;
-                    uint thirdByte = (u >> 16) & 0xff;
-                    uint fourthByte = (u >> 24) & 0xff;
-                    tmp[i] = thirdByte << 24 | secondByte << 16 | firstByte << 8 | fourthByte;
+                    tmp[i] = data[elementCount + startOffset - index - 1];
                 }
             }
 

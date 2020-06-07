@@ -125,7 +125,7 @@ namespace ClassicUO
                                           GraphicsDevice,
                                           TEXTURE_WIDHT,
                                           TEXTURE_HEIGHT);
-            _hues_sampler[0].SetData(buffer, 0, TEXTURE_WIDHT * TEXTURE_HEIGHT);
+            _hues_sampler[0].SetData(buffer, 0, TEXTURE_WIDHT * TEXTURE_HEIGHT, true);
            
            
 
@@ -134,7 +134,7 @@ namespace ClassicUO
                                           GraphicsDevice,
                                           TEXTURE_WIDHT,
                                           TEXTURE_HEIGHT);
-            _hues_sampler[1].SetData(buffer, TEXTURE_WIDHT * TEXTURE_HEIGHT, TEXTURE_WIDHT * TEXTURE_HEIGHT);
+            _hues_sampler[1].SetData(buffer, TEXTURE_WIDHT * TEXTURE_HEIGHT, TEXTURE_WIDHT * TEXTURE_HEIGHT, true);
 
 
 
