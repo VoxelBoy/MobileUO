@@ -141,6 +141,9 @@ namespace ClassicUO
 
             GraphicsDevice.Textures[1] = _hues_sampler[0];
             GraphicsDevice.Textures[2] = _hues_sampler[1];
+
+            GraphicsDevice.Textures[1].UnityTexture.filterMode = UnityEngine.FilterMode.Point;
+            GraphicsDevice.Textures[2].UnityTexture.filterMode = UnityEngine.FilterMode.Point;
             
             // File.WriteAllBytes(Path.Combine(UnityEngine.Application.persistentDataPath, "hue1.png"), UnityEngine.ImageConversion.EncodeToPNG(_hues_sampler[0].UnityTexture as UnityEngine.Texture2D));
             // File.WriteAllBytes(Path.Combine(UnityEngine.Application.persistentDataPath, "hue2.png"), UnityEngine.ImageConversion.EncodeToPNG(_hues_sampler[1].UnityTexture as UnityEngine.Texture2D));

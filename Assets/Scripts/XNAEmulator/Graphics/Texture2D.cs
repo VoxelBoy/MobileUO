@@ -13,6 +13,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         private static readonly byte[] byteArray = new byte[4];
 
+        public static FilterMode defaultFilterMode = FilterMode.Point;
+
         protected Texture2D()
         {
         }
@@ -22,7 +24,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Texture2D(GraphicsDevice graphicsDevice, int width, int height)
         {
             UnityTexture = new UnityEngine.Texture2D(width, height, TextureFormat.RGBA32, false, false);
-            UnityTexture.filterMode = FilterMode.Point;
+            UnityTexture.filterMode = defaultFilterMode;
             UnityTexture.wrapMode = TextureWrapMode.Clamp;
         }
 

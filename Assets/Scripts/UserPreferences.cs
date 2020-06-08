@@ -100,11 +100,31 @@ public static class UserPreferences
         }
     }
 
+    private const string textureFilteringPrefKey = "textureFiltering";
+    private const string textureFilteringDefaultValue = "Point";
+    private static FilterMode textureFiltering;
+    public static Action TextureFilteringChanged;
+
+    public static FilterMode TextureFiltering
+    {
+        get => textureFiltering;
+        set
+        {
+            if (textureFiltering != value)
+            {
+                textureFiltering = value;
+                PlayerPrefs.SetString(textureFilteringPrefKey, textureFiltering.ToString());
+                TextureFilteringChanged?.Invoke();
+            }
+        }
+    }
+
     public static void Initialize()
     {
         CustomScaleSize = (ScaleSizes) Enum.Parse(typeof(ScaleSizes), PlayerPrefs.GetString(customScaleSizePrefKey, customScaleSizeDefaultValue));
         TargetFrameRate = (TargetFrameRates) PlayerPrefs.GetInt(targetFrameRatePrefKey, targetFrameRateDefaultValue);
         JoystickSize = (JoystickSizes) Enum.Parse(typeof(JoystickSizes), PlayerPrefs.GetString(joystickSizePrefKey, joystickSizeDefaultValue));
+        TextureFiltering = (FilterMode) Enum.Parse(typeof(FilterMode), PlayerPrefs.GetString(textureFilteringPrefKey, textureFilteringDefaultValue));
         
         customJoystickPositionAndSize.x = PlayerPrefs.GetFloat(customJoystickPositionAndSizePrefKey + "X", -1f);
         customJoystickPositionAndSize.y = PlayerPrefs.GetFloat(customJoystickPositionAndSizePrefKey + "Y", -1f);
