@@ -1833,7 +1833,7 @@ namespace ClassicUO.Network
             {
                 var pageNum = p.ReadUShort();
 
-                if (pageNum <= pages.Length)
+                if (pageNum > 0 && pageNum <= pages.Length)
                 {
                     var lineCnt = p.ReadUShort();
 
@@ -2505,12 +2505,15 @@ namespace ClassicUO.Network
             {
                 uint item_serial = p.ReadUInt();
 
-                Item item = World.GetOrCreateItem(item_serial);
+                if (layer - 1 != Layer.Backpack)
+                {
+                    Item item = World.GetOrCreateItem(item_serial);
 
-                RemoveItemFromContainer(item);
-                item.Container = serial;
-                item.Layer = layer - 1;
-                corpse.PushToBack(item);
+                    RemoveItemFromContainer(item);
+                    item.Container = serial;
+                    item.Layer = layer - 1;
+                    corpse.PushToBack(item);
+                }
 
                 layer = (Layer) p.ReadByte();
             }
@@ -3508,10 +3511,38 @@ namespace ClassicUO.Network
                             break;
 
                         case 5:
-                            Mobile character = World.Mobiles.Get(serial);
 
-                            if (character != null && p.Length == 19)
-                                character.IsDead = p.ReadBool();
+                            int pos = p.Position;
+                            byte zero = p.ReadByte();
+                            byte type2 = p.ReadByte();
+
+                            if (type2 == 0xFF)
+                            {
+                                byte status = p.ReadByte();
+                                ushort animation = p.ReadUShort();
+                                ushort frame = p.ReadUShort();
+
+                                if (status == 0 && animation == 0 && frame == 0)
+                                {
+                                    p.Seek(pos);
+                                    goto case 0;
+                                }
+                                else
+                                {
+                                    Mobile mobile = World.Mobiles.Get(serial);
+
+                                    if (mobile != null)
+                                    {
+                                        // TODO: animation for statues
+                                        //mobile.SetAnimation();
+                                    }
+                                }
+                            }
+                            else if (World.Player != null && serial == World.Player)
+                            {
+                                p.Seek(pos);
+                                goto case 2;
+                            }
 
                             break;
                     }
@@ -4749,7 +4780,7 @@ namespace ClassicUO.Network
 
             bool created = false;
 
-            if (obj == null)
+            if (obj == null || obj.IsDestroyed)
             {
                 created = true;
 

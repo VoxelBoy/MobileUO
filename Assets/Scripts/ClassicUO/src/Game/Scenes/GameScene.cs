@@ -279,8 +279,8 @@ namespace ClassicUO.Game.Scenes
 
                     break;
             }
-
-            World.Journal.Add(text, hue, name, e.IsUnicode);
+            if (!string.IsNullOrEmpty(text))
+                World.Journal.Add(text, hue, name, e.IsUnicode);
         }
 
         public override void Unload()
@@ -832,7 +832,7 @@ namespace ClassicUO.Game.Scenes
 
         private void DrawLights(UltimaBatcher2D batcher)
         {
-            if (_deathScreenActive || (!UseLights && !UseAltLights))
+            if (_deathScreenActive || (!UseLights && !UseAltLights) || (World.Player.IsDead && ProfileManager.Current.EnableBlackWhiteEffect))
                 return;
 
             batcher.GraphicsDevice.SetRenderTarget(_lightRenderTarget);
@@ -887,12 +887,11 @@ namespace ClassicUO.Game.Scenes
             if (renderIndex < 1)
                 renderIndex = 99;
 
+            if (!IsMouseOverViewport)
+                SelectedObject.Object = null;
 
             World.WorldTextManager.ProcessWorldText(true);
             World.WorldTextManager.Draw(batcher, x, y, renderIndex);
-
-            if (!IsMouseOverViewport)
-                SelectedObject.Object = null;
 
             SelectedObject.LastObject = SelectedObject.Object;
         }
