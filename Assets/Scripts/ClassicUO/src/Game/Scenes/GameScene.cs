@@ -571,8 +571,8 @@ namespace ClassicUO.Game.Scenes
             Pathfinder.ProcessAutoWalk();
             DelayedObjectClickManager.Update();
 
-            //Don't allow MoveCharacterByMouseInput on mobile platforms
-            if (UnityEngine.Application.isMobilePlatform == false)
+            //Don't allow MoveCharacterByMouseInput on mobile platforms unless UseMouseOnMobile is enabled
+            if (UnityEngine.Application.isMobilePlatform == false || UserPreferences.UseMouseOnMobile.CurrentValue == 1)
             {
                 if (!MoveCharacterByMouseInput() && !ProfileManager.Current.DisableArrowBtn)
                 {

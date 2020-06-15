@@ -1,133 +1,87 @@
 using System;
+using PreferenceEnums;
 using UnityEngine;
 
 public static class UserPreferences
 {
-    public enum ScaleSizes
+    public class IntPreference
     {
-        Default = 100,
-        OneTwentyFive = 125,
-        OneHalf = 150,
-        OneSeventyFive = 175,
-        Two = 200
-    }
+        private readonly string PrefKey;
+        private int currentValue;
+        public Action<int> ValueChanged;
 
-    public enum TargetFrameRates
-    {
-        Thirty = 30,
-        Sixty = 60
-    }
+        public int CurrentValue
+        {
+            get => currentValue;
+            set
+            {
+                if (currentValue != value)
+                {
+                    currentValue = value;
+                    PlayerPrefs.SetInt(PrefKey, currentValue);
+                    PlayerPrefs.Save();
+                    ValueChanged?.Invoke(currentValue);
+                }
+            }
+        }
 
-    public enum JoystickSizes
-    {
-        Small = 0,
-        Normal = 1,
-        Large = 2,
-        Custom = 3
+        public IntPreference(string prefKey, int defaultValue)
+        {
+            PrefKey = prefKey;
+            currentValue = PlayerPrefs.GetInt(prefKey, defaultValue);
+        }
     }
     
-    private const string customScaleSizePrefKey = "customScaleSize";
-    private const string customScaleSizeDefaultValue = "Default";
-    private static ScaleSizes customScaleSize;
-    public static Action CustomScaleSizeChanged;
-
-    public static ScaleSizes CustomScaleSize
+    public class Vector3Preference
     {
-        get => customScaleSize;
-        set
+        private readonly string PrefKey;
+        private Vector3 currentValue;
+        public Action<Vector3> ValueChanged;
+
+        public Vector3 CurrentValue
         {
-            if (customScaleSize != value)
+            get => currentValue;
+            set
             {
-                customScaleSize = value;
-                PlayerPrefs.SetString(customScaleSizePrefKey, customScaleSize.ToString());
-                CustomScaleSizeChanged?.Invoke();
+                if (currentValue != value)
+                {
+                    currentValue = value;
+                    PlayerPrefs.SetFloat(PrefKey + "X", currentValue.x);
+                    PlayerPrefs.SetFloat(PrefKey + "Y", currentValue.y);
+                    PlayerPrefs.SetFloat(PrefKey + "Z", currentValue.z);
+                    PlayerPrefs.Save();
+                    ValueChanged?.Invoke(currentValue);
+                }
             }
         }
-    }
 
+        public Vector3Preference(string prefKey, Vector3 defaultValue)
+        {
+            PrefKey = prefKey;
+            currentValue.x = PlayerPrefs.GetFloat(prefKey + "X", -defaultValue.x);
+            currentValue.y = PlayerPrefs.GetFloat(prefKey + "Y", -defaultValue.y);
+            currentValue.z = PlayerPrefs.GetFloat(prefKey + "Z", defaultValue.z);
+        }
+    }
     
-    private const string targetFrameRatePrefKey = "targetFrameRate";
-    private const int targetFrameRateDefaultValue = 60;
-    private static TargetFrameRates targetFrameRate;
-    public static Action TargetFrameRateChanged;
-
-    public static TargetFrameRates TargetFrameRate
-    {
-        get => targetFrameRate;
-        set
-        {
-            if (targetFrameRate != value)
-            {
-                targetFrameRate = value;
-                PlayerPrefs.SetInt(targetFrameRatePrefKey, (int) targetFrameRate);
-                TargetFrameRateChanged?.Invoke();
-            }
-        }
-    }
-
-    private const string customJoystickPositionAndSizePrefKey = "customJoystickSizeAndPosition";
-    private static Vector3 customJoystickPositionAndSize;
-    public static Vector3 CustomJoystickPositionAndSize
-    {
-        get => customJoystickPositionAndSize;
-        set
-        {
-            if (customJoystickPositionAndSize != value)
-            {
-                customJoystickPositionAndSize = value;
-                PlayerPrefs.SetFloat(customJoystickPositionAndSizePrefKey + "X", customJoystickPositionAndSize.x);
-                PlayerPrefs.SetFloat(customJoystickPositionAndSizePrefKey + "Y", customJoystickPositionAndSize.y);
-                PlayerPrefs.SetFloat(customJoystickPositionAndSizePrefKey + "Z", customJoystickPositionAndSize.z);
-            }
-        }
-    }
-
-    private const string joystickSizePrefKey = "joystickSize";
-    private const string joystickSizeDefaultValue = "Normal";
-    private static JoystickSizes joystickSize;
-    public static Action JoystickSizeChanged;
-    public static JoystickSizes JoystickSize
-    {
-        get => joystickSize;
-        set
-        {
-            if (joystickSize != value)
-            {
-                joystickSize = value;
-                PlayerPrefs.SetString(joystickSizePrefKey, joystickSize.ToString());
-                JoystickSizeChanged?.Invoke();
-            }
-        }
-    }
-
-    private const string textureFilteringPrefKey = "textureFiltering";
-    private const string textureFilteringDefaultValue = "Point";
-    private static FilterMode textureFiltering;
-    public static Action TextureFilteringChanged;
-
-    public static FilterMode TextureFiltering
-    {
-        get => textureFiltering;
-        set
-        {
-            if (textureFiltering != value)
-            {
-                textureFiltering = value;
-                PlayerPrefs.SetString(textureFilteringPrefKey, textureFiltering.ToString());
-                TextureFilteringChanged?.Invoke();
-            }
-        }
-    }
+    public static IntPreference ShowCloseButtons;
+    public static IntPreference UseMouseOnMobile;
+    public static IntPreference ScaleSize;
+    public static IntPreference TextureFiltering;
+    public static IntPreference TargetFrameRate;
+    public static IntPreference JoystickSize;
+    public static IntPreference JoystickOpacity;
+    public static Vector3Preference CustomJoystickPositionAndSize;
 
     public static void Initialize()
     {
-        CustomScaleSize = (ScaleSizes) Enum.Parse(typeof(ScaleSizes), PlayerPrefs.GetString(customScaleSizePrefKey, customScaleSizeDefaultValue));
-        TargetFrameRate = (TargetFrameRates) PlayerPrefs.GetInt(targetFrameRatePrefKey, targetFrameRateDefaultValue);
-        JoystickSize = (JoystickSizes) Enum.Parse(typeof(JoystickSizes), PlayerPrefs.GetString(joystickSizePrefKey, joystickSizeDefaultValue));
-        TextureFiltering = (FilterMode) Enum.Parse(typeof(FilterMode), PlayerPrefs.GetString(textureFilteringPrefKey, textureFilteringDefaultValue));
-        
-        customJoystickPositionAndSize.x = PlayerPrefs.GetFloat(customJoystickPositionAndSizePrefKey + "X", -1f);
-        customJoystickPositionAndSize.y = PlayerPrefs.GetFloat(customJoystickPositionAndSizePrefKey + "Y", -1f);
-        customJoystickPositionAndSize.z = PlayerPrefs.GetFloat(customJoystickPositionAndSizePrefKey + "Z", -1f);
+        ShowCloseButtons = new IntPreference(nameof(ShowCloseButtons), (int) PreferenceEnums.ShowCloseButtons.Off);
+        UseMouseOnMobile = new IntPreference(nameof(UseMouseOnMobile), (int) PreferenceEnums.UseMouseOnMobile.Off);
+        ScaleSize = new IntPreference(nameof(ScaleSize), (int) ScaleSizes.Default);
+        TextureFiltering = new IntPreference(nameof(TextureFiltering), (int) TextureFilterMode.Sharp);
+        TargetFrameRate = new IntPreference(nameof(TargetFrameRate), (int) TargetFrameRates.Sixty);
+        JoystickSize = new IntPreference(nameof(JoystickSize), (int) JoystickSizes.Normal);
+        JoystickOpacity = new IntPreference(nameof(JoystickOpacity), (int) PreferenceEnums.JoystickOpacity.Normal);
+        CustomJoystickPositionAndSize = new Vector3Preference("customJoystickSizeAndPosition", new Vector3(-1,-1,-1));
     }
 }

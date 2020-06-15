@@ -119,7 +119,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.21
+  bundleVersion: 0.22
   preloadedAssets: []
   metroInputSource: 1
   wsaTransparentSwapchain: 0
@@ -169,8 +169,8 @@ PlayerSettings:
     iPhone: com.saltedcaramelgames.mobileuo
     tvOS: 
   buildNumber:
-    iPhone: 0.21
-  AndroidBundleVersionCode: 21
+    iPhone: 0.22
+  AndroidBundleVersionCode: 22
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -818,14 +818,14 @@ PlayerSettings:
     Standalone: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: UnityXNA
+  metroPackageName: MobileUO
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: UnityXNA
+  metroApplicationDescription: MobileUO
   wsaImages: {}
   metroTileShortName: 
   metroTileShowName: 0
@@ -889,10 +889,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 09b19706-8b0f-4f19-a413-3e3d181b8231
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: MobileUO
+  organizationId: voxelboy
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

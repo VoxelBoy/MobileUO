@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using PreferenceEnums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,10 +21,39 @@ public class MenuPresenter : MonoBehaviour
     private float listTweenDuration;
 
     private bool menuOpened;
+    
+    [SerializeField] private OptionEnumView optionEnumViewInstance;
+    [SerializeField] private GameObject customizeJoystickButtonGameObject;
+    [SerializeField] private ClientRunner clientRunner;
 
     void Awake()
     {
         menuButton.onClick.AddListener(OnMenuButtonClicked);
+        
+        GetOptionEnumViewInstance().Initialize(typeof(ShowCloseButtons), UserPreferences.ShowCloseButtons, "Close Buttons", false, false);
+        GetOptionEnumViewInstance().Initialize(typeof(ScaleSizes), UserPreferences.ScaleSize, "View Scale", true, true);
+        GetOptionEnumViewInstance().Initialize(typeof(TargetFrameRates), UserPreferences.TargetFrameRate, "Target Frame Rate", true, false);
+        GetOptionEnumViewInstance().Initialize(typeof(TextureFilterMode), UserPreferences.TextureFiltering, "Texture Filtering", false, false);
+        GetOptionEnumViewInstance().Initialize(typeof(UseMouseOnMobile), UserPreferences.UseMouseOnMobile, "Use Mouse", false, false);
+        GetOptionEnumViewInstance().Initialize(typeof(JoystickSizes), UserPreferences.JoystickSize, "Joystick Size", false, false);
+        GetOptionEnumViewInstance().Initialize(typeof(JoystickOpacity), UserPreferences.JoystickOpacity, "Joystick Opacity", false, false);
+        
+        //Only show customize joystick button when UO client is running and we're in the game scene
+        customizeJoystickButtonGameObject.transform.SetAsLastSibling();
+        customizeJoystickButtonGameObject.SetActive(false);
+        clientRunner.SceneChanged += OnUoSceneChanged;
+        
+        optionEnumViewInstance.gameObject.SetActive(false);
+    }
+
+    private void OnUoSceneChanged(bool isGameScene)
+    {
+        customizeJoystickButtonGameObject.SetActive(isGameScene);
+    }
+
+    private OptionEnumView GetOptionEnumViewInstance()
+    {
+        return Instantiate(optionEnumViewInstance.gameObject, optionEnumViewInstance.transform.parent).GetComponent<OptionEnumView>();
     }
 
     private void OnMenuButtonClicked()

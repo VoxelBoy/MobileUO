@@ -822,7 +822,7 @@ namespace ClassicUO
             var oneOverScale = 1f / scale;
 
             //Finger/mouse handling
-            if (UnityEngine.Application.isMobilePlatform)
+            if (UnityEngine.Application.isMobilePlatform && UserPreferences.UseMouseOnMobile.CurrentValue == 0)
             {
                 var fingers = Lean.Touch.LeanTouch.GetFingers(true, false);
 

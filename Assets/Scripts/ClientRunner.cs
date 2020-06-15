@@ -7,15 +7,17 @@ using ClassicUO.Configuration;
 using ClassicUO.Data;
 using ClassicUO.Game;
 using ClassicUO.Game.GameObjects;
+using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
+using ClassicUO.Game.UI.Gumps;
 using Newtonsoft.Json;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
-using Vector2 = UnityEngine.Vector2;
+using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
-public class UnityMain : MonoBehaviour
+public class ClientRunner : MonoBehaviour
 {
 	[SerializeField]
 	private bool useDynamicAtlas;
@@ -25,102 +27,77 @@ public class UnityMain : MonoBehaviour
 	private bool forceEnterWorld;
 	[SerializeField]
 	private bool saveAllTextures;
-
 	[SerializeField]
 	private bool scaleGameToFitScreen;
-	public bool ScaleGameToFitScreen
-	{
-		get => scaleGameToFitScreen;
-		set
-		{
-			scaleGameToFitScreen = value;
-			ApplyScalingFactor();
-			//Force update game viewport render texture
-			if (Client.Game.Scene is GameScene gameScene)
-			{
-				gameScene.GetViewPort();
-			}
-		}
-	}
 	
-	[Header("Controls")]
 	[SerializeField]
 	private MobileJoystick movementJoystick;
-
 	[SerializeField]
 	private bool showMovementJoystickOnNonMobilePlatforms;
-
-	private static readonly int ScissorStateOverrideNameId = Shader.PropertyToID("ScissorStateOverride");
-
-	private ScissorStateOverride scissorStateOverride = ScissorStateOverride.On;
-	public ScissorStateOverride ScissorStateOverride
-	{
-		get => scissorStateOverride;
-		set
-		{
-			scissorStateOverride = value;
-			Shader.SetGlobalInt(ScissorStateOverrideNameId, (int) scissorStateOverride);
-		}
-	}
 
 	private int lastScreenWidth;
 	private int lastScreenHeight;
 	
 	public Action<string> OnError;
 	public Action OnExiting;
+	public Action<bool> SceneChanged;
 
-	private void Start ()
+	private void Awake()
 	{
-		//Apply custom position and size to movementJoystick if set
-		var customJoystickPositionAndSize = UserPreferences.CustomJoystickPositionAndSize;
-		if (customJoystickPositionAndSize.x != -1)
-		{
-			((RectTransform)movementJoystick.transform).anchoredPosition = new Vector2(customJoystickPositionAndSize.x, customJoystickPositionAndSize.y);
-			movementJoystick.SetSize(customJoystickPositionAndSize.z);
-		}
-		movementJoystick.gameObject.SetActive(false);
-		
-	    UserPreferences.CustomScaleSizeChanged += OnCustomScaleSizeChanged;
-	    UserPreferences.JoystickSizeChanged += OnJoystickSizeChanged;
+		UserPreferences.ScaleSize.ValueChanged += OnCustomScaleSizeChanged;
+		UserPreferences.ShowCloseButtons.ValueChanged += OnShowCloseButtonsChanged;
+		UserPreferences.UseMouseOnMobile.ValueChanged += OnUseMouseOnMobileChanged;
+		UserPreferences.TargetFrameRate.ValueChanged += OnTargetFrameRateChanged;
+		UserPreferences.TextureFiltering.ValueChanged += UpdateTextureFiltering;
+		OnCustomScaleSizeChanged(UserPreferences.ScaleSize.CurrentValue);
+		OnShowCloseButtonsChanged(UserPreferences.ShowCloseButtons.CurrentValue);
+		OnUseMouseOnMobileChanged(UserPreferences.UseMouseOnMobile.CurrentValue);
+		OnTargetFrameRateChanged(UserPreferences.TargetFrameRate.CurrentValue);
+		UpdateTextureFiltering(UserPreferences.TextureFiltering.CurrentValue);
 	}
-
-	private void OnCustomScaleSizeChanged()
+	
+	private static void OnTargetFrameRateChanged(int frameRate)
 	{
-		ApplyScalingFactor();
-		//Force update game viewport render texture
-		if (Client.Game != null && Client.Game.Scene is GameScene gameScene)
+		Application.targetFrameRate = frameRate;
+	}
+    
+	private void UpdateTextureFiltering(int textureFiltering)
+	{
+		var filterMode = (FilterMode) textureFiltering;
+		Texture2D.defaultFilterMode = filterMode;
+		if (Client.Game != null)
 		{
-			gameScene.UpdateDrawPosition = true;
-			gameScene.GetViewPort();
+			var textures = FindObjectsOfType<Texture>();
+			foreach (var t in textures)
+			{
+				t.filterMode = filterMode;
+			}
+			Client.Game.GraphicsDevice.Textures[1].UnityTexture.filterMode = FilterMode.Point;
+			Client.Game.GraphicsDevice.Textures[2].UnityTexture.filterMode = FilterMode.Point;
 		}
 	}
 	
-	private void OnJoystickSizeChanged()
+	private void OnUseMouseOnMobileChanged(int useMouse)
 	{
-		var rectT = (RectTransform) movementJoystick.transform;
-		var sizeEnum = UserPreferences.JoystickSize;
-		var size = rectT.sizeDelta.x;
-		if (sizeEnum == UserPreferences.JoystickSizes.Small)
+		UpdateMovementJoystick();
+	}
+
+	private void OnCustomScaleSizeChanged(int customScaleSize)
+	{
+		ApplyScalingFactor();
+	}
+	
+	private void OnShowCloseButtonsChanged(int showCloseButtons)
+	{
+		Gump.CloseButtonsEnabled = showCloseButtons != 0;
+        
+		foreach (var control in UIManager.Gumps)
 		{
-			size = 120f;
-		}
-		else if (sizeEnum == UserPreferences.JoystickSizes.Normal)
-		{
-			size = 160f;
-		}
-		else if (sizeEnum == UserPreferences.JoystickSizes.Large)
-		{
-			size = 200f;
-		}
-		else if (sizeEnum == UserPreferences.JoystickSizes.Custom)
-		{
-			var customJoystickPositionAndSize = UserPreferences.CustomJoystickPositionAndSize;
-			if (customJoystickPositionAndSize.z != -1)
+			if (control is Gump gump)
 			{
-				size = customJoystickPositionAndSize.z;
+				gump.UpdateCloseButton();
 			}
 		}
-		movementJoystick.SetSize(size);
 	}
 
 	private void Update ()
@@ -132,8 +109,7 @@ public class UnityMain : MonoBehaviour
 		{
 			lastScreenWidth = Screen.width;
 			lastScreenHeight = Screen.height;
-			//Force update ScaleGameToFitScreen
-			ScaleGameToFitScreen = scaleGameToFitScreen;
+			ApplyScalingFactor();
 		}
 
 		if (forceEnterWorld && Client.Game.Scene is LoginScene)
@@ -156,7 +132,7 @@ public class UnityMain : MonoBehaviour
             deltaTime = 0.050f;
         }
 
-        if ((Application.isMobilePlatform || showMovementJoystickOnNonMobilePlatforms) && Client.Game.Scene is GameScene gameScene)
+        if (movementJoystick.isActiveAndEnabled && Client.Game.Scene is GameScene gameScene)
         {
 	        gameScene.JoystickInput = new Microsoft.Xna.Framework.Vector2(movementJoystick.Position.x, -1 * movementJoystick.Position.y);
         }
@@ -312,7 +288,15 @@ public class UnityMain : MonoBehaviour
     private void OnSceneChanged()
     {
 	    ApplyScalingFactor();
-	    movementJoystick.gameObject.SetActive((Application.isMobilePlatform || showMovementJoystickOnNonMobilePlatforms) && Client.Game.Scene is GameScene);
+	    UpdateMovementJoystick();
+	    SceneChanged?.Invoke(Client.Game.Scene is GameScene);
+    }
+
+    private void UpdateMovementJoystick()
+    {
+	    movementJoystick.gameObject.SetActive((Application.isMobilePlatform || showMovementJoystickOnNonMobilePlatforms)
+	                                          && Client.Game != null && Client.Game.Scene is GameScene
+	                                          && UserPreferences.UseMouseOnMobile.CurrentValue == 0);
     }
 
     private void ApplyScalingFactor()
@@ -324,23 +308,31 @@ public class UnityMain : MonoBehaviour
 		    return;
 	    }
 
-	    var isGameScene = Client.Game.Scene is GameScene;
+	    var gameScene = Client.Game.Scene as GameScene;
+	    var isGameScene = gameScene != null;
 
-	    if (ScaleGameToFitScreen)
+	    if (scaleGameToFitScreen)
 	    {
 		    var loginScale = Mathf.Min(Screen.width / 640f, Screen.height / 480f);
 		    var gameScale = Mathf.Max(1, loginScale * 0.75f);
 		    scale = isGameScene ? gameScale : loginScale;
 	    }
 
-	    if (UserPreferences.CustomScaleSize != UserPreferences.ScaleSizes.Default && isGameScene)
+	    if (UserPreferences.ScaleSize.CurrentValue != (int) PreferenceEnums.ScaleSizes.Default && isGameScene)
 	    {
-		    scale *= (int)UserPreferences.CustomScaleSize / 100f;
+		    scale *= UserPreferences.ScaleSize.CurrentValue / 100f;
 	    }
 
 	    ((UnityGameWindow) Client.Game.Window).Scale = scale;
 	    Client.Game.Batcher.scale = scale;
 	    Client.Game.scale = scale;
+	    
+	    //Force update game viewport render texture
+	    if (isGameScene)
+	    {
+		    gameScene.UpdateDrawPosition = true;
+		    gameScene.GetViewPort();
+	    }
     }
 
     private void OnGameExiting(object sender, EventArgs e)

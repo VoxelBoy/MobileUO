@@ -60,9 +60,6 @@
             float _Debug;
             float _Scissor;
             float4 _ScissorRect;
-            
-            //0 for On, 1 for Inverted, 2 for Off
-            int ScissorStateOverride;
 
             sampler2D _HueTex1;
             sampler2D _HueTex2;
@@ -99,15 +96,11 @@
 
             fixed4 frag (v2f IN) : SV_Target
             {
-                if(_Scissor == 1 && ScissorStateOverride != 2)
+                if(_Scissor == 1)
                 {
                     #if UNITY_UV_STARTS_AT_TOP == false
                     IN.pos.y = _ScreenParams.y - IN.pos.y;
                     #endif
-                    if(ScissorStateOverride == 1)
-                    {
-                        IN.pos.y = _ScreenParams.y - IN.pos.y;
-                    } 
                     if(IN.pos.x < _ScissorRect.x || IN.pos.x > _ScissorRect.z || IN.pos.y < _ScissorRect.y || IN.pos.y > _ScissorRect.w)
                     {
                         discard;

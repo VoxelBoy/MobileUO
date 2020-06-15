@@ -2,24 +2,24 @@ using UnityEngine;
 
 public class GameState : IState
 {
-    private readonly UnityMain unityMain;
+    private readonly ClientRunner clientRunner;
     private readonly ErrorPresenter errorPresenter;
     private readonly Canvas inGameDebugConsoleCanvas;
 
-    public GameState(UnityMain unityMain, ErrorPresenter errorPresenter, Canvas inGameDebugConsoleCanvas)
+    public GameState(ClientRunner clientRunner, ErrorPresenter errorPresenter, Canvas inGameDebugConsoleCanvas)
     {
-        this.unityMain = unityMain;
+        this.clientRunner = clientRunner;
         this.errorPresenter = errorPresenter;
         this.inGameDebugConsoleCanvas = inGameDebugConsoleCanvas;
     }
     public void Enter()
     {
         errorPresenter.BackButtonClicked += GoBackToServerConfigurationState;
-        unityMain.OnExiting += GoBackToServerConfigurationState;
-        unityMain.OnError += OnError;
+        clientRunner.OnExiting += GoBackToServerConfigurationState;
+        clientRunner.OnError += OnError;
         
-        unityMain.enabled = true;
-        unityMain.StartGame(ServerConfigurationModel.ActiveConfiguration);
+        clientRunner.enabled = true;
+        clientRunner.StartGame(ServerConfigurationModel.ActiveConfiguration);
     }
 
     private void GoBackToServerConfigurationState()
@@ -30,7 +30,7 @@ public class GameState : IState
 
     private void OnError(string error)
     {
-        unityMain.enabled = false;
+        clientRunner.enabled = false;
         errorPresenter.gameObject.SetActive(true);
         errorPresenter.SetErrorText(error);
         inGameDebugConsoleCanvas.enabled = true;
@@ -38,11 +38,11 @@ public class GameState : IState
 
     public void Exit()
     {
-        unityMain.enabled = false;
+        clientRunner.enabled = false;
         errorPresenter.gameObject.SetActive(false);
         
         errorPresenter.BackButtonClicked -= GoBackToServerConfigurationState;
-        unityMain.OnExiting -= GoBackToServerConfigurationState;
-        unityMain.OnError -= OnError;
+        clientRunner.OnExiting -= GoBackToServerConfigurationState;
+        clientRunner.OnError -= OnError;
     }
 }

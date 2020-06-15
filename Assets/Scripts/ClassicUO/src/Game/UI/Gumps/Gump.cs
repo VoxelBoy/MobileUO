@@ -96,7 +96,7 @@ namespace ClassicUO.Game.UI.Gumps
             }
         }
 
-        public void ToggleCloseButtonEnabled()
+        public void UpdateCloseButton()
         {
             InitCloseButton();
             if (closeButton != null)

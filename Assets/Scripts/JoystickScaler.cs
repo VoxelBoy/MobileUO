@@ -16,6 +16,22 @@ public class JoystickScaler : MonoBehaviour
 
     [SerializeField]
     private float maxSize;
+    
+    [SerializeField]
+    private float smallSize;
+    
+    [SerializeField]
+    private float normalSize;
+    
+    [SerializeField]
+    private float largeSize;
+
+    private void Awake()
+    {
+        UserPreferences.JoystickSize.ValueChanged += OnJoystickSizeChanged;
+        OnJoystickSizeChanged(UserPreferences.JoystickSize.CurrentValue);
+        gameObject.SetActive(false);
+    }
 
     private void OnEnable()
     {
@@ -80,7 +96,41 @@ public class JoystickScaler : MonoBehaviour
     
     private void SaveSizeAndPosition()
     {
-        UserPreferences.CustomJoystickPositionAndSize = new Vector3(joystickRectTransform.anchoredPosition.x, joystickRectTransform.anchoredPosition.y, joystickRectTransform.sizeDelta.x);
-        UserPreferences.JoystickSize = UserPreferences.JoystickSizes.Custom;
+        UserPreferences.CustomJoystickPositionAndSize.CurrentValue = new Vector3(joystickRectTransform.anchoredPosition.x, joystickRectTransform.anchoredPosition.y, joystickRectTransform.sizeDelta.x);
+        UserPreferences.JoystickSize.CurrentValue = (int) PreferenceEnums.JoystickSizes.Custom;
+    }
+    
+    private void OnJoystickSizeChanged(int joystickSize)
+    {
+        var rectT = (RectTransform) mobileJoystick.transform;
+        var sizeEnum = (PreferenceEnums.JoystickSizes) UserPreferences.JoystickSize.CurrentValue;
+        var customJoystickPositionAndSize = UserPreferences.CustomJoystickPositionAndSize.CurrentValue;
+        var size = rectT.sizeDelta.x;
+        if (sizeEnum == PreferenceEnums.JoystickSizes.Small)
+        {
+            size = smallSize;
+        }
+        else if (sizeEnum == PreferenceEnums.JoystickSizes.Normal)
+        {
+            size = normalSize;
+        }
+        else if (sizeEnum == PreferenceEnums.JoystickSizes.Large)
+        {
+            size = largeSize;
+        }
+        else if (sizeEnum == PreferenceEnums.JoystickSizes.Custom)
+        {
+            if (customJoystickPositionAndSize.z != -1)
+            {
+                size = customJoystickPositionAndSize.z;
+            }
+        }
+        mobileJoystick.SetSize(size);
+        
+        //Also update anchoredPosition if there's a custom position defined
+        if (customJoystickPositionAndSize.x != -1)
+        {
+            ((RectTransform)mobileJoystick.transform).anchoredPosition = new Vector2(customJoystickPositionAndSize.x, customJoystickPositionAndSize.y);
+        }
     }
 }
