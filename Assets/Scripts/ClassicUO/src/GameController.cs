@@ -815,6 +815,7 @@ namespace ClassicUO
         }
 
         private readonly UnityEngine.KeyCode[] _keyCodeEnumValues = (UnityEngine.KeyCode[]) Enum.GetValues(typeof(UnityEngine.KeyCode));
+        private readonly Control[] controlsUnderFingers = new Control[5];
         private UnityEngine.Vector3 lastMousePosition;
 
         private void UnityInputUpdate()
@@ -826,8 +827,10 @@ namespace ClassicUO
             {
                 var fingers = Lean.Touch.LeanTouch.GetFingers(true, false);
 
-                foreach (var finger in fingers)
+                for (int i = 0; i < fingers.Count && i < 5; i++)
                 {
+                    var finger = fingers[i];
+                    
                     var leftMouseDown = finger.Down;
                     var leftMouseHeld = finger.Set;
                     var leftMouseUp = finger.Up;
@@ -838,6 +841,23 @@ namespace ClassicUO
 
                     Mouse.Position.X = UnityEngine.Mathf.RoundToInt(finger.ScreenPosition.x * oneOverScale);
                     Mouse.Position.Y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - finger.ScreenPosition.y) * oneOverScale);
+                    
+                    //Used for implementing two finger tap gesture for closing gumps
+                    if (finger.Age < 0.1f)
+                    {
+                        controlsUnderFingers[i] = UIManager.GetMouseOverControl(Mouse.Position);
+                        if (controlsUnderFingers[i] != null)
+                        {
+                            for (int k = 0; k < i; k++)
+                            {
+                                if (controlsUnderFingers[k] == controlsUnderFingers[i])
+                                {
+                                    rightMouseUp = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
                     SimulateMouse(leftMouseDown, leftMouseHeld, leftMouseUp, rightMouseDown, rightMouseHeld, rightMouseUp, mouseMotion);
                 }

@@ -672,7 +672,7 @@ namespace ClassicUO.Game.Managers
             }
         }
 
-        private static Control GetMouseOverControl(Point position)
+        public static Control GetMouseOverControl(Point position)
         {
             if (_isDraggingControl)
                 return DraggingControl;

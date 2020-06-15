@@ -32,6 +32,8 @@ public class Init : MonoBehaviour
         StateManager.AddState(new GameState(clientRunner, errorPresenter, inGameDebugConsoleCanvas));
 
         inGameDebugConsoleCanvas.enabled = false;
+
+        Input.simulateMouseWithTouches = false;
         
         ServerConfigurationModel.Initialize();
         

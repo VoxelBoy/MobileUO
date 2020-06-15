@@ -572,7 +572,7 @@ namespace ClassicUO.Game.Scenes
             DelayedObjectClickManager.Update();
 
             //Don't allow MoveCharacterByMouseInput on mobile platforms unless UseMouseOnMobile is enabled
-            if (UnityEngine.Application.isMobilePlatform == false || UserPreferences.UseMouseOnMobile.CurrentValue == 1)
+            // if (UnityEngine.Application.isMobilePlatform == false || UserPreferences.UseMouseOnMobile.CurrentValue == 1)
             {
                 if (!MoveCharacterByMouseInput() && !ProfileManager.Current.DisableArrowBtn)
                 {
