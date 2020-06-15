@@ -58,8 +58,8 @@ public static class UserPreferences
         public Vector3Preference(string prefKey, Vector3 defaultValue)
         {
             PrefKey = prefKey;
-            currentValue.x = PlayerPrefs.GetFloat(prefKey + "X", -defaultValue.x);
-            currentValue.y = PlayerPrefs.GetFloat(prefKey + "Y", -defaultValue.y);
+            currentValue.x = PlayerPrefs.GetFloat(prefKey + "X", defaultValue.x);
+            currentValue.y = PlayerPrefs.GetFloat(prefKey + "Y", defaultValue.y);
             currentValue.z = PlayerPrefs.GetFloat(prefKey + "Z", defaultValue.z);
         }
     }
