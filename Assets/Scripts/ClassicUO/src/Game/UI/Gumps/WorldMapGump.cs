@@ -520,7 +520,7 @@ namespace ClassicUO.Game.UI.Gumps
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine(ex);
                     }
                    
 

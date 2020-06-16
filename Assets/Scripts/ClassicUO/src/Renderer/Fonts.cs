@@ -34,15 +34,15 @@ namespace ClassicUO.Renderer
 
         static Fonts()
         {
-            Regular = SpriteFont.Create("ClassicUO.Renderer.fonts.regular_font.xnb");
-            Bold = SpriteFont.Create("ClassicUO.Renderer.fonts.bold_font.xnb");
+            Regular = SpriteFont.Create("regular_font");
+            Bold = SpriteFont.Create("bold_font");
 
-            Map1 = SpriteFont.Create("ClassicUO.Renderer.fonts.map1_font.xnb");
-            Map2 = SpriteFont.Create("ClassicUO.Renderer.fonts.map2_font.xnb");
-            Map3 = SpriteFont.Create("ClassicUO.Renderer.fonts.map3_font.xnb");
-            Map4 = SpriteFont.Create("ClassicUO.Renderer.fonts.map4_font.xnb");
-            Map5 = SpriteFont.Create("ClassicUO.Renderer.fonts.map5_font.xnb");
-            Map6 = SpriteFont.Create("ClassicUO.Renderer.fonts.map6_font.xnb");
+            Map1 = SpriteFont.Create("map1_font");
+            Map2 = SpriteFont.Create("map2_font");
+            Map3 = SpriteFont.Create("map3_font");
+            Map4 = SpriteFont.Create("map4_font");
+            Map5 = SpriteFont.Create("map5_font");
+            Map6 = SpriteFont.Create("map6_font");
         }
     }
 }

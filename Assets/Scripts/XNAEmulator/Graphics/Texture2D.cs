@@ -66,7 +66,13 @@ namespace Microsoft.Xna.Framework.Graphics
 
         internal void SetData(byte[] data)
         {
-            Console.WriteLine("SetData with byte array is not implemented.");
+            Console.WriteLine("SetData with bytes is probably not working properly yet, we're not converting the bytes at all.");
+            var dataLength = data.Length;
+            var destText = UnityTexture as UnityEngine.Texture2D;
+            var dst = destText.GetRawTextureData<byte>();
+            dst.CopyFrom(data);
+            destText.Apply();
+            Hash = UnityTexture.GetHashCode();
         }
 
         internal void SetData(ushort[] data)
@@ -197,7 +203,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public static Texture2D FromStream(GraphicsDevice graphicsDevice, MemoryStream ms)
         {
-            //TODO: Implement
+            Console.WriteLine("Texture2D.FromStream is not implemented yet.");
             var texture = new Texture2D(graphicsDevice, 2, 2);
             return texture;
         }

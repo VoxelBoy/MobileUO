@@ -145,7 +145,8 @@ namespace ClassicUO.Renderer
 
         public static SpriteFont Create(string name)
         {
-            Stream stream = typeof(SpriteFont).Assembly.GetManifestResourceStream(name);
+            var bytes = UnityEngine.Resources.Load<UnityEngine.TextAsset>(name).bytes;
+            var stream = new MemoryStream(bytes);
 
             using (BinReader reader = new BinReader(stream))
             {
