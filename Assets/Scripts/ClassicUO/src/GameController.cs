@@ -62,8 +62,6 @@ namespace ClassicUO
         private uint _totalFrames;
         private Vector3 _hueVector;
 
-        public event Action sceneChanged;
-
         public GameController()
         {
             _graphicDeviceManager = new GraphicsDeviceManager(this);
@@ -199,7 +197,7 @@ namespace ClassicUO
             _scene = scene;
 
             //NOTE: Added this to be able to react to scene changes, mainly for calculating render scale factor
-            sceneChanged?.Invoke();
+            Client.InvokeSceneChanged();
 
             if (scene != null)
             {

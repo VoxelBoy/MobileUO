@@ -24,6 +24,7 @@ public class MenuPresenter : MonoBehaviour
     
     [SerializeField] private OptionEnumView optionEnumViewInstance;
     [SerializeField] private GameObject customizeJoystickButtonGameObject;
+    [SerializeField] private GameObject loginButtonGameObject;
     [SerializeField] private ClientRunner clientRunner;
 
     void Awake()
@@ -41,6 +42,11 @@ public class MenuPresenter : MonoBehaviour
         //Only show customize joystick button when UO client is running and we're in the game scene
         customizeJoystickButtonGameObject.transform.SetAsLastSibling();
         customizeJoystickButtonGameObject.SetActive(false);
+        
+        //Only show login button when UO client is running and we're in the login scene
+        loginButtonGameObject.transform.SetAsFirstSibling();
+        loginButtonGameObject.SetActive(false);
+        
         clientRunner.SceneChanged += OnUoSceneChanged;
         
         optionEnumViewInstance.gameObject.SetActive(false);
@@ -49,6 +55,7 @@ public class MenuPresenter : MonoBehaviour
     private void OnUoSceneChanged(bool isGameScene)
     {
         customizeJoystickButtonGameObject.SetActive(isGameScene);
+        loginButtonGameObject.SetActive(isGameScene == false);
     }
 
     private OptionEnumView GetOptionEnumViewInstance()

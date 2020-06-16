@@ -348,7 +348,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
             }
         }
         
-        private enum Buttons
+        public enum Buttons
         {
             NextArrow,
             Quit

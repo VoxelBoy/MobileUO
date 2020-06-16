@@ -42,7 +42,13 @@ namespace ClassicUO
         public static bool IsUOPInstallation { get; private set; }
         public static bool UseUOPGumps { get; set; }
         public static GameController Game { get; set; }
+        
+        public static event Action SceneChanged;
 
+        public static void InvokeSceneChanged()
+        {
+            SceneChanged?.Invoke();
+        }
 
         public static void Run()
         {

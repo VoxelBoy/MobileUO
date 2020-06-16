@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using ClassicUO;
 using ClassicUO.Utility.Logging;
@@ -10,6 +11,7 @@ using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Gumps;
+using ClassicUO.Game.UI.Gumps.Login;
 using Newtonsoft.Json;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
@@ -260,9 +262,8 @@ public class ClientRunner : MonoBehaviour
 
 	    try
 	    {
+		    Client.SceneChanged += OnSceneChanged;
 		    Client.Run();
-
-		    Client.Game.sceneChanged += OnSceneChanged;
 		    Client.Game.Exiting += OnGameExiting;
 		    ApplyScalingFactor();
 	    }
@@ -271,6 +272,16 @@ public class ClientRunner : MonoBehaviour
 		    Console.WriteLine(e);
 		    OnError?.Invoke(e.ToString());
 	    }
+    }
+
+    public static void Login()
+    {
+	    if (Client.Game == null || !(Client.Game.Scene is LoginScene loginScene) || loginScene.CurrentLoginStep != LoginSteps.Main)
+	    {
+		    return;
+	    }
+	    var loginGump = UIManager.Gumps.FirstOrDefault(g => g is LoginGump) as LoginGump;
+	    loginGump?.OnButtonClick((int) LoginGump.Buttons.NextArrow);
     }
 
     private void OnProfileLoaded()
