@@ -826,23 +826,11 @@ namespace ClassicUO
             if (UnityEngine.Application.isMobilePlatform && UserPreferences.UseMouseOnMobile.CurrentValue == 0)
             {
                 var fingers = Lean.Touch.LeanTouch.GetFingers(true, false);
-
+                
+                //Detect two finger tap gesture for closing gumps
                 for (int i = 0; i < fingers.Count && i < 5; i++)
                 {
                     var finger = fingers[i];
-                    
-                    var leftMouseDown = finger.Down;
-                    var leftMouseHeld = finger.Set;
-                    var leftMouseUp = finger.Up;
-                    var rightMouseDown = false;
-                    var rightMouseHeld = false;
-                    var rightMouseUp = false;
-                    var mouseMotion = finger.ScreenPosition != finger.LastScreenPosition;
-
-                    Mouse.Position.X = UnityEngine.Mathf.RoundToInt(finger.ScreenPosition.x * oneOverScale);
-                    Mouse.Position.Y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - finger.ScreenPosition.y) * oneOverScale);
-                    
-                    //Used for implementing two finger tap gesture for closing gumps
                     if (finger.Age < 0.1f)
                     {
                         controlsUnderFingers[i] = UIManager.GetMouseOverControl(Mouse.Position);
@@ -852,14 +840,37 @@ namespace ClassicUO
                             {
                                 if (controlsUnderFingers[k] == controlsUnderFingers[i])
                                 {
-                                    rightMouseUp = true;
+                                    //Simulate right mouse down and up
+                                    var mousePos = ConvertUnityMousePosition(finger.ScreenPosition, oneOverScale);
+                                    SimulateMouse(mousePos, false, false, false, true, false, false, false, true);
+                                    SimulateMouse(mousePos, false, false, false, false, false, true, false, true);
                                     break;
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        controlsUnderFingers[i] = null;
+                    }
+                }
+                
+                //Only process one finger that has not started over gui because using multiple fingers with UIManager
+                //causes issues due to the assumption that there's only one pointer, such as on finger "stealing"
+                //a dragged gump from another
+                if (fingers.Count > 0)
+                {
+                    var finger = fingers[0];
+                    
+                    var leftMouseDown = finger.Down;
+                    var leftMouseHeld = finger.Set;
+                    var leftMouseUp = finger.Up;
+                    var rightMouseDown = false;
+                    var rightMouseHeld = false;
+                    var rightMouseUp = false;
+                    var mouseMotion = finger.ScreenPosition != finger.LastScreenPosition;
 
-                    SimulateMouse(leftMouseDown, leftMouseHeld, leftMouseUp, rightMouseDown, rightMouseHeld, rightMouseUp, mouseMotion);
+                    SimulateMouse(ConvertUnityMousePosition(finger.ScreenPosition, oneOverScale), leftMouseDown, leftMouseHeld, leftMouseUp, rightMouseDown, rightMouseHeld, rightMouseUp, mouseMotion, false);
                 }
             }
             else
@@ -885,11 +896,8 @@ namespace ClassicUO
                     rightMouseHeld = false;
                     rightMouseUp = false;
                 }
-
-                Mouse.Position.X = UnityEngine.Mathf.RoundToInt(mousePosition.x * oneOverScale);
-                Mouse.Position.Y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - mousePosition.y) * oneOverScale);
-
-                SimulateMouse(leftMouseDown, leftMouseHeld, leftMouseUp, rightMouseDown, rightMouseHeld, rightMouseUp, mouseMotion);
+                
+                SimulateMouse(ConvertUnityMousePosition(mousePosition, oneOverScale), leftMouseDown, leftMouseHeld, leftMouseUp, rightMouseDown, rightMouseHeld, rightMouseUp, mouseMotion, false);
             }
 
             //Keyboard handling
@@ -920,25 +928,15 @@ namespace ClassicUO
             }
             foreach (var keyCode in _keyCodeEnumValues)
             {
+                var key = new SDL_KeyboardEvent {keysym = new SDL_Keysym {sym = (SDL_Keycode) keyCode, mod = keymod}};
                 if (UnityEngine.Input.GetKeyDown(keyCode))
                 {
-                    var key = new SDL_KeyboardEvent() {keysym = new SDL_Keysym() {sym = (SDL_Keycode) keyCode, mod = keymod}};
                     Keyboard.OnKeyDown(key);
-
-                    if (Plugin.ProcessHotkeys((int) key.keysym.sym, (int) key.keysym.mod, true))
-                    {
-                        _ignoreNextTextInput = false;
-                        
-                        UIManager.KeyboardFocusControl?.InvokeKeyDown(key.keysym.sym, key.keysym.mod);
-
-                        _scene.OnKeyDown(key);
-                    }
-                    else
-                        _ignoreNextTextInput = true;
+                    UIManager.KeyboardFocusControl?.InvokeKeyDown(key.keysym.sym, key.keysym.mod);
+                    _scene.OnKeyDown(key);
                 }
                 if (UnityEngine.Input.GetKeyUp(keyCode))
                 {
-                    var key = new SDL_KeyboardEvent() {keysym = new SDL_Keysym() {sym = (SDL_Keycode) keyCode}};
                     Keyboard.OnKeyUp(key);
                     UIManager.KeyboardFocusControl?.InvokeKeyUp(key.keysym.sym, key.keysym.mod);
                     _scene.OnKeyUp(key);
@@ -981,8 +979,16 @@ namespace ClassicUO
             }
         }
 
-        private void SimulateMouse(bool leftMouseDown, bool leftMouseHeld, bool leftMouseUp, bool rightMouseDown, bool rightMouseHeld, bool rightMouseUp, bool mouseMotion)
+        private Point ConvertUnityMousePosition(UnityEngine.Vector2 screenPosition, float oneOverScale)
         {
+            var x = UnityEngine.Mathf.RoundToInt(screenPosition.x * oneOverScale);
+            var y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - screenPosition.y) * oneOverScale);
+            return new Point(x, y);
+        }
+
+        private void SimulateMouse(Point mousePosition, bool leftMouseDown, bool leftMouseHeld, bool leftMouseUp, bool rightMouseDown, bool rightMouseHeld, bool rightMouseUp, bool mouseMotion, bool skipSceneInput)
+        {
+            Mouse.Position = mousePosition;
             Mouse.LButtonPressed = leftMouseDown || leftMouseHeld;
             Mouse.RButtonPressed = rightMouseDown || rightMouseHeld;
             Mouse.IsDragging = Mouse.LButtonPressed || Mouse.RButtonPressed;
@@ -992,10 +998,9 @@ namespace ClassicUO
             {
                 _dragStarted = false;
             }
-
+            
             if (leftMouseDown)
             {
-                Mouse.Begin();
                 Mouse.LDropPosition = Mouse.Position;
                 Mouse.CancelDoubleClick = false;
                 uint ticks = Time.Ticks;
@@ -1003,11 +1008,19 @@ namespace ClassicUO
                 {
                     Mouse.LastLeftButtonClickTime = 0;
 
-                    bool res = _scene.OnLeftMouseDoubleClick() || UIManager.OnLeftMouseDoubleClick();
+                    var res = false;
+                    if (skipSceneInput)
+                    {
+                        res = UIManager.OnLeftMouseDoubleClick();
+                    }
+                    else
+                    {
+                        res = _scene.OnLeftMouseDoubleClick() || UIManager.OnLeftMouseDoubleClick();
+                    }
 
                     if (!res)
                     {
-                        if (!_scene.OnLeftMouseDown())
+                        if (skipSceneInput || !_scene.OnLeftMouseDown())
                             UIManager.OnLeftMouseButtonDown();
                     }
                     else
@@ -1017,7 +1030,7 @@ namespace ClassicUO
                 }
                 else
                 {
-                    if (!_scene.OnLeftMouseDown())
+                    if (skipSceneInput || !_scene.OnLeftMouseDown())
                         UIManager.OnLeftMouseButtonDown();
                     Mouse.LastLeftButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
                 }
@@ -1026,7 +1039,7 @@ namespace ClassicUO
             {
                 if (Mouse.LastLeftButtonClickTime != 0xFFFF_FFFF)
                 {
-                    if (!_scene.OnLeftMouseUp() || UIManager.LastControlMouseDown(MouseButtonType.Left) != null)
+                    if (skipSceneInput || !_scene.OnLeftMouseUp() || UIManager.LastControlMouseDown(MouseButtonType.Left) != null)
                         UIManager.OnLeftMouseButtonUp();
                 }
 
@@ -1035,7 +1048,6 @@ namespace ClassicUO
 
             if (rightMouseDown)
             {
-                Mouse.Begin();
                 Mouse.RDropPosition = Mouse.Position;
                 Mouse.CancelDoubleClick = false;
                 uint ticks = Time.Ticks;
@@ -1044,11 +1056,19 @@ namespace ClassicUO
                 {
                     Mouse.LastRightButtonClickTime = 0;
 
-                    bool res = _scene.OnRightMouseDoubleClick() || UIManager.OnRightMouseDoubleClick();
-
+                    var res = false;
+                    if (skipSceneInput)
+                    {
+                        res = UIManager.OnRightMouseDoubleClick();
+                    }
+                    else
+                    {
+                        res = _scene.OnRightMouseDoubleClick() || UIManager.OnRightMouseDoubleClick();
+                    }
+                    
                     if (!res)
                     {
-                        if (!_scene.OnRightMouseDown())
+                        if (skipSceneInput || !_scene.OnRightMouseDown())
                             UIManager.OnRightMouseButtonDown();
                     }
                     else
@@ -1058,7 +1078,7 @@ namespace ClassicUO
                 }
                 else
                 {
-                    if (!_scene.OnRightMouseDown())
+                    if (skipSceneInput || !_scene.OnRightMouseDown())
                         UIManager.OnRightMouseButtonDown();
                     Mouse.LastRightButtonClickTime = Mouse.CancelDoubleClick ? 0 : ticks;
                 }
@@ -1067,7 +1087,7 @@ namespace ClassicUO
             {
                 if (Mouse.LastRightButtonClickTime != 0xFFFF_FFFF)
                 {
-                    if (!_scene.OnRightMouseUp())
+                    if (skipSceneInput || !_scene.OnRightMouseUp())
                         UIManager.OnRightMouseButtonUp();
                 }
 
@@ -1078,7 +1098,7 @@ namespace ClassicUO
             {
                 if (Mouse.IsDragging)
                 {
-                    if (!_scene.OnMouseDragging())
+                    if (skipSceneInput || !_scene.OnMouseDragging())
                         UIManager.OnMouseDragging();
                 }
 
