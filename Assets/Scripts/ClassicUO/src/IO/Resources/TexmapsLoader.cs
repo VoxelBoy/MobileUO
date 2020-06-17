@@ -40,7 +40,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public static TexmapsLoader _instance;
+        private static TexmapsLoader _instance;
         public static TexmapsLoader Instance
         {
             get
@@ -161,13 +161,17 @@ namespace ClassicUO.IO.Resources
 
                 SaveID(g);
             }
- 
+            else
+            {
+                texture.Ticks = Time.Ticks;
+            }
+
             return texture;
         }
 
-        public override void CleanResources()
+        public override void ClearResources()
         {
-            base.CleanResources();
+            base.ClearResources();
             
             _file?.Dispose();
             _file = null;
@@ -176,7 +180,7 @@ namespace ClassicUO.IO.Resources
 
         private ushort[] GetTextmapTexture(ushort index, out int size)
         {
-            ref readonly var entry = ref GetValidRefEntry(index);
+            ref var entry = ref GetValidRefEntry(index);
 
             if (entry.Length <= 0)
             {

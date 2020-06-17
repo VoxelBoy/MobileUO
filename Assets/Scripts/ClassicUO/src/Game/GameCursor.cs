@@ -285,6 +285,7 @@ namespace ClassicUO.Game
 
         public bool IsLoading { get; set; }
         public bool IsDraggingCursorForced { get; set; }
+        public bool AllowDrawSDLCursor { get; set; } = true;
 
 
         public void SetDraggedItem(Point? offset)
@@ -314,7 +315,7 @@ namespace ClassicUO.Game
             {
                 _needGraphicUpdate = false;
 
-                if (Settings.GlobalSettings.RunMouseInASeparateThread)
+                if (AllowDrawSDLCursor && Settings.GlobalSettings.RunMouseInASeparateThread)
                 {
                     ushort id = Graphic;
 
@@ -597,7 +598,7 @@ namespace ClassicUO.Game
             if (IsLoading)
                 return _cursorData[war, 13];
 
-            if (UIManager.MouseOverControl is AbstractTextBox t && t.IsEditable)
+            if (UIManager.MouseOverControl != null && UIManager.MouseOverControl.AcceptKeyboardInput && UIManager.MouseOverControl.IsEditable)
                 return _cursorData[war, 14];
 
             ushort result = _cursorData[war, 9];

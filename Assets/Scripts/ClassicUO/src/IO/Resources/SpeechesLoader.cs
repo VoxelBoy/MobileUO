@@ -38,7 +38,7 @@ namespace ClassicUO.IO.Resources
         }
 
 
-        public static SpeechesLoader _instance;
+        private static SpeechesLoader _instance;
         public static SpeechesLoader Instance
         {
             get
@@ -85,7 +85,7 @@ namespace ClassicUO.IO.Resources
             });
         }
 
-        public override void CleanResources()
+        public override void ClearResources()
         {
             _instance = null;
         }
@@ -130,7 +130,8 @@ namespace ClassicUO.IO.Resources
             {
                 SpeechEntry entry = _speech[i];
 
-                if (IsMatch(text, in entry)) list.Add(entry);
+                if (IsMatch(text, in entry))
+                    list.Add(entry);
             }
 
             list.Sort();

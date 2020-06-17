@@ -212,6 +212,8 @@ namespace SDL2
             SDL_PIXELTYPE_ENUM.SDL_PIXELTYPE_PACKED16, SDL_PIXELORDER_ENUM.SDL_PACKEDORDER_ARGB,
             SDL_PACKEDLAYOUT_ENUM.SDL_PACKEDLAYOUT_1555, 16, 2);
 
+        public static readonly uint SDL_PIXELFORMAT_ABGR8888;
+
         internal static byte[] UTF8_ToNative(string s)
         {
             if (s == null)
@@ -833,6 +835,21 @@ namespace SDL2
         public static string SDL_GetPlatform()
         {
             return string.Empty;
+        }
+
+        public static unsafe SDL_Surface* SDL_CreateRGBSurface(int i, int biWidth, int biHeight, int i1, int i2, int i3, int i4, uint u)
+        {
+            throw new NotImplementedException();
+        }
+
+        public struct SDL_PixelFormat
+        {
+            public uint format;
+        }
+
+        public static IntPtr SDL_ConvertSurfaceFormat(IntPtr surface, uint sdlPixelformatAbgr8888, int i)
+        {
+            throw new NotImplementedException();
         }
     }
 }

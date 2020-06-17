@@ -66,6 +66,8 @@ namespace ClassicUO.Renderer
             }
         }
 
+        public ushort[] Data => _data;
+
         public override bool Contains(int x, int y, bool pixelCheck = true)
         {
             if (UnityTexture != null && x >= 0 && y >= 0 && x < Width && y < Height)

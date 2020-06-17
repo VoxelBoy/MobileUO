@@ -37,7 +37,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public static TileDataLoader _instance;
+        private static TileDataLoader _instance;
         public static TileDataLoader Instance
         {
             get
@@ -310,7 +310,7 @@ namespace ClassicUO.IO.Resources
             });
         }
 
-        public override void CleanResources()
+        public override void ClearResources()
         {
             _staticData = null;
             _landData = null;

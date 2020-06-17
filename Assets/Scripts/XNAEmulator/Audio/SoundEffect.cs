@@ -58,12 +58,18 @@ namespace Microsoft.Xna.Framework.Audio
         {
             if (stream)
             {
-                source.Stop();
+                if (source != null)
+                {
+                    source.Stop();
+                }
             }
             else
             {
                 //NOTE: Should we call stop on one shot? Does it even work?
-                MediaPlayer.AudioSourceOneShot.Stop();
+                if(MediaPlayer.AudioSourceOneShot != null)
+                { 
+                    MediaPlayer.AudioSourceOneShot.Stop();
+                }
             }
             State = SoundState.Stopped;
         }

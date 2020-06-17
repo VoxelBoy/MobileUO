@@ -36,7 +36,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public static LightsLoader _instance;
+        private static LightsLoader _instance;
         public static LightsLoader Instance
         {
             get
@@ -65,10 +65,9 @@ namespace ClassicUO.IO.Resources
             });
         }
 
-
-        public override void CleanResources()
+        public override void ClearResources()
         {
-            base.CleanResources();
+            base.ClearResources();
             
             _file?.Dispose();
             _file = null;
@@ -86,10 +85,17 @@ namespace ClassicUO.IO.Resources
             {
                 ushort[] pixels = GetLight(id, out int w, out int h);
 
+                if (w == 0 && h == 0)
+                    return null;
+
                 texture = new UOTexture16(w, h);
                 texture.PushData(pixels);
 
                 SaveID(id);
+            }
+            else
+            {
+                texture.Ticks = Time.Ticks;
             }
 
             return texture;
@@ -98,10 +104,15 @@ namespace ClassicUO.IO.Resources
 
         private ushort[] GetLight(uint idx, out int width, out int height)
         {
-            ref readonly var entry = ref GetValidRefEntry((int) idx);
+            ref var entry = ref GetValidRefEntry((int) idx);
 
             width = entry.Width;
             height = entry.Height;
+
+            if (width == 0 && height == 0)
+            {
+                return null;
+            }
 
             ushort[] pixels = new ushort[width * height];
 

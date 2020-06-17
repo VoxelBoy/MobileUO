@@ -103,20 +103,17 @@ namespace ClassicUO.Game.GameObjects
         public void SetGraphic(ushort g)
         {
             Graphic = g;
-            SetTextureByGraphic(g);
         }
 
         public void RestoreOriginalGraphic()
         {
             Graphic = OriginalGraphic;
-            SetTextureByGraphic(Graphic);
         }
 
         public override void UpdateGraphicBySeason()
         {
             SetGraphic(SeasonManager.GetSeasonGraphic(World.Season, OriginalGraphic));
             AllowedToDraw = !GameObjectHelper.IsNoDrawable(Graphic);
-            SetTextureByGraphic(Graphic);
             IsVegetation = StaticFilters.IsVegetation(Graphic);
         }
 
@@ -145,8 +142,10 @@ namespace ClassicUO.Game.GameObjects
             x += 22;
             y += 44;
 
-            if (Texture != null)
-                y -= Texture is ArtTexture t ? (t.ImageRectangle.Height >> 1) : (Texture.Height >> 1);
+            var texture = ArtLoader.Instance.GetTexture(Graphic);
+
+            if (texture != null)
+                y -= (texture.ImageRectangle.Height >> 1);
 
             x = (int)(x / scale);
             y = (int)(y / scale);

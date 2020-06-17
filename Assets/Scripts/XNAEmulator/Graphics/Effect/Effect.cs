@@ -290,4 +290,26 @@ namespace Microsoft.Xna.Framework.Graphics
         {
         }
     }
+
+    public class BasicEffect : Effect
+    {
+        public Matrix World;
+        public Matrix View;
+        public Matrix Projection;
+        public bool TextureEnabled;
+        public Texture2D Texture;
+        public bool VertexColorEnabled;
+
+        public BasicEffect(GraphicsDevice graphicsDevice, byte[] v) : base(graphicsDevice, v)
+        {
+        }
+
+        internal BasicEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice)
+        {
+        }
+
+        protected BasicEffect(Effect cloneSource) : base(cloneSource)
+        {
+        }
+    }
 }

@@ -42,7 +42,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public static SoundsLoader _instance;
+        private static SoundsLoader _instance;
         public static SoundsLoader Instance
         {
             get
@@ -223,7 +223,7 @@ namespace ClassicUO.IO.Resources
             if (sound < 0)
                 return false;
 
-            ref readonly var entry = ref GetValidRefEntry(sound);
+            ref var entry = ref GetValidRefEntry(sound);
 
             _file.Seek(entry.Offset);
 
@@ -306,14 +306,23 @@ namespace ClassicUO.IO.Resources
             return music;
         }
 
-        public override void CleanResources()
+        public override void ClearResources()
         {
-            _mMusicData.Clear();
-            foreach (var keyValuePair in _sounds)
+            foreach (var m in _musics)
             {
-                keyValuePair.Value?.Dispose();
+                m.Value.Dispose();
             }
+
+            _musics.Clear();
+
+            foreach (var s in _sounds)
+            {
+                s.Value.Dispose();
+            }
+
             _sounds.Clear();
+
+            _mMusicData.Clear();
             
             _file?.Dispose();
             _file = null;

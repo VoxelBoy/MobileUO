@@ -36,7 +36,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public static HuesLoader _instance;
+        private static HuesLoader _instance;
         public static HuesLoader Instance
         {
             get
@@ -89,7 +89,7 @@ namespace ClassicUO.IO.Resources
         }
 
 
-        public override void CleanResources()
+        public override void ClearResources()
         {
             _instance = null;
         }
@@ -149,20 +149,6 @@ namespace ClassicUO.IO.Resources
                     }
                 }
             }
-
-            //for (int r = 0; r < len; r++)
-            //{
-            //    for (int y = 0; y < 8; y++)
-            //    {
-            //        for (int x = 0; x < 32; x++)
-            //        {
-            //            if (x == 0)
-            //                hues[idx++] = HuesHelper.Color16To32(HuesRange[0].Entries[0].ColorTable[0]);
-            //            else
-            //                hues[idx++] = HuesHelper.Color16To32(HuesRange[r].Entries[y].ColorTable[x]);
-            //        }
-            //    }
-            //}
         }
 
         //public float[] GetColorForShader(ushort color)

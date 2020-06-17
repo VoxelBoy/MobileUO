@@ -655,7 +655,7 @@ namespace ClassicUO.IO
 
             internal new UOFileIndex[][] Entries;
 
-            public override void CleanResources()
+            public override void ClearResources()
             {
                 try
                 {
@@ -674,8 +674,6 @@ namespace ClassicUO.IO
                         _filesStaticsStream[i]?.Dispose();
                     _filesStaticsStream = null;
                 }
-
-                _instance = null;
             }
 
             public override Task Load()

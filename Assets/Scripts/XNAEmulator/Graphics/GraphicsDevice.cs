@@ -18,9 +18,10 @@ namespace Microsoft.Xna.Framework.Graphics
             Viewport = new Viewport(0, 0, Screen.width, Screen.height);
         }
 
-        public Viewport Viewport { get; }
+        public Viewport Viewport { get; set; }
 
         public Rectangle ScissorRectangle { get; set; }
+        public Color BlendFactor { get; set; }
         public BlendState BlendState { get; set; }
         public DepthStencilState DepthStencilState { get; set; }
         public RasterizerState RasterizerState { get; set; }
@@ -58,7 +59,7 @@ namespace Microsoft.Xna.Framework.Graphics
             GL.Clear(depth != 0 || (options & ClearOptions.DepthBuffer) != 0, color != Color.Transparent, UnityEngine.Color.black);
         }
 
-        public void SetVertexBuffer(DynamicVertexBuffer dynamicVertexBuffer)
+        public void SetVertexBuffer(VertexBuffer dynamicVertexBuffer)
         {
         }
 

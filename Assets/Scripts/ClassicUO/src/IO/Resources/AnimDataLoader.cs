@@ -32,14 +32,13 @@ namespace ClassicUO.IO.Resources
     internal class AnimDataLoader : UOFileLoader
     {
         private UOFileMul _file;
-        private readonly Dictionary<ushort, IntPtr> _anims = new Dictionary<ushort, IntPtr>();
 
         private AnimDataLoader()
         {
 
         }
 
-        public static AnimDataLoader _instance;
+        private static AnimDataLoader _instance;
         public static AnimDataLoader Instance
         {
             get
@@ -67,31 +66,17 @@ namespace ClassicUO.IO.Resources
             });
         }
 
-        public override void CleanResources()
+        public UOFile AnimDataFile => _file;
+        
+        public override void ClearResources()
         {
             _file?.Dispose();
             _file = null;
-            _anims.Clear();
             _instance = null;
         }
 
 
-
-        public IntPtr GetAddressToAnim(ushort graphic)
-        {
-            if (!_anims.TryGetValue(graphic, out IntPtr address))
-            {
-                address = _file.StartAddress;
-
-                if (address != IntPtr.Zero)
-                {
-                    address += (graphic * 68 + 4 * ((graphic >> 3) + 1));
-
-                    _anims[graphic] = address;
-                }
-            }
-            return address;
-        }
+      
 
         public AnimDataFrame2 CalculateCurrentGraphic(ushort graphic)
         {

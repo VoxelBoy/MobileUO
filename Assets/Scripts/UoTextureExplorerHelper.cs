@@ -50,7 +50,7 @@ public static class UoTextureExplorerHelper
 
     public static void TriggerFirstTexture()
     {
-        ArtLoader.Instance.CleanResources();
+        ArtLoader.Instance.ClearResources();
         ArtLoader.Instance.GetLandTexture(0);
     }
 

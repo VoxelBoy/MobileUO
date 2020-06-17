@@ -38,7 +38,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public static GumpsLoader _instance;
+        private static GumpsLoader _instance;
         public static GumpsLoader Instance
         {
             get
@@ -144,13 +144,17 @@ namespace ClassicUO.IO.Resources
 
                 SaveID(g);
             }
+            else
+            {
+                texture.Ticks = Time.Ticks;
+            }
 
             return texture;
         }
 
-        public override void CleanResources()
+        public override void ClearResources()
         {
-            base.CleanResources();
+            base.ClearResources();
             
             _file?.Dispose();
             _file = null;
@@ -159,7 +163,7 @@ namespace ClassicUO.IO.Resources
 
         public unsafe ushort[] GetGumpPixels(uint index, out int width, out int height)
         {
-            ref readonly var entry = ref GetValidRefEntry((int) index);
+            ref var entry = ref GetValidRefEntry((int) index);
 
             if (entry.Width <= 0 && entry.Height <= 0)
             {

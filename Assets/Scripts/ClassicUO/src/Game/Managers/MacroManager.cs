@@ -417,14 +417,10 @@ namespace ClassicUO.Game.Managers
                     break;
 
                 case MacroType.Paste:
+                    string txt = Utility.StringHelper.GetClipboardText(true);
 
-                    if (SDL.SDL_HasClipboardText() != SDL.SDL_bool.SDL_FALSE)
-                    {
-                        string s = SDL.SDL_GetClipboardText();
-
-                        if (!string.IsNullOrEmpty(s))
-                            UIManager.SystemChat.TextBoxControl.Text += s;
-                    }
+                    if (txt != null)
+                        UIManager.SystemChat.TextBoxControl.Text += txt;
 
                     break;
 
@@ -980,6 +976,7 @@ namespace ClassicUO.Game.Managers
                         gs.WearHeldItem(World.Player);
 
                         _itemsInHand[handIndex] = 0;
+                        _nextTimer = Time.Ticks + 1000;
                     }
                     else
                     {
@@ -996,6 +993,7 @@ namespace ClassicUO.Game.Managers
 
                             GameActions.PickUp(item, 1);
                             gs.MergeHeldItem(backpack);
+                            _nextTimer = Time.Ticks + 1000;
                         }
                     }
 

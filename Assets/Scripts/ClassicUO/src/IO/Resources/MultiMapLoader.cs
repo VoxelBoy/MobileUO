@@ -39,7 +39,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public static MultiMapLoader _instance;
+        private static MultiMapLoader _instance;
         public static MultiMapLoader Instance
         {
             get
@@ -73,7 +73,8 @@ namespace ClassicUO.IO.Resources
                 {
                     path = UOFileManager.GetUOFilePath($"facet0{i}.mul");
 
-                    if (File.Exists(path)) _facets[i] = new UOFileMul(path);
+                    if (File.Exists(path)) 
+                        _facets[i] = new UOFileMul(path);
                 }
             });
         }
@@ -255,7 +256,7 @@ namespace ClassicUO.IO.Resources
         }
 
 
-        public override void CleanResources()
+        public override void ClearResources()
         {
             _file?.Dispose();
             _file = null;

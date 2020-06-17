@@ -47,7 +47,7 @@ namespace ClassicUO.IO.Resources
 
         }
 
-        public static MapLoader _instance;
+        private static MapLoader _instance;
         public static MapLoader Instance
         {
             get
@@ -183,7 +183,7 @@ namespace ClassicUO.IO.Resources
             });
         }
 
-        public override void CleanResources()
+        public override void ClearResources()
         {
             for (int i = 0; i < _filesIdxStatics.Length; i++)
             {
@@ -314,7 +314,6 @@ namespace ClassicUO.IO.Resources
                 data.OriginalStaticCount = realstaticcount;
             }
         }
-
 
         public void PatchMapBlock(ulong block, ulong address)
         {

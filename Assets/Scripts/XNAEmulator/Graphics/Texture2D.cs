@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    public class Texture2D : IDisposable
+    public class Texture2D : GraphicsResource, IDisposable
     {
         //This hash doesn't work as intended since it's not based on the contents of the UnityTexture but its instanceID
         //which will be different as old textures are discarded and new ones are created 
@@ -201,11 +201,16 @@ namespace Microsoft.Xna.Framework.Graphics
             return Hash;
         }
 
-        public static Texture2D FromStream(GraphicsDevice graphicsDevice, MemoryStream ms)
+        public static Texture2D FromStream(GraphicsDevice graphicsDevice, Stream stream)
         {
             Console.WriteLine("Texture2D.FromStream is not implemented yet.");
             var texture = new Texture2D(graphicsDevice, 2, 2);
             return texture;
+        }
+
+        public void SetDataPointerEXT(int level, Rectangle rectangle, IntPtr data, int dataLength)
+        {
+            Console.WriteLine("Texture2D.SetDataPointerEXT is not implemented yet.");
         }
     }
 }

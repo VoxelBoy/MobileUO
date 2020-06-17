@@ -1069,7 +1069,7 @@ namespace ClassicUO.Renderer
         }
 
         [MethodImpl(256)]
-        public void Draw2D(Texture2D texture, int x, int y, int sx, int sy, float swidth, float sheight, ref XnaVector3 hue, bool allowAtlas = true)
+        public bool Draw2D(Texture2D texture, int x, int y, int sx, int sy, float swidth, float sheight, ref XnaVector3 hue, bool allowAtlas = true)
         {
 #if BATCHER_DEBUG
             SeenTextures.Add(texture);
@@ -1133,6 +1133,8 @@ namespace ClassicUO.Renderer
                 
                 RenderVertex(vertex, texture, hue);
             }
+
+            return true;
         }
 
         [MethodImpl(256)]
