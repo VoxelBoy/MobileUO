@@ -350,14 +350,14 @@ namespace ClassicUO.Game.UI.Gumps
 
         #region Loading
 
-        private unsafe Task Load()
+        private unsafe void Load()
         {
             _mapIndex = World.MapIndex;
             _mapTexture?.Dispose();
             _mapTexture = null;
 
-            return Task.Run(() =>
-            {
+            // return Task.Run(() =>
+            // {
                 if (World.InGame)
                 {
                     try
@@ -526,14 +526,13 @@ namespace ClassicUO.Game.UI.Gumps
 
                     GameActions.Print("WorldMap loaded!", 0x48);
                 }
-            }
-            );
+                // });
         }
 
-        private unsafe Task LoadMarkers()
+        private unsafe void LoadMarkers()
         {
-            return Task.Run(() =>
-            {
+            // return Task.Run(() =>
+            // {
                 if (World.InGame)
                 {
                     _mapMarkersLoaded = false;
@@ -711,7 +710,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                     GameActions.Print($"WorldMap markers loaded ({count})", 0x2A);
                 }
-            });
+            // });
         }
 
         #endregion
