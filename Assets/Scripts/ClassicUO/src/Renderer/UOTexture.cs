@@ -47,25 +47,6 @@ namespace ClassicUO.Renderer
             SetData(data);
         }
 
-        public void GetData(ushort[] originalData, int startIndex, int elementCount)
-        {
-            //NOTE: Hacky code to make it work specifically for shop gump, width and height given with +1
-            for (int i = 0; i < elementCount; i++)
-            {
-                var index = i + startIndex;
-                var x = index % (Width + 1);
-                var y = index / (Height - (Height - Width));
-                if (x >= Width || y >= Height)
-                {
-                    originalData[i] = 0;
-                }
-                else
-                {
-                    originalData[i] = _data[y * Width + x];
-                }
-            }
-        }
-
         public ushort[] Data => _data;
 
         public override bool Contains(int x, int y, bool pixelCheck = true)

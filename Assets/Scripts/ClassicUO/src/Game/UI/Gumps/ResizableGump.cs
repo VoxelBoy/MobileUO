@@ -46,6 +46,14 @@ namespace ClassicUO.Game.UI.Gumps
             _button = new Button(0, 0x837, 0x838, 0x838);
             Add(_button);
 
+            //Upscale resize button on mobile
+            if (UnityEngine.Application.isMobilePlatform)
+            {
+                _button.Width *= 2;
+                _button.Height *= 2;
+                _button.ContainsByBounds = true;
+            }
+            
             _button.MouseDown += (sender, e) => { _clicked = true;};
             _button.MouseUp += (sender, e) =>
             {
