@@ -181,20 +181,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
             Hash = UnityTexture.GetHashCode();
         }
-
-        public static void TextureDataFromStreamEXT(
-            Stream stream,
-            out int width,
-            out int height,
-            out byte[] pixels,
-            int requestedWidth = -1,
-            int requestedHeight = -1,
-            bool zoom = false)
-        {
-            width = requestedWidth;
-            height = requestedHeight;
-            pixels = new[] {(byte)0};
-        }
         
         public override int GetHashCode()
         {

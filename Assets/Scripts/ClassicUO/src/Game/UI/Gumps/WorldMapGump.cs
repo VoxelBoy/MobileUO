@@ -569,7 +569,7 @@ namespace ClassicUO.Game.UI.Gumps
                                     if (b > 255)
                                         b = 255;
 
-                                    cc.PackedValue = (uint)(A << 24) + (uint)(R << 16) + (uint)(G << 8) + B;
+                                    cc.PackedValue = (uint)(A << 24) + (uint)((byte)r << 16) + (uint)((byte)g << 8) + (byte)b;
                                 }
                             }
                         }
