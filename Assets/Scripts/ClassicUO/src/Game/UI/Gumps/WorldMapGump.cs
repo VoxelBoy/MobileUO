@@ -373,6 +373,11 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 if (World.InGame)
                 {
+                    var start = DateTime.UtcNow;
+
+                    uint[] cachedColorsForTileId = new uint[ushort.MaxValue];
+                    uint[] cachedColorsForStaticColor = new uint[ushort.MaxValue];
+
                     var huesLoaderInstance = HuesLoader.Instance;
                     var radarColors = huesLoaderInstance.RadarCol;
                     var huesCount = huesLoaderInstance.HuesCount;
@@ -471,12 +476,20 @@ namespace ClassicUO.Game.UI.Gumps
                                     for (x = 0; x < 8; x++)
                                     {
                                         ref MapCells cell = ref cells[pos];
-
-                                        // ushort color = (ushort) (0x8000 | HuesLoader.Instance.GetRadarColorData(cell.TileID));
-                                        ushort color = (ushort) (0x8000 | radarColors[cell.TileID]);
-
+                                        
+                                        var cachedColor = cachedColorsForTileId[cell.TileID];
                                         ref var cc = ref buffer[block];
-                                        cc.PackedValue = HuesHelper.Color16To32(color) | 0xFF_00_00_00;
+                                        if (cachedColor != 0)
+                                        {
+                                            cc.PackedValue = cachedColor;
+                                        }
+                                        else
+                                        {
+                                            ushort color = (ushort) (0x8000 | radarColors[cell.TileID]);
+                                            var packedColor = HuesHelper.Color16To32(color) | 0xFF_00_00_00;
+                                            cc.PackedValue = packedColor;
+                                            cachedColorsForTileId[cell.TileID] = packedColor;
+                                        }
 
                                         allZ[block] = cell.Z;
 
@@ -509,7 +522,18 @@ namespace ClassicUO.Game.UI.Gumps
                                                             OFFSET_PIX_HALF;
 
                                                 ref var cc = ref buffer[block];
-                                                cc.PackedValue = HuesHelper.Color16To32(color) | 0xFF_00_00_00;
+
+                                                var cachedPackedColor = cachedColorsForStaticColor[color];
+                                                if (cachedPackedColor != 0)
+                                                {
+                                                    cc.PackedValue = cachedPackedColor;
+                                                }
+                                                else
+                                                {
+                                                    var packedColor = HuesHelper.Color16To32(color) | 0xFF_00_00_00;
+                                                    cc.PackedValue = packedColor;
+                                                    cachedColorsForStaticColor[color] = packedColor;
+                                                }
 
                                                 allZ[block] = staticBlock.Z;
                                             }
@@ -592,6 +616,8 @@ namespace ClassicUO.Game.UI.Gumps
                     //GameActions.Print("WorldMap loaded!", 0x48);
 
                     readyToCreateTexture = true;
+                    
+                    Console.WriteLine("World map load took " + (DateTime.UtcNow - start).TotalSeconds + " seconds");
                 }
             });
         }
@@ -840,6 +866,7 @@ namespace ClassicUO.Game.UI.Gumps
                 readyToCreateTexture = false;
                 _mapTexture = new UOTexture32(realWidth, realHeight);
                 _mapTexture.SetData(buffer);
+                buffer = null;
             }
 
             if (_mapIndex != World.MapIndex)

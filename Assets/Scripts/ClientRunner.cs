@@ -265,8 +265,6 @@ public class ClientRunner : MonoBehaviour
 
     private void OnProfileLoaded()
     {
-	    //Disable XBR as MobileUO does not yet support that effect
-	    ProfileManager.Current.UseXBR = false;
 	    //Disable auto move on mobile platform
 	    ProfileManager.Current.DisableAutoMove = Application.isMobilePlatform;
 	    //Prevent stack split gump from appearing on mobile

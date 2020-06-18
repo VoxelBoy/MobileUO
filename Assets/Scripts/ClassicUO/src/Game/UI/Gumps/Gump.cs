@@ -77,11 +77,7 @@ namespace ClassicUO.Game.UI.Gumps
         //NOTE: Make sure close button is always on top
         protected override void OnChildAdded()
         {
-            InitCloseButton();
-            if (closeButton != null)
-            {
-                closeButton.Parent = this;
-            }
+            UpdateCloseButton();
         }
 
         private void InitCloseButton()
@@ -104,7 +100,10 @@ namespace ClassicUO.Game.UI.Gumps
                 closeButton.IsEnabled = CloseButtonsEnabled && (CanCloseWithRightClick || CanCloseWithEsc);
                 closeButton.IsVisible = closeButton.IsEnabled;
                 //Force insert closeButton, might be needed if it was somehow removed from Children in the meanwhile
-                OnChildAdded();
+                if (closeButton.Parent != this)
+                {
+                    closeButton.Parent = this;
+                }
             }
         }
 

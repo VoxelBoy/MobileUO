@@ -1,6 +1,4 @@
-﻿//#define BATCHER_DEBUG
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -30,13 +28,11 @@ namespace ClassicUO.Renderer
         private DepthStencilState _stencil;
         private bool _useScissor;
         private int _numSprites;
-
-#if BATCHER_DEBUG
-        public HashSet<Texture2D> SeenTextures = new HashSet<Texture2D>();
-#endif
+        
         public HashSet<UnityTexture> TexturesToAtlas = new HashSet<UnityTexture>();
 
         private Material hueMaterial;
+        private Material xbrMaterial;
 
         private MeshHolder reusedMesh = new MeshHolder(1);
 
@@ -92,6 +88,7 @@ namespace ClassicUO.Renderer
             DefaultEffect = new IsometricEffect(device);
 
             hueMaterial = new Material(UnityEngine.Resources.Load<Shader>("HueShader"));
+            xbrMaterial = new Material(UnityEngine.Resources.Load<Shader>("XbrShader"));
 
             if (UseDynamicAtlas)
             {
@@ -127,6 +124,8 @@ namespace ClassicUO.Renderer
         }
 
         private MatrixEffect DefaultEffect { get; }
+
+        private Effect CustomEffect;
 
         private DepthStencilState Stencil { get; } = new DepthStencilState
         {
@@ -230,7 +229,7 @@ namespace ClassicUO.Renderer
                 Draw2D(textureValue,
                     Mathf.RoundToInt((x + (int) offsetX) * scale), Mathf.RoundToInt((y + (int) offsetY) * scale),
                     cGlyph.X, cGlyph.Y, cGlyph.Width * scale, cGlyph.Height * scale,
-                    ref color, false);
+                    ref color);
 
                 curOffset.X += cKern.Y + cKern.Z;
             }
@@ -239,10 +238,6 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public bool DrawSprite(Texture2D texture, int x, int y, bool mirror, ref XnaVector3 hue)
         {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
             int w = texture.Width;
             int h = texture.Height;
 
@@ -402,10 +397,6 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public void DrawSpriteRotated(Texture2D texture, int x, int y, int destX, int destY, ref XnaVector3 hue, float angle)
         {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
             float ww = texture.Width * 0.5f;
             float hh = texture.Height * 0.5f;
 
@@ -462,10 +453,6 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public bool DrawSpriteLand(Texture2D texture, int x, int y, ref Rectangle rect, ref XnaVector3 normal0, ref XnaVector3 normal1, ref XnaVector3 normal2, ref XnaVector3 normal3, ref XnaVector3 hue)
         {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
             var vertex = new PositionTextureColor4();
 
             vertex.TextureCoordinate0.x = 0;
@@ -511,11 +498,7 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public void DrawSpriteShadow(Texture2D texture, int x, int y, bool flip)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
+        { 
             var vertex = new PositionTextureColor4();
 
             float width = texture.Width;
@@ -636,11 +619,7 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool DrawCharacterSitted(Texture2D texture, int x, int y, bool mirror, float h3mod, float h6mod, float h9mod, ref XnaVector3 hue)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
+        { 
             float width = texture.Width;
             float height = texture.Height;
 
@@ -1014,11 +993,7 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool Draw2D(Texture2D texture, int x, int y, ref XnaVector3 hue)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
+        { 
             if (UseGraphicsDrawTexture)
             {
                 var rect = new Rect(x * scale, y * scale, texture.Width * scale, texture.Height * scale);
@@ -1069,12 +1044,8 @@ namespace ClassicUO.Renderer
         }
 
         [MethodImpl(256)]
-        public bool Draw2D(Texture2D texture, int x, int y, int sx, int sy, float swidth, float sheight, ref XnaVector3 hue, bool allowAtlas = true)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
+        public bool Draw2D(Texture2D texture, int x, int y, int sx, int sy, float swidth, float sheight, ref XnaVector3 hue)
+        { 
             float minX = sx / (float) texture.Width;
             float maxX = (sx + swidth) / texture.Width;
             float minY = sy / (float) texture.Height;
@@ -1139,11 +1110,7 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool Draw2D(Texture2D texture, float dx, float dy, float dwidth, float dheight, int sx, int sy, float swidth, float sheight, ref XnaVector3 hue, float angle = 0.0f)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
+        { 
             float minX = sx / (float) texture.Width, maxX = (sx + swidth) / texture.Width;
             float minY = sy / (float) texture.Height, maxY = (sy + sheight) / texture.Height;
 
@@ -1269,16 +1236,21 @@ namespace ClassicUO.Renderer
         }
 
         [MethodImpl(256)]
-        public bool Draw2D(Texture2D texture, int x, int y, float width, float height, ref XnaVector3 hue, bool allowAtlas = true)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
+        public bool Draw2D(Texture2D texture, int x, int y, float width, float height, ref XnaVector3 hue)
+        { 
             if (UseGraphicsDrawTexture)
             {
-                hueMaterial.SetColor(Hue, new Color(hue.X,hue.Y,hue.Z));
-                hueMaterial.SetFloat(UvMirrorX, 0);
-                Graphics.DrawTexture(new Rect(x * scale, y * scale, width * scale, height * scale), texture.UnityTexture, hueMaterial);
+                if (CustomEffect is XBREffect xbrEffect)
+                {
+                    xbrMaterial.SetVector("textureSize", new Vector4(xbrEffect._vectorSize.X, xbrEffect._vectorSize.Y));
+                    Graphics.DrawTexture(new Rect(x * scale, y * scale, width * scale, height * scale), texture.UnityTexture, xbrMaterial);
+                }
+                else
+                {
+                    hueMaterial.SetColor(Hue, new Color(hue.X,hue.Y,hue.Z));
+                    hueMaterial.SetFloat(UvMirrorX, 0);
+                    Graphics.DrawTexture(new Rect(x * scale, y * scale, width * scale, height * scale), texture.UnityTexture, hueMaterial);
+                }
             }
             else
             {
@@ -1334,10 +1306,7 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool Draw2DTiled(Texture2D texture, int dx, int dy, float dwidth, float dheight, ref XnaVector3 hue)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
+        { 
             int y = dy;
             int h = (int) dheight;
 
@@ -1367,10 +1336,7 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool DrawRectangle(Texture2D texture, int x, int y, int width, int height, ref XnaVector3 hue)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
+        { 
             Draw2D(texture, x, y, width, 1, ref hue);
             Draw2D(texture, x + width, y, 1, height + 1, ref hue);
             Draw2D(texture, x, y + height, width, 1, ref hue);
@@ -1381,11 +1347,7 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public void DrawLine(Texture2D texture, int startX, int startY, int endX, int endY, int originX, int originY)
-        {
-#if BATCHER_DEBUG
-            SeenTextures.Add(texture);
-#endif
-
+        { 
             var vertex = new PositionTextureColor4();
 
             const int WIDTH = 1;
@@ -1458,15 +1420,14 @@ namespace ClassicUO.Renderer
 
         public void Begin(Effect effect)
         {
+            CustomEffect = effect;
         }
 
         [MethodImpl(256)]
         public void End()
         {
-#if BATCHER_DEBUG
-            // Debug.Log($"Number of unique textures: {seenTextures.Count}");
-            // SeenTextures.Clear();
-#endif
+            CustomEffect = null;
+            
             //Draw batched meshes
             /*
             if (spriteMeshCustomVertexWriteIndex != 0)

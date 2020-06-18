@@ -44,7 +44,8 @@ public static class UoTextureExplorerHelper
 
     public static void UnloadArt()
     {
-        Client.Game.Dispose();
+        ArtLoader.Instance.Dispose();
+        GumpsLoader.Instance.Dispose();
         loaded = false;
     }
 

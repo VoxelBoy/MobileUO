@@ -437,7 +437,7 @@ namespace ClassicUO.Renderer
 
             _hueVector.Z = alpha;
 
-            return batcher.Draw2D(Texture, x, y, Width, Height, ref _hueVector, false);
+            return batcher.Draw2D(Texture, x, y, Width, Height, ref _hueVector);
         }
 
         public void CreateTexture()

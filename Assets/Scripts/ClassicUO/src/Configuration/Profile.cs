@@ -220,7 +220,7 @@ namespace ClassicUO.Configuration
 
         [JsonProperty] public bool PartyAura { get; set; }
 
-        [JsonProperty] public bool UseXBR { get; set; } = true;
+        [JsonProperty] public bool UseXBR { get; set; } = false;
 
         [JsonProperty] public bool HideChatGradient { get; set; } = false;
 
