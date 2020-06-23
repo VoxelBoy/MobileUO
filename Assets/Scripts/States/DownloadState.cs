@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -13,22 +11,17 @@ public class DownloadState : IState
     private readonly Canvas inGameDebugConsoleCanvas;
     
     private ServerConfiguration serverConfiguration;
-    private string pathToSaveFiles;
-    private int port;
-    
-    private int concurrentDownloadCounter;
-    private int numberOfFilesDownloaded;
-    private int numberOfFilesToDownload;
-    private readonly Dictionary<string, int> downloadAttemptsPerFile = new Dictionary<string, int>();
-    private List<string> downloadingFilesList;
-    private readonly List<Tuple<UnityWebRequest, string>> activeRequestAndFileNameTupleList = new List<Tuple<UnityWebRequest, string>>();
-    private Coroutine downloadCoroutine;
+
+    public List<string> filesToDownload;
+    private DownloaderBase downloader;
 
     private readonly bool forceDownloadsInEditor;
     
     private const string H_REF_PATTERN = @"<a\shref=[^>]*>([^<]*)<\/a>";
-    private const int MAX_CONCURRENT_DOWNLOADS = 1;
-    private const int MAX_DOWNLOAD_ATTEMPTS = 3;
+    
+    public readonly List<string> NeededUoFileExtensions = new List<string>{".def", ".mul", ".idx", ".uop", ".enu"};
+
+    public const string DefaultFileDownloadPort = "8080";
 
     public DownloadState(DownloadPresenter downloadPresenter, bool forceDownloadsInEditor, Canvas inGameDebugConsoleCanvas)
     {
@@ -49,9 +42,8 @@ public class DownloadState : IState
     {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         serverConfiguration = ServerConfigurationModel.ActiveConfiguration;
-        pathToSaveFiles = serverConfiguration.GetPathToSaveFiles();
-        Debug.Log($"Downloading files to {pathToSaveFiles}");
-        port = int.Parse(serverConfiguration.FileDownloadServerPort);
+        Debug.Log($"Downloading files to {serverConfiguration.GetPathToSaveFiles()}");
+        var port = int.Parse(serverConfiguration.FileDownloadServerPort);
         
         if (serverConfiguration.AllFilesDownloaded || (Application.isEditor && forceDownloadsInEditor == false))
         {
@@ -60,36 +52,100 @@ public class DownloadState : IState
         else
         {
             downloadPresenter.gameObject.SetActive(true);
-            //Get list of files to download from server
-            var uri = GetUri(serverConfiguration.FileDownloadServerUrl, port);
-            var request = UnityWebRequest.Get(uri);
-            request.SendWebRequest().completed += operation =>
-            {
-                if (request.isHttpError || request.isNetworkError)
-                {
-                    var error = $"Error while getting list of files from server: {request.error}";
-                    Debug.LogError(error);
-                    downloadPresenter.ShowError(error);
-                    return;
-                }
 
-                downloadingFilesList = new List<string>(Regex
-                    .Matches(request.downloadHandler.text, H_REF_PATTERN, RegexOptions.IgnoreCase).Cast<Match>()
-                    .Select(match => match.Groups[1].Value)
-                    .Where(text => text.Contains(".") &&
-                                   text.Contains(".exe") == false &&
-                                   text.Contains(".app") == false &&
-                                   text.Contains(".dll") == false &&
-                                   text.Contains(".pdb") == false &&
-                                   text.Contains("/") == false));
-                numberOfFilesToDownload = downloadingFilesList.Count;
-                downloadPresenter.SetFileList(downloadingFilesList);
-                downloadCoroutine = downloadPresenter.StartCoroutine(DownloadFiles());
-            };
+            //Figure out what kind of downloader we should use
+            if (serverConfiguration.FileDownloadServerUrl.ToLowerInvariant().Contains("uooutlands.com"))
+            {
+                downloader = new OutlandsDownloader();
+                downloader.Initialize(this, serverConfiguration, downloadPresenter);
+            }
+            else
+            {
+                //Get list of files to download from server
+                var uri = GetUri(serverConfiguration.FileDownloadServerUrl, port);
+                var request = UnityWebRequest.Get(uri);
+                request.SendWebRequest().completed += operation =>
+                {
+                    if (request.isHttpError || request.isNetworkError)
+                    {
+                        var error = $"Error while making initial request to server: {request.error}";
+                        StopAndShowError(error);
+                        return;
+                    }
+
+                    var headers = request.GetResponseHeaders();
+
+                    if (headers.TryGetValue("Content-Type", out var contentType))
+                    {
+                        if (contentType.Contains("application/json"))
+                        {
+                            //Parse json response to get list of files
+                            Debug.Log($"Json response: {request.downloadHandler.text}");
+                            filesToDownload = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(request.downloadHandler.text);
+                        }
+                        else if (contentType.Contains("text/html"))
+                        {
+                            filesToDownload = new List<string>(Regex
+                                .Matches(request.downloadHandler.text, H_REF_PATTERN, RegexOptions.IgnoreCase)
+                                .Cast<Match>()
+                                .Select(match => match.Groups[1].Value));
+                        }
+                    }
+
+                    if (filesToDownload != null)
+                    {
+                        filesToDownload.RemoveAll(file => NeededUoFileExtensions.Any(file.Contains) == false);
+                        SetFileListAndDownload(filesToDownload);
+                    }
+                    else
+                    {
+                        StopAndShowError("Could not determine file list to download");
+                    }
+                };
+            }
         }
     }
 
-    private static Uri GetUri(string serverUrl, int port, string fileName = null)
+    public void SetFileListAndDownload(List<string> filesList)
+    {
+        filesToDownload = filesList;
+
+        var hasAnimationFiles = filesToDownload.Any(x =>
+        {
+            var fileNameLowerCase = x.ToLowerInvariant();
+            return fileNameLowerCase.Contains("anim.mul") || fileNameLowerCase.Contains("animationframe1.uop");
+        });
+                    
+        if (filesToDownload.Count == 0 || hasAnimationFiles == false)
+        {
+            var error = "Download directory does not contain UO files such as anim.mul or AnimationFrame1.uop";
+            StopAndShowError(error);
+            return;
+        }
+
+        if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
+        {
+            ShowCellularWarning();
+        }
+        else
+        {
+            downloader = new DirectoryDownloader();
+            downloader.Initialize(this, serverConfiguration, downloadPresenter);
+        }
+    }
+
+    private void ShowCellularWarning()
+    {
+        //TODO: Implement a dialog with Back and Continue buttons
+        var userAllowedDownloads = true;
+        if (userAllowedDownloads)
+        {
+            downloader = new DirectoryDownloader();
+            downloader.Initialize(this, serverConfiguration, downloadPresenter);
+        }
+    }
+
+    public static Uri GetUri(string serverUrl, int port, string fileName = null)
     {
         var httpPort = port == 80;
         var httpsPort = port == 443;
@@ -99,99 +155,10 @@ public class DownloadState : IState
         return uriBuilder.Uri;
     }
 
-    private IEnumerator DownloadFiles()
-    {
-        int index = 0;
-        
-        var directoryInfo = new DirectoryInfo(pathToSaveFiles);
-        if (directoryInfo.Exists == false)
-        {
-            directoryInfo.Create();
-        }
-
-        while (downloadingFilesList.Count > 0)
-        {
-            while (concurrentDownloadCounter < MAX_CONCURRENT_DOWNLOADS && downloadingFilesList.Count > 0)
-            {
-                var fileName = downloadingFilesList[0];
-                downloadingFilesList.RemoveAt(0);
-                downloadAttemptsPerFile[fileName] = 1;
-                DownloadFile(fileName);
-            }
-
-            UpdateDownloadProgress();
-
-            yield return null;
-        }
-
-        //Wait until final downloads finish
-        while (concurrentDownloadCounter > 0)
-        {
-            UpdateDownloadProgress();
-            yield return null;
-        }
-
-        serverConfiguration.AllFilesDownloaded = true;
-        ServerConfigurationModel.SaveServerConfigurations();
-        
-        StateManager.GoToState<GameState>();
-    }
-
-    private void UpdateDownloadProgress()
-    {
-        foreach (var tuple in activeRequestAndFileNameTupleList)
-        {
-            downloadPresenter.SetDownloadProgress(tuple.Item2, tuple.Item1.downloadProgress);
-        }
-    }
-
-    private void DownloadFile(string fileName)
-    {
-        var uri = GetUri(serverConfiguration.FileDownloadServerUrl, port, fileName);
-        var request = UnityWebRequest.Get(uri);
-        var filePath = Path.Combine(pathToSaveFiles, fileName);
-        var fileDownloadHandler = new DownloadHandlerFile(filePath) {removeFileOnAbort = true};
-        request.downloadHandler = fileDownloadHandler;
-        request.SendWebRequest().completed += operation => SingleFileDownloadFinished(request, fileName);
-        activeRequestAndFileNameTupleList.Add(new Tuple<UnityWebRequest, string>(request, fileName));
-        ++concurrentDownloadCounter;
-    }
-
-    private void SingleFileDownloadFinished(UnityWebRequest request, string fileName)
-    {
-        --concurrentDownloadCounter;
-        activeRequestAndFileNameTupleList.RemoveAll(x => x.Item1 == request);
-        if (request.isHttpError || request.isNetworkError)
-        {
-            if(downloadAttemptsPerFile[fileName] >= MAX_DOWNLOAD_ATTEMPTS)
-            {
-                var error = $"Error while downloading {fileName}: {request.error}";
-                StopAndShowError(error);
-            }
-            else
-            {
-                var attempt = downloadAttemptsPerFile[fileName] + 1;
-                downloadAttemptsPerFile[fileName] = attempt;
-                Debug.Log($"Re-downloading file, attempt:{attempt}");
-                downloadingFilesList.Insert(0, fileName);
-                downloadPresenter.SetDownloadProgress(request.uri.AbsolutePath, 0f);
-            }
-        }
-        else
-        {
-            Debug.Log($"Download finished - {fileName}");
-            ++numberOfFilesDownloaded;
-            downloadPresenter.SetFileDownloaded(fileName);
-            downloadPresenter.UpdateView(numberOfFilesDownloaded, numberOfFilesToDownload);
-        }
-        
-    }
-
-    private void StopAndShowError(string error)
+    public void StopAndShowError(string error)
     {
         Debug.LogError(error);
         //Stop downloads
-        downloadPresenter.StopCoroutine(downloadCoroutine);
         downloadPresenter.ShowError(error);
         downloadPresenter.ClearFileList();
         inGameDebugConsoleCanvas.enabled = true;
@@ -201,21 +168,11 @@ public class DownloadState : IState
     {
         Screen.sleepTimeout = SleepTimeout.SystemSetting;
         
-        if (downloadCoroutine != null)
-        {
-            downloadPresenter.StopCoroutine(downloadCoroutine);
-            downloadCoroutine = null;
-        }
         downloadPresenter.ClearFileList();
         downloadPresenter.gameObject.SetActive(false);
+        downloader?.Dispose();
         
-        downloadAttemptsPerFile.Clear();
-        downloadingFilesList = null;
-        activeRequestAndFileNameTupleList.Clear();
+        filesToDownload = null;
         serverConfiguration = null;
-
-        concurrentDownloadCounter = 0;
-        numberOfFilesDownloaded = 0;
-        numberOfFilesToDownload = 0;
     }
 }

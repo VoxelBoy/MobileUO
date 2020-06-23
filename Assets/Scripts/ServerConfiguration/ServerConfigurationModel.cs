@@ -11,6 +11,8 @@ public static class ServerConfigurationModel
     private const string defaultConfigurationNameKey = "default_server_configuration";
 
     public static List<ServerConfiguration> ServerConfigurations;
+    public static List<ServerConfiguration> SupportedServerConfigurations;
+    
     private static ServerConfiguration activeConfiguration;
     public static ServerConfiguration ActiveConfiguration
     {
@@ -25,11 +27,13 @@ public static class ServerConfigurationModel
 
     public static Action ActiveConfigurationChanged;
 
-    public static void Initialize()
+    public static void Initialize(SupportedServerConfigurations supportedServerConfigurations)
     {
         var json = PlayerPrefs.GetString(serverConfigurationsKey, string.Empty);
         ServerConfigurations = string.IsNullOrEmpty(json) == false ? JsonConvert.DeserializeObject<List<ServerConfiguration>>(json) : new List<ServerConfiguration>();
         DefaultConfiguration = GetDefaultConfiguration();
+
+        SupportedServerConfigurations = new List<ServerConfiguration>(supportedServerConfigurations.ServerConfigurations);
     }
 
     private static ServerConfiguration GetDefaultConfiguration()
@@ -50,7 +54,7 @@ public static class ServerConfigurationModel
         SaveServerConfigurations();
     }
 
-    private static bool IsServerConfigurationNameValid(string name)
+    public static bool IsServerConfigurationNameValid(string name)
     {
         return ServerConfigurations.All(x => x.Name != name);
     }
@@ -99,10 +103,10 @@ public static class ServerConfigurationModel
         if (directoryInfo.Exists)
         {
             directoryInfo.Delete(true);
-            if (createEmptyDirectory)
-            {
-                config.CreateDirectoryToSaveFiles();
-            }
+        }
+        if (createEmptyDirectory)
+        {
+            config.CreateDirectoryToSaveFiles();
         }
         config.AllFilesDownloaded = false;
         SaveServerConfigurations();

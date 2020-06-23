@@ -13,7 +13,6 @@ using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Game.UI.Gumps.Login;
 using Newtonsoft.Json;
-using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
@@ -111,6 +110,7 @@ public class ClientRunner : MonoBehaviour
 		{
 			lastScreenWidth = Screen.width;
 			lastScreenHeight = Screen.height;
+			Client.Game.Window.ClientBounds = new Rectangle(0, 0, Screen.width, Screen.height);
 			ApplyScalingFactor();
 		}
 

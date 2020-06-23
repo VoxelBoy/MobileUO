@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ClassicUO.Data;
 using DG.Tweening;
+using Rssdp;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -80,6 +81,12 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
     [SerializeField]
     private GameObject validationErrorTextParent;
 
+    [SerializeField]
+    private Button discoverButton;
+
+    [SerializeField]
+    private ServerDiscoveryButtonPresenter serverDiscoveryButtonPresenter;
+
     public Action OnConfigurationEditSaved;
     public Action OnConfigurationEditCanceled;
     public Action OnConfigurationDeleted;
@@ -105,7 +112,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         uoServerUrlInputField.text = serverConfigurationToEdit?.UoServerUrl ?? "";
         uoServerPortInputField.text = serverConfigurationToEdit?.UoServerPort ?? "2593";
         fileDownloadServerUrlInputField.text = serverConfigurationToEdit?.FileDownloadServerUrl ?? "";
-        fileDownloadServerPortInputField.text = serverConfigurationToEdit?.FileDownloadServerPort ?? "8080";
+        fileDownloadServerPortInputField.text = serverConfigurationToEdit?.FileDownloadServerPort ?? DownloadState.DefaultFileDownloadPort;
         clientVersionInputField.text = serverConfigurationToEdit?.ClientVersion ?? "";
         useEncryptionToggle.isOn = serverConfigurationToEdit?.UseEncryption ?? false;
         clientPathForUnityEditorInputField.text = serverConfigurationToEdit?.ClientPathForUnityEditor ?? "";
@@ -128,8 +135,37 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         deleteServerConfigurationButton.onClick.AddListener(OnDeleteServerConfigurationButtonClicked);
         deleteServerFilesButton.onClick.AddListener(OnDeleteServerFilesButtonClicked);
         markFilesAsDownloadedButton.onClick.AddListener(OnMarkFilesAsDownloadedButtonClicked);
+        discoverButton.onClick.AddListener(SearchForDevices);
 
         saveButtonOriginalLocalPosition = saveButtonTransform.localPosition;
+    }
+    
+    private async void SearchForDevices()
+    {
+        serverDiscoveryButtonPresenter.Toggle(true);
+        using (var deviceLocator = new SsdpDeviceLocator())
+        {
+            try
+            {
+                var foundDevices = await deviceLocator.SearchAsync("urn:UOFileServer:device:UOFileServer:1");
+                var device = foundDevices.FirstOrDefault();
+                if (device == null)
+                {
+                    Debug.Log("No UOFileServer device found");
+                }
+                else
+                {
+                    var ip = device.DescriptionLocation.Authority;
+                    fileDownloadServerUrlInputField.text = ip;
+                    fileDownloadServerPortInputField.text = DownloadState.DefaultFileDownloadPort;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+        serverDiscoveryButtonPresenter.Toggle(false);
     }
 
     private void OnDisable()
@@ -158,10 +194,14 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
             //Rename directory where client files are saved, if it exists
             var currentDirectoryPath = serverConfigurationToEdit.GetPathToSaveFiles();
             var directoryInfo = new DirectoryInfo(currentDirectoryPath);
+            var newDirectoryPath = Path.Combine(Application.persistentDataPath, serverNameInputField.text);
             if (directoryInfo.Exists)
             {
-                var newDirectoryPath = Path.Combine(Application.persistentDataPath, serverNameInputField.text);
                 Directory.Move(currentDirectoryPath, newDirectoryPath);
+            }
+            else
+            {
+                Directory.CreateDirectory(newDirectoryPath);
             }
             ServerConfigurationToEdit.Name = serverNameInputField.text;
         }

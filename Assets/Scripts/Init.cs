@@ -19,7 +19,13 @@ public class Init : MonoBehaviour
 
     [SerializeField]
     private Canvas inGameDebugConsoleCanvas;
-    
+
+    [SerializeField]
+    private bool hideInGameDebugConsoleOnAwake;
+
+    [SerializeField]
+    private SupportedServerConfigurations supportedServerConfigurations;
+
     private void Awake()
     {
         ConsoleRedirect.Redirect();
@@ -31,11 +37,14 @@ public class Init : MonoBehaviour
         StateManager.AddState(new DownloadState(downloadPresenter, forceDownloadsInEditor, inGameDebugConsoleCanvas));
         StateManager.AddState(new GameState(clientRunner, errorPresenter, inGameDebugConsoleCanvas));
 
-        inGameDebugConsoleCanvas.enabled = false;
+        if (hideInGameDebugConsoleOnAwake)
+        {
+            inGameDebugConsoleCanvas.enabled = false;
+        }
 
         Input.simulateMouseWithTouches = false;
         
-        ServerConfigurationModel.Initialize();
+        ServerConfigurationModel.Initialize(supportedServerConfigurations);
         
         StateManager.GoToState<BootState>();
     }
