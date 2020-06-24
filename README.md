@@ -4,7 +4,8 @@ MobileUO - the first **mobile** client for Ultima Online!
 
 MobileUO runs on **iOS & Android** and enables you to play UO on the go.
 
-<img src="https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/MobileUOGitHubCover.png"/>
+<a href='https://play.google.com/store/apps/details?id=com.mobileuo.mobileuo&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height='60' alt='Get it on Google Play' src='https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/playStoreBadge.png'/></a>
+<a href='https://apps.apple.com/us/app/id1511721667'><img height='60' alt='Download on the App Store' src='https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/appStoreBadge.png'/></a>
 
 **Support the project on Patreon**
 
@@ -15,6 +16,8 @@ MobileUO runs on **iOS & Android** and enables you to play UO on the go.
 <a href="https://discord.gg/d6NQsj3">
 <img src="https://img.shields.io/discord/687638336482836481?logo=discord"
 alt="chat on Discord"></a>
+
+<img src="https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/MobileUOGitHubCover.png"/>
 
 # How to Play?
 Follow the instructions on the [Wiki](https://github.com/VoxelBoy/MobileUO/wiki) to install and configure MobileUO for your mobile device.
