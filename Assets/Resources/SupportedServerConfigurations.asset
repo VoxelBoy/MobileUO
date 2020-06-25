@@ -22,3 +22,12 @@ MonoBehaviour:
     UseEncryption: 0
     ClientPathForUnityEditor: 
     AllFilesDownloaded: 0
+  - Name: Renaissance (supported)
+    UoServerUrl: login.uorenaissance.com
+    UoServerPort: 2593
+    FileDownloadServerUrl: uorenaissance.com
+    FileDownloadServerPort: 80
+    ClientVersion: 5.0.8.3
+    UseEncryption: 0
+    ClientPathForUnityEditor: 
+    AllFilesDownloaded: 0

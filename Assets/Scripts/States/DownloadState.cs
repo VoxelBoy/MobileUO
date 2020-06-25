@@ -8,6 +8,8 @@ using UnityEngine.Networking;
 public class DownloadState : IState
 {
     public List<string> FilesToDownload;
+    public string ResourcePathForFilesToDownload;
+    
     public readonly List<string> NeededUoFileExtensions = new List<string>{".def", ".mul", ".idx", ".uop", ".enu"};
     public const string DefaultFileDownloadPort = "8080";
     
@@ -69,6 +71,11 @@ public class DownloadState : IState
                 downloader = new OutlandsDownloader();
                 downloader.Initialize(this, serverConfiguration, downloadPresenter);
             }
+            else if (serverConfiguration.FileDownloadServerUrl.ToLowerInvariant().Contains("uorenaissance.com"))
+            {
+                downloader = new RenaissanceDownloader();
+                downloader.Initialize(this, serverConfiguration, downloadPresenter);
+            }
             else
             {
                 //Get list of files to download from server
@@ -116,9 +123,10 @@ public class DownloadState : IState
         }
     }
 
-    public void SetFileListAndDownload(List<string> filesList)
+    public void SetFileListAndDownload(List<string> filesList, string resourcePathForFilesToDownload = null)
     {
         FilesToDownload = filesList;
+        ResourcePathForFilesToDownload = resourcePathForFilesToDownload;
 
         var hasAnimationFiles = FilesToDownload.Any(x =>
         {

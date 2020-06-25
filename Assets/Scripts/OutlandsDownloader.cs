@@ -18,7 +18,6 @@ public class OutlandsDownloader : DownloaderBase
         //Make version request
         var uri = DownloadState.GetUri(serverConfiguration.FileDownloadServerUrl, port, "Version");
         var request = UnityWebRequest.Get(uri);
-        // request.SetRequestHeader("User-Agent", "Outlands.exe/3.0.7288.16619");
         request.SendWebRequest().completed += operation =>
         {
             if (request.isHttpError || request.isNetworkError)
@@ -36,7 +35,6 @@ public class OutlandsDownloader : DownloaderBase
             {
                 //First time reaching to outlands servers
                 PlayerPrefs.SetString(OUTLANDS_VERSION_PREF_KEY, outlandsVersion);
-                
             }
             else if(previousOutlandsVersion == outlandsVersion)
             {
@@ -56,7 +54,6 @@ public class OutlandsDownloader : DownloaderBase
         //Make version request
         var uri = DownloadState.GetUri(serverConfiguration.FileDownloadServerUrl, port, "Manifest");
         var request = UnityWebRequest.Get(uri);
-        // request.SetRequestHeader("User-Agent", "Outlands.exe/3.0.7288.16619");
         request.SendWebRequest().completed += operation =>
         {
             if (request.isHttpError || request.isNetworkError)

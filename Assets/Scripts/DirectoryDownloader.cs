@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 public class DirectoryDownloader : DownloaderBase
 {
     private List<string> filesToDownload;
+    private string resourcePathForFilesToDownload;
     private int concurrentDownloadCounter;
     private int numberOfFilesDownloaded;
     private int numberOfFilesToDownload;
@@ -27,6 +28,7 @@ public class DirectoryDownloader : DownloaderBase
         pathToSaveFiles = serverConfiguration.GetPathToSaveFiles();
         port = int.Parse(serverConfiguration.FileDownloadServerPort);
         filesToDownload = downloadState.FilesToDownload;
+        resourcePathForFilesToDownload = downloadState.ResourcePathForFilesToDownload ?? "";
         numberOfFilesToDownload = filesToDownload.Count;
         downloadPresenter.SetFileList(filesToDownload);
         downloadCoroutine = downloadPresenter.StartCoroutine(DownloadFiles());
@@ -82,7 +84,7 @@ public class DirectoryDownloader : DownloaderBase
 
     private void DownloadFile(string fileName)
     {
-        var uri = DownloadState.GetUri(serverConfiguration.FileDownloadServerUrl, port, fileName);
+        var uri = DownloadState.GetUri(serverConfiguration.FileDownloadServerUrl, port, resourcePathForFilesToDownload + fileName);
         var request = UnityWebRequest.Get(uri);
         var filePath = Path.Combine(pathToSaveFiles, fileName);
         var fileDownloadHandler = new DownloadHandlerFile(filePath) {removeFileOnAbort = true};
