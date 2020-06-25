@@ -376,10 +376,8 @@ namespace ClassicUO.Game.UI.Gumps
                     var start = DateTime.UtcNow;
 
                     uint[] cachedColorsForTileId = new uint[ushort.MaxValue];
-                    uint[] cachedColorsForStaticColor = new uint[ushort.MaxValue];
 
                     var huesLoaderInstance = HuesLoader.Instance;
-                    var radarColors = huesLoaderInstance.RadarCol;
                     var huesCount = huesLoaderInstance.HuesCount;
                     var huesRange = huesLoaderInstance.HuesRange;
                     var tileDataLoaderStaticData = TileDataLoader.Instance.StaticData;
@@ -426,6 +424,11 @@ namespace ClassicUO.Game.UI.Gumps
                             if (g >= 0x2198 && g <= 0x21A4) 
                                 return true;
 
+                            if (g >= tileDataLoaderStaticData.Length)
+                            {
+                                return false;
+                            }
+                            
                             ref StaticTiles data = ref tileDataLoaderStaticData[g];
                             if (!data.IsNoDiagonal || (data.IsAnimated && playerNotNullAndIsGargoyle))
                                 return false;
@@ -485,7 +488,7 @@ namespace ClassicUO.Game.UI.Gumps
                                         }
                                         else
                                         {
-                                            ushort color = (ushort) (0x8000 | radarColors[cell.TileID]);
+                                            ushort color = (ushort) (0x8000 | huesLoaderInstance.GetRadarColorData(cell.TileID));
                                             var packedColor = HuesHelper.Color16To32(color) | 0xFF_00_00_00;
                                             cc.PackedValue = packedColor;
                                             cachedColorsForTileId[cell.TileID] = packedColor;
@@ -515,25 +518,16 @@ namespace ClassicUO.Game.UI.Gumps
                                             if (cell.Z <= staticBlock.Z)
                                             {
                                                 // ushort color = (ushort) (0x8000 | (staticBlock.Hue > 0 ? HuesLoader.Instance.GetColor16(16384, staticBlock.Hue) : HuesLoader.Instance.GetRadarColorData(staticBlock.Color + 0x4000)));
-                                                ushort color = (ushort) (0x8000 | (staticBlock.Hue > 0 ? GetColor16(16384, staticBlock.Hue) : radarColors[staticBlock.Color + (ushort)0x4000]));
+                                                ushort color = (ushort) (0x8000 | (staticBlock.Hue > 0 ? GetColor16(16384, staticBlock.Hue) : huesLoaderInstance.GetRadarColorData(staticBlock.Color + (ushort)0x4000)));
 
                                                 int block = (mapY + staticBlock.Y + OFFSET_PIX_HALF) *
                                                             (realWidth + OFFSET_PIX) + (mapX + staticBlock.X) +
                                                             OFFSET_PIX_HALF;
 
                                                 ref var cc = ref buffer[block];
-
-                                                var cachedPackedColor = cachedColorsForStaticColor[color];
-                                                if (cachedPackedColor != 0)
-                                                {
-                                                    cc.PackedValue = cachedPackedColor;
-                                                }
-                                                else
-                                                {
-                                                    var packedColor = HuesHelper.Color16To32(color) | 0xFF_00_00_00;
-                                                    cc.PackedValue = packedColor;
-                                                    cachedColorsForStaticColor[color] = packedColor;
-                                                }
+                                                
+                                                var packedColor = HuesHelper.Color16To32(color) | 0xFF_00_00_00;
+                                                cc.PackedValue = packedColor;
 
                                                 allZ[block] = staticBlock.Z;
                                             }
