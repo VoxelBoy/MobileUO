@@ -736,6 +736,10 @@ namespace ClassicUO.Game.Scenes
 
         public override bool Draw(UltimaBatcher2D batcher)
         {
+            //Revert scaling during game scene drawing
+            var originalBatcherScale = batcher.scale;
+            batcher.scale = 1f;
+            
             if (!World.InGame)
                 return false;
 
@@ -761,6 +765,8 @@ namespace ClassicUO.Game.Scenes
             }
 
             DrawWorld(batcher);
+
+            batcher.scale = originalBatcherScale;
 
             return base.Draw(batcher);
         }

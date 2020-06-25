@@ -75,6 +75,7 @@ public static class UserPreferences
     public static IntPreference JoystickDeadZone;
     public static IntPreference JoystickRunThreshold;
     public static IntPreference ContainerItemSelection;
+    public static IntPreference ForceUseXbr;
 
     public static void Initialize()
     {
@@ -89,5 +90,6 @@ public static class UserPreferences
         JoystickDeadZone = new IntPreference(nameof(JoystickDeadZone), (int) PreferenceEnums.JoystickDeadZone.Low);
         JoystickRunThreshold = new IntPreference(nameof(JoystickRunThreshold), (int) PreferenceEnums.JoystickRunThreshold.Low);
         ContainerItemSelection = new IntPreference(nameof(ContainerItemSelection), (int) PreferenceEnums.ContainerItemSelection.Coarse);
+        ForceUseXbr = new IntPreference(nameof(ForceUseXbr), (int) PreferenceEnums.ForceUseXbr.Off);
     }
 }

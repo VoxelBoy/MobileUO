@@ -50,6 +50,7 @@ public class ClientRunner : MonoBehaviour
 	private void Awake()
 	{
 		UserPreferences.ScaleSize.ValueChanged += OnCustomScaleSizeChanged;
+		UserPreferences.ForceUseXbr.ValueChanged += OnForceUseXbrChanged;
 		UserPreferences.ShowCloseButtons.ValueChanged += OnShowCloseButtonsChanged;
 		UserPreferences.UseMouseOnMobile.ValueChanged += OnUseMouseOnMobileChanged;
 		UserPreferences.TargetFrameRate.ValueChanged += OnTargetFrameRateChanged;
@@ -58,6 +59,7 @@ public class ClientRunner : MonoBehaviour
 		UserPreferences.JoystickRunThreshold.ValueChanged += OnJoystickRunThresholdChanged;
 		UserPreferences.ContainerItemSelection.ValueChanged += OnContainerItemSelectionChanged;
 		OnCustomScaleSizeChanged(UserPreferences.ScaleSize.CurrentValue);
+		OnForceUseXbrChanged(UserPreferences.ForceUseXbr.CurrentValue);
 		OnShowCloseButtonsChanged(UserPreferences.ShowCloseButtons.CurrentValue);
 		OnUseMouseOnMobileChanged(UserPreferences.UseMouseOnMobile.CurrentValue);
 		OnTargetFrameRateChanged(UserPreferences.TargetFrameRate.CurrentValue);
@@ -65,6 +67,14 @@ public class ClientRunner : MonoBehaviour
 		OnJoystickDeadZoneChanged(UserPreferences.JoystickDeadZone.CurrentValue);
 		OnJoystickRunThresholdChanged(UserPreferences.JoystickRunThreshold.CurrentValue);
 		OnContainerItemSelectionChanged(UserPreferences.ContainerItemSelection.CurrentValue);
+	}
+
+	private void OnForceUseXbrChanged(int currentValue)
+	{
+		if (ProfileManager.Current != null)
+		{
+			ProfileManager.Current.UseXBR = currentValue == (int) PreferenceEnums.ForceUseXbr.On;
+		}
 	}
 
 	private void OnContainerItemSelectionChanged(int currentValue)
@@ -299,6 +309,7 @@ public class ClientRunner : MonoBehaviour
 	    //ProfileManager.Current.HoldShiftToSplitStack = Application.isMobilePlatform;
 	    //Scale items inside containers by default on mobile (won't have any effect if container scale isn't changed)
 	    ProfileManager.Current.ScaleItemsInsideContainers = Application.isMobilePlatform;
+	    OnForceUseXbrChanged(UserPreferences.ForceUseXbr.CurrentValue);
     }
 
     private void OnSceneChanged()
@@ -346,14 +357,6 @@ public class ClientRunner : MonoBehaviour
 
 	    ((UnityGameWindow) Client.Game.Window).Scale = scale;
 	    Client.Game.Batcher.scale = scale;
-	    Client.Game.scale = scale;
-	    
-	    //Force update game viewport render texture
-	    if (isGameScene)
-	    {
-		    gameScene.UpdateDrawPosition = true;
-		    gameScene.GetViewPort();
-	    }
     }
 
     private void OnGameExiting(object sender, EventArgs e)

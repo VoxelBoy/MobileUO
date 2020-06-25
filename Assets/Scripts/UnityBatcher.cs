@@ -59,6 +59,7 @@ namespace ClassicUO.Renderer
         private static readonly int UvMirrorX = Shader.PropertyToID("_uvMirrorX");
         private static readonly int Scissor = Shader.PropertyToID("_Scissor");
         private static readonly int ScissorRect = Shader.PropertyToID("_ScissorRect");
+        private static readonly int TextureSize = Shader.PropertyToID("textureSize");
 
         [StructLayout(LayoutKind.Sequential)]
         private struct CustomVertex
@@ -1242,7 +1243,7 @@ namespace ClassicUO.Renderer
             {
                 if (CustomEffect is XBREffect xbrEffect)
                 {
-                    xbrMaterial.SetVector("textureSize", new Vector4(xbrEffect._vectorSize.X, xbrEffect._vectorSize.Y));
+                    xbrMaterial.SetVector(TextureSize, new Vector4(xbrEffect._vectorSize.X, xbrEffect._vectorSize.Y));
                     Graphics.DrawTexture(new Rect(x * scale, y * scale, width * scale, height * scale), texture.UnityTexture, xbrMaterial);
                 }
                 else

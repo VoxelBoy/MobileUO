@@ -63,7 +63,6 @@ namespace ClassicUO
         private uint _totalFrames;
         
         public UltimaBatcher2D Batcher => _uoSpriteBatch;
-        public float scale = 1;
         public static UnityEngine.TouchScreenKeyboard TouchScreenKeyboard;
 
         public GameController()
@@ -848,7 +847,7 @@ namespace ClassicUO
 
         private void MouseUpdate()
         {
-            var oneOverScale = 1f / scale;
+            var oneOverScale = 1f / Batcher.scale;
             
             //Finger/mouse handling
             if (UnityEngine.Application.isMobilePlatform && UserPreferences.UseMouseOnMobile.CurrentValue == 0)
@@ -902,7 +901,7 @@ namespace ClassicUO
 
         private void UnityInputUpdate()
         {
-            var oneOverScale = 1f / scale;
+            var oneOverScale = 1f / Batcher.scale;
             
             //Finger/mouse handling
             if (UnityEngine.Application.isMobilePlatform && UserPreferences.UseMouseOnMobile.CurrentValue == 0)

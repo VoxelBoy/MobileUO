@@ -829,8 +829,8 @@ namespace ClassicUO.Game.Scenes
             {
                 UpdateDrawPosition = true;
 
-                var scaledWidth = (int) (winGameWidth * Scale * Client.Game.scale);
-                var scaledHeight = (int) (winGameHeight * Scale * Client.Game.scale);
+                var scaledWidth = (int) (winGameWidth * Scale);
+                var scaledHeight = (int) (winGameHeight * Scale);
                 if (_viewportRenderTarget == null || _viewportRenderTarget.Width != scaledWidth || _viewportRenderTarget.Height != scaledHeight)
                 {
                     _viewportRenderTarget?.Dispose();

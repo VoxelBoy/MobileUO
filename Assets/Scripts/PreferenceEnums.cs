@@ -68,4 +68,10 @@ namespace PreferenceEnums
         Coarse = 0,
         Fine = 1
     }
+
+    public enum ForceUseXbr
+    {
+        Off = 0,
+        On = 1
+    }
 }
