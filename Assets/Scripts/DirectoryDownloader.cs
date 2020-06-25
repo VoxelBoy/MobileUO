@@ -19,7 +19,6 @@ public class DirectoryDownloader : DownloaderBase
     
     private const int MAX_CONCURRENT_DOWNLOADS = 2;
     private const int MAX_DOWNLOAD_ATTEMPTS = 3;
-    private const string CORE_SERVER_FILE_REQUEST_PREFIX = "/files/download/";
 
     public override void Initialize(DownloadState downloadState, ServerConfiguration serverConfiguration, DownloadPresenter downloadPresenter)
     {
@@ -27,7 +26,7 @@ public class DirectoryDownloader : DownloaderBase
 
         pathToSaveFiles = serverConfiguration.GetPathToSaveFiles();
         port = int.Parse(serverConfiguration.FileDownloadServerPort);
-        filesToDownload = downloadState.filesToDownload;
+        filesToDownload = downloadState.FilesToDownload;
         numberOfFilesToDownload = filesToDownload.Count;
         downloadPresenter.SetFileList(filesToDownload);
         downloadCoroutine = downloadPresenter.StartCoroutine(DownloadFiles());
@@ -85,13 +84,7 @@ public class DirectoryDownloader : DownloaderBase
     {
         var uri = DownloadState.GetUri(serverConfiguration.FileDownloadServerUrl, port, fileName);
         var request = UnityWebRequest.Get(uri);
-        //In case we're downloading from CoreServer, remove the /files/download request string from the fileName when determining path to save the file
-        var filaNameForFilePath = fileName;
-        if (filaNameForFilePath.StartsWith(CORE_SERVER_FILE_REQUEST_PREFIX))
-        {
-            filaNameForFilePath = filaNameForFilePath.Replace(CORE_SERVER_FILE_REQUEST_PREFIX, string.Empty);
-        }
-        var filePath = Path.Combine(pathToSaveFiles, filaNameForFilePath);
+        var filePath = Path.Combine(pathToSaveFiles, fileName);
         var fileDownloadHandler = new DownloadHandlerFile(filePath) {removeFileOnAbort = true};
         request.downloadHandler = fileDownloadHandler;
         request.SendWebRequest().completed += operation => SingleFileDownloadFinished(request, fileName);

@@ -7,29 +7,39 @@ using UnityEngine.Networking;
 
 public class DownloadState : IState
 {
+    public List<string> FilesToDownload;
+    public readonly List<string> NeededUoFileExtensions = new List<string>{".def", ".mul", ".idx", ".uop", ".enu"};
+    public const string DefaultFileDownloadPort = "8080";
+    
     private readonly DownloadPresenter downloadPresenter;
     private readonly Canvas inGameDebugConsoleCanvas;
     
     private ServerConfiguration serverConfiguration;
-
-    public List<string> filesToDownload;
     private DownloaderBase downloader;
-
     private readonly bool forceDownloadsInEditor;
-    
     private const string H_REF_PATTERN = @"<a\shref=[^>]*>([^<]*)<\/a>";
-    
-    public readonly List<string> NeededUoFileExtensions = new List<string>{".def", ".mul", ".idx", ".uop", ".enu"};
-
-    public const string DefaultFileDownloadPort = "8080";
 
     public DownloadState(DownloadPresenter downloadPresenter, bool forceDownloadsInEditor, Canvas inGameDebugConsoleCanvas)
     {
         this.downloadPresenter = downloadPresenter;
         this.inGameDebugConsoleCanvas = inGameDebugConsoleCanvas;
         
-        downloadPresenter.backButtonPressed += OnBackButtonPressed;
+        downloadPresenter.BackButtonPressed += OnBackButtonPressed;
+        downloadPresenter.CellularWarningYesButtonPressed += OnCellularWarningYesButtonPressed;
+        downloadPresenter.CellularWarningNoButtonPressed += OnCellularWarningNoButtonPressed;
         this.forceDownloadsInEditor = forceDownloadsInEditor;
+    }
+
+    private void OnCellularWarningYesButtonPressed()
+    {
+        downloadPresenter.ToggleCellularWarning(false);
+        StartDirectoryDownloader();
+    }
+    
+    private void OnCellularWarningNoButtonPressed()
+    {
+        downloadPresenter.ToggleCellularWarning(false);
+        StateManager.GoToState<ServerConfigurationState>();
     }
 
     private void OnBackButtonPressed()
@@ -81,21 +91,21 @@ public class DownloadState : IState
                         {
                             //Parse json response to get list of files
                             Debug.Log($"Json response: {request.downloadHandler.text}");
-                            filesToDownload = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(request.downloadHandler.text);
+                            FilesToDownload = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(request.downloadHandler.text);
                         }
                         else if (contentType.Contains("text/html"))
                         {
-                            filesToDownload = new List<string>(Regex
+                            FilesToDownload = new List<string>(Regex
                                 .Matches(request.downloadHandler.text, H_REF_PATTERN, RegexOptions.IgnoreCase)
                                 .Cast<Match>()
                                 .Select(match => match.Groups[1].Value));
                         }
                     }
 
-                    if (filesToDownload != null)
+                    if (FilesToDownload != null)
                     {
-                        filesToDownload.RemoveAll(file => NeededUoFileExtensions.Any(file.Contains) == false);
-                        SetFileListAndDownload(filesToDownload);
+                        FilesToDownload.RemoveAll(file => NeededUoFileExtensions.Any(file.Contains) == false);
+                        SetFileListAndDownload(FilesToDownload);
                     }
                     else
                     {
@@ -108,15 +118,15 @@ public class DownloadState : IState
 
     public void SetFileListAndDownload(List<string> filesList)
     {
-        filesToDownload = filesList;
+        FilesToDownload = filesList;
 
-        var hasAnimationFiles = filesToDownload.Any(x =>
+        var hasAnimationFiles = FilesToDownload.Any(x =>
         {
             var fileNameLowerCase = x.ToLowerInvariant();
             return fileNameLowerCase.Contains("anim.mul") || fileNameLowerCase.Contains("animationframe1.uop");
         });
                     
-        if (filesToDownload.Count == 0 || hasAnimationFiles == false)
+        if (FilesToDownload.Count == 0 || hasAnimationFiles == false)
         {
             var error = "Download directory does not contain UO files such as anim.mul or AnimationFrame1.uop";
             StopAndShowError(error);
@@ -129,20 +139,19 @@ public class DownloadState : IState
         }
         else
         {
-            downloader = new DirectoryDownloader();
-            downloader.Initialize(this, serverConfiguration, downloadPresenter);
+            StartDirectoryDownloader();
         }
+    }
+
+    private void StartDirectoryDownloader()
+    {
+        downloader = new DirectoryDownloader();
+        downloader.Initialize(this, serverConfiguration, downloadPresenter);
     }
 
     private void ShowCellularWarning()
     {
-        //TODO: Implement a dialog with Back and Continue buttons
-        var userAllowedDownloads = true;
-        if (userAllowedDownloads)
-        {
-            downloader = new DirectoryDownloader();
-            downloader.Initialize(this, serverConfiguration, downloadPresenter);
-        }
+        downloadPresenter.ToggleCellularWarning(true);
     }
 
     public static Uri GetUri(string serverUrl, int port, string fileName = null)
@@ -172,7 +181,7 @@ public class DownloadState : IState
         downloadPresenter.gameObject.SetActive(false);
         downloader?.Dispose();
         
-        filesToDownload = null;
+        FilesToDownload = null;
         serverConfiguration = null;
     }
 }

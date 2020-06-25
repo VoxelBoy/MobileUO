@@ -69,7 +69,7 @@ public class OutlandsDownloader : DownloaderBase
             var manifestContents = request.downloadHandler.text;
             Debug.Log($"Request result text (manifest contents): {manifestContents}");
             
-            var lines = manifestContents.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).ToList();
+            var lines = manifestContents.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
             
             //All valid lines start with one backslash
             lines.RemoveAll(x => x.StartsWith("\\") == false);

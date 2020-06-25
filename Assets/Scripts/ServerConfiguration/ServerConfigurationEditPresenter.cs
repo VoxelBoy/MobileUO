@@ -148,16 +148,38 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
             try
             {
                 var foundDevices = await deviceLocator.SearchAsync("urn:UOFileServer:device:UOFileServer:1");
-                var device = foundDevices.FirstOrDefault();
-                if (device == null)
+                //Check isActiveAndEnabled in case the Edit Presenter exited already
+                if (isActiveAndEnabled)
                 {
-                    Debug.Log("No UOFileServer device found");
-                }
-                else
-                {
-                    var ip = device.DescriptionLocation.Authority;
-                    fileDownloadServerUrlInputField.text = ip;
-                    fileDownloadServerPortInputField.text = DownloadState.DefaultFileDownloadPort;
+                    var device = foundDevices.FirstOrDefault();
+                    if (device == null)
+                    {
+                        Debug.Log("UOFileServer device was not found.");
+                    }
+                    else
+                    {
+                        var ip = device.DescriptionLocation.Authority;
+                        Debug.Log($"UOFileServer device found at {ip}");
+                        
+                        var responseHeaders = device.ResponseHeaders;
+                        if (responseHeaders.TryGetValues("LoginServer", out var loginServerValues))
+                        {
+                            uoServerUrlInputField.text = loginServerValues.FirstOrDefault();
+                        }
+
+                        if (responseHeaders.TryGetValues("LoginPort", out var loginPortValues))
+                        {
+                            uoServerPortInputField.text = loginPortValues.FirstOrDefault();
+                        }
+
+                        if (responseHeaders.TryGetValues("ClientVersion", out var clientVersionValues))
+                        {
+                            clientVersionInputField.text = clientVersionValues.FirstOrDefault();
+                        }
+                    
+                        fileDownloadServerUrlInputField.text = ip;
+                        fileDownloadServerPortInputField.text = DownloadState.DefaultFileDownloadPort;
+                    }
                 }
             }
             catch (Exception e)

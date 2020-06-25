@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ServerDiscoveryButtonPresenter : MonoBehaviour
 {
     public Button button;
-    public Image magnifierImage;
+    public Text text;
     public Image searchingImage;
     public RectTransform searchingRectTransform;
     public float searchingImageRotationSpeed;
@@ -14,7 +14,7 @@ public class ServerDiscoveryButtonPresenter : MonoBehaviour
         button.interactable = serverDiscoveryRunning == false;
         searchingRectTransform.localRotation = Quaternion.identity;
 
-        magnifierImage.enabled = serverDiscoveryRunning == false;
+        text.enabled = serverDiscoveryRunning == false;
         searchingImage.enabled = serverDiscoveryRunning;
     }
 

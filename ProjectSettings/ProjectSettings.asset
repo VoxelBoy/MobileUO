@@ -111,6 +111,8 @@ PlayerSettings:
   switchNVNShaderPoolsGranularity: 33554432
   switchNVNDefaultPoolsGranularity: 16777216
   switchNVNOtherPoolsGranularity: 16777216
+  stadiaPresentMode: 0
+  stadiaTargetFramerate: 0
   vulkanNumSwapchainBuffers: 3
   vulkanEnableSetSRGBWrite: 0
   m_SupportedAspectRatios:
@@ -119,7 +121,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.22
+  bundleVersion: 0.23
   preloadedAssets: []
   metroInputSource: 1
   wsaTransparentSwapchain: 0
@@ -169,8 +171,8 @@ PlayerSettings:
     iPhone: com.saltedcaramelgames.mobileuo
     tvOS: 
   buildNumber:
-    iPhone: 0.22
-  AndroidBundleVersionCode: 22
+    iPhone: 0.23
+  AndroidBundleVersionCode: 23
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

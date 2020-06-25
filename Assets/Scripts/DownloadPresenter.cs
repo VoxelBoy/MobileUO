@@ -20,13 +20,28 @@ public class DownloadPresenter : MonoBehaviour
     [SerializeField]
     private Button backButton;
 
-    public Action backButtonPressed;
+    [SerializeField]
+    private GameObject cellularWarningParent;
+
+    [SerializeField]
+    private Button cellularWarningYesButton;
+
+    [SerializeField]
+    private Button cellularWarningNoButton;
+
+    public Action BackButtonPressed;
+    public Action CellularWarningYesButtonPressed;
+    public Action CellularWarningNoButtonPressed;
 
     private readonly Dictionary<string, FileNameView> fileNameToFileNameView = new Dictionary<string, FileNameView>();
 
     private void OnEnable()
     {
-        backButton.onClick.AddListener(() => backButtonPressed?.Invoke());
+        backButton.onClick.AddListener(() => BackButtonPressed?.Invoke());
+        cellularWarningYesButton.onClick.AddListener(() => CellularWarningYesButtonPressed?.Invoke());
+        cellularWarningNoButton.onClick.AddListener(() => CellularWarningNoButtonPressed?.Invoke());
+        
+        cellularWarningParent.gameObject.SetActive(false);
         backButton.gameObject.SetActive(false);
         errorText.gameObject.SetActive(false);
         fileNameViewInstance.gameObject.SetActive(false);
@@ -95,5 +110,10 @@ public class DownloadPresenter : MonoBehaviour
         {
             fileNameView?.SetProgress(progress);
         }
+    }
+
+    public void ToggleCellularWarning(bool enabled)
+    {
+        cellularWarningParent.SetActive(enabled);
     }
 }
