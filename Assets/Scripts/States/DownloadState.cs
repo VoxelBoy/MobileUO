@@ -81,6 +81,8 @@ public class DownloadState : IState
                 //Get list of files to download from server
                 var uri = GetUri(serverConfiguration.FileDownloadServerUrl, port);
                 var request = UnityWebRequest.Get(uri);
+                //This request should not take more than 5 seconds, the amount of data being received is very small
+                request.timeout = 5;
                 request.SendWebRequest().completed += operation =>
                 {
                     if (request.isHttpError || request.isNetworkError)
