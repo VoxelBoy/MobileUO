@@ -11,44 +11,85 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
     [SerializeField]
     private RectTransform handle;
     [SerializeField]
-    private float offset;
-    public Vector2 Position { get; private set; }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        var backgroundRect = background.rect;
-        var backgroundPosition = (Vector2) background.position;
-
-        var eventToBackgroundPositionDelta = eventData.position - backgroundPosition;
-        var backgroundToKnobRectSizeDelta = backgroundRect.size * 0.5f;
-
-        Position = new Vector2(eventToBackgroundPositionDelta.x / (backgroundToKnobRectSizeDelta.x), eventToBackgroundPositionDelta.y / (backgroundToKnobRectSizeDelta.y));
-        Position = Position.sqrMagnitude > 1.0f ? Position.normalized : Position;
-        handle.position = new Vector2(Position.x * (backgroundToKnobRectSizeDelta.x) * offset + backgroundPosition.x, Position.y * (backgroundToKnobRectSizeDelta.y) * offset + backgroundPosition.y);
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        Position = Vector2.zero;
-        handle.position = background.position;
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        OnDrag(eventData);
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        OnEndDrag(eventData);
-    }
-
+    public float deadZone;
+    [SerializeField]
+    private float handleRange = 1f;
+    [SerializeField]
+    private bool blockVerticalInput;
+    [SerializeField]
+    private bool blockHorizontalInput;
+    
+    public Vector2 Input { get; private set; }
+    
+    private int pointerId = -1;
+    
     public void SetSize(float size)
     {
         background.sizeDelta = Vector2.one * size;
         handle.sizeDelta = Vector2.one * size * 0.5f;
     }
 
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (eventData.pointerId != pointerId)
+        {
+            return;
+        }
+        
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(background, eventData.position, null, out var pointerPosition);
+        var extent = background.rect.size * 0.5f * handleRange;
+        
+        var horizontalInput = pointerPosition.x / extent.x;
+        var verticalInput = pointerPosition.y / extent.y;
+        Input = new Vector2(blockHorizontalInput ? 0f : horizontalInput, blockVerticalInput ? 0f : verticalInput);
+
+        var magnitude = Input.magnitude;
+        Input = magnitude > 1.0f ? Input.normalized : Input;
+        handle.localPosition = new Vector2(Input.x * extent.x, Input.y * extent.y);
+        if (magnitude < deadZone)
+        {
+            Input = Vector2.zero;
+        }
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (eventData.pointerId != pointerId)
+        {
+            return;
+        }
+        
+        ResetPosition();
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (eventData.pointerEnter != gameObject)
+        {
+            return;
+        }
+
+        pointerId = eventData.pointerId;
+        
+        OnDrag(eventData);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (eventData.pointerId != pointerId)
+        {
+            return;
+        }
+        
+        OnEndDrag(eventData);
+    }
+
+    private void ResetPosition()
+    {
+        Input = Vector2.zero;
+        handle.position = background.position;
+    }
+    
     private void OnEnable()
     {
         backgroundImage.raycastTarget = true;
@@ -57,5 +98,7 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
     private void OnDisable()
     {
         backgroundImage.raycastTarget = false;
+        ResetPosition();
+
     }
 }

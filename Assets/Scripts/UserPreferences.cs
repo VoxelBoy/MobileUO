@@ -72,6 +72,8 @@ public static class UserPreferences
     public static IntPreference JoystickSize;
     public static IntPreference JoystickOpacity;
     public static Vector3Preference CustomJoystickPositionAndSize;
+    public static IntPreference JoystickDeadZone;
+    public static IntPreference JoystickRunThreshold;
 
     public static void Initialize()
     {
@@ -83,5 +85,7 @@ public static class UserPreferences
         JoystickSize = new IntPreference(nameof(JoystickSize), (int) JoystickSizes.Normal);
         JoystickOpacity = new IntPreference(nameof(JoystickOpacity), (int) PreferenceEnums.JoystickOpacity.Normal);
         CustomJoystickPositionAndSize = new Vector3Preference("customJoystickSizeAndPosition", new Vector3(-1,-1,-1));
+        JoystickDeadZone = new IntPreference(nameof(JoystickDeadZone), (int) PreferenceEnums.JoystickDeadZone.Low);
+        JoystickRunThreshold = new IntPreference(nameof(JoystickRunThreshold), (int) PreferenceEnums.JoystickRunThreshold.Low);
     }
 }

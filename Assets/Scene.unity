@@ -646,7 +646,7 @@ GameObject:
   - component: {fileID: 90313485}
   - component: {fileID: 90313484}
   m_Layer: 5
-  m_Name: LeftJoyStick
+  m_Name: MobileJoystick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -706,7 +706,10 @@ MonoBehaviour:
   background: {fileID: 90313483}
   backgroundImage: {fileID: 90313486}
   handle: {fileID: 906887848}
-  offset: 1
+  deadZone: 0.1
+  handleRange: 1
+  blockVerticalInput: 0
+  blockHorizontalInput: 0
 --- !u!114 &90313486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1146,6 +1149,14 @@ MonoBehaviour:
   scaleGameToFitScreen: 1
   movementJoystick: {fileID: 90313485}
   showMovementJoystickOnNonMobilePlatforms: 0
+  joystickDeadZoneValues:
+  - 0.1
+  - 0.2
+  - 0.3
+  joystickRunThresholdValues:
+  - 0.7
+  - 0.8
+  - 0.9
 --- !u!1 &225267982
 GameObject:
   m_ObjectHideFlags: 0
@@ -9980,7 +9991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverConfigurationUiParent: {fileID: 627388592}
   downloadPresenter: {fileID: 644890276}
-  forceDownloadsInEditor: 0
+  forceDownloadsInEditor: 1
   clientRunner: {fileID: 204360075}
   errorPresenter: {fileID: 525914056}
   inGameDebugConsoleCanvas: {fileID: 168659848}

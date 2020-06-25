@@ -48,4 +48,18 @@ namespace PreferenceEnums
         Normal = 2,
         High = 3
     }
+    
+    public enum JoystickDeadZone
+    {
+        Low = 0,
+        Medium = 1,
+        High = 2
+    }
+    
+    public enum JoystickRunThreshold
+    {
+        Low = 0,
+        Medium = 1,
+        High = 2
+    }
 }

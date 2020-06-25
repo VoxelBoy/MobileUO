@@ -70,9 +70,8 @@ namespace ClassicUO.Game.Scenes
         private Vector4 _vectorClear = new Vector4(Vector3.Zero, 1);
         private Weather _weather;
 
-        public Vector2 JoystickInput { get; set; }
-
-
+        public Vector2 JoystickInput;
+        public float JoystickRunThreshold;
 
         public GameScene() : base((int) SceneType.Game,
             true,
@@ -588,7 +587,7 @@ namespace ClassicUO.Game.Scenes
 
             if (JoystickInput != Vector2.Zero)
             {
-                World.Player.Walk(DirectionHelper.DirectionFromVectors(Vector2.Zero, JoystickInput), ProfileManager.Current.AlwaysRun || JoystickInput.Length() > 0.5f);
+                World.Player.Walk(DirectionHelper.DirectionFromVectors(Vector2.Zero, JoystickInput), ProfileManager.Current.AlwaysRun || JoystickInput.Length() > JoystickRunThreshold);
             }
 
             if (_followingMode && SerialHelper.IsMobile(_followingTarget) && !Pathfinder.AutoWalking)

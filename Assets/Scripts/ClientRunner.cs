@@ -30,11 +30,14 @@ public class ClientRunner : MonoBehaviour
 	private bool saveAllTextures;
 	[SerializeField]
 	private bool scaleGameToFitScreen;
-	
 	[SerializeField]
 	private MobileJoystick movementJoystick;
 	[SerializeField]
 	private bool showMovementJoystickOnNonMobilePlatforms;
+	[SerializeField]
+	private float[] joystickDeadZoneValues;
+	[SerializeField]
+	private float[] joystickRunThresholdValues;
 
 	private int lastScreenWidth;
 	private int lastScreenHeight;
@@ -50,13 +53,30 @@ public class ClientRunner : MonoBehaviour
 		UserPreferences.UseMouseOnMobile.ValueChanged += OnUseMouseOnMobileChanged;
 		UserPreferences.TargetFrameRate.ValueChanged += OnTargetFrameRateChanged;
 		UserPreferences.TextureFiltering.ValueChanged += UpdateTextureFiltering;
+		UserPreferences.JoystickDeadZone.ValueChanged += OnJoystickDeadZoneChanged;
+		UserPreferences.JoystickRunThreshold.ValueChanged += OnJoystickRunThresholdChanged;
 		OnCustomScaleSizeChanged(UserPreferences.ScaleSize.CurrentValue);
 		OnShowCloseButtonsChanged(UserPreferences.ShowCloseButtons.CurrentValue);
 		OnUseMouseOnMobileChanged(UserPreferences.UseMouseOnMobile.CurrentValue);
 		OnTargetFrameRateChanged(UserPreferences.TargetFrameRate.CurrentValue);
 		UpdateTextureFiltering(UserPreferences.TextureFiltering.CurrentValue);
+		OnJoystickDeadZoneChanged(UserPreferences.JoystickDeadZone.CurrentValue);
+		OnJoystickRunThresholdChanged(UserPreferences.JoystickRunThreshold.CurrentValue);
 	}
-	
+
+	private void OnJoystickRunThresholdChanged(int currentValue)
+	{
+		if (Client.Game?.Scene is GameScene gameScene)
+		{
+			gameScene.JoystickRunThreshold = joystickRunThresholdValues[UserPreferences.JoystickRunThreshold.CurrentValue];
+		}
+	}
+
+	private void OnJoystickDeadZoneChanged(int currentValue)
+	{
+		movementJoystick.deadZone = joystickDeadZoneValues[currentValue];
+	}
+
 	private static void OnTargetFrameRateChanged(int frameRate)
 	{
 		Application.targetFrameRate = frameRate;
@@ -136,7 +156,7 @@ public class ClientRunner : MonoBehaviour
 
         if (movementJoystick.isActiveAndEnabled && Client.Game.Scene is GameScene gameScene)
         {
-	        gameScene.JoystickInput = new Microsoft.Xna.Framework.Vector2(movementJoystick.Position.x, -1 * movementJoystick.Position.y);
+	        gameScene.JoystickInput = new Microsoft.Xna.Framework.Vector2(movementJoystick.Input.x, -1 * movementJoystick.Input.y);
         }
         
         Client.Game.Tick(deltaTime);
@@ -277,7 +297,12 @@ public class ClientRunner : MonoBehaviour
     {
 	    ApplyScalingFactor();
 	    UpdateMovementJoystick();
-	    SceneChanged?.Invoke(Client.Game.Scene is GameScene);
+	    var isGameScene = Client.Game.Scene is GameScene;
+	    SceneChanged?.Invoke(isGameScene);
+	    if (isGameScene)
+	    {
+		    OnJoystickRunThresholdChanged(UserPreferences.JoystickRunThreshold.CurrentValue);
+	    }
     }
 
     private void UpdateMovementJoystick()
