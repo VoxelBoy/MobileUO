@@ -55,6 +55,7 @@ namespace ClassicUO.Game.UI.Controls
         public bool HighlightOnMouseOver { get; set; }
         public bool CanPickUp { get; set; }
 
+        public static bool PixelCheck = false;
 
         public override void Update(double totalMS, double frameMS)
         {
@@ -116,7 +117,7 @@ namespace ClassicUO.Game.UI.Controls
                 y = (int)(y / scale);
             }
 
-            if (texture.Contains(x, y, false))
+            if (texture.Contains(x, y, PixelCheck))
             {
                 return true;
             }
@@ -125,7 +126,7 @@ namespace ClassicUO.Game.UI.Controls
 
             if (item != null && !item.IsCoin && item.Amount > 1 && item.ItemData.IsStackable)
             {
-                if (texture.Contains(x - 5, y - 5, false))
+                if (texture.Contains(x - 5, y - 5, PixelCheck))
                 {
                     return true;
                 }

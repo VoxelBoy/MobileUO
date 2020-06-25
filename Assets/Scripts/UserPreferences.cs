@@ -74,6 +74,7 @@ public static class UserPreferences
     public static Vector3Preference CustomJoystickPositionAndSize;
     public static IntPreference JoystickDeadZone;
     public static IntPreference JoystickRunThreshold;
+    public static IntPreference ContainerItemSelection;
 
     public static void Initialize()
     {
@@ -87,5 +88,6 @@ public static class UserPreferences
         CustomJoystickPositionAndSize = new Vector3Preference("customJoystickSizeAndPosition", new Vector3(-1,-1,-1));
         JoystickDeadZone = new IntPreference(nameof(JoystickDeadZone), (int) PreferenceEnums.JoystickDeadZone.Low);
         JoystickRunThreshold = new IntPreference(nameof(JoystickRunThreshold), (int) PreferenceEnums.JoystickRunThreshold.Low);
+        ContainerItemSelection = new IntPreference(nameof(ContainerItemSelection), (int) PreferenceEnums.ContainerItemSelection.Coarse);
     }
 }

@@ -10,6 +10,7 @@ using ClassicUO.Game;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
+using ClassicUO.Game.UI.Controls;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Game.UI.Gumps.Login;
 using Newtonsoft.Json;
@@ -55,6 +56,7 @@ public class ClientRunner : MonoBehaviour
 		UserPreferences.TextureFiltering.ValueChanged += UpdateTextureFiltering;
 		UserPreferences.JoystickDeadZone.ValueChanged += OnJoystickDeadZoneChanged;
 		UserPreferences.JoystickRunThreshold.ValueChanged += OnJoystickRunThresholdChanged;
+		UserPreferences.ContainerItemSelection.ValueChanged += OnContainerItemSelectionChanged;
 		OnCustomScaleSizeChanged(UserPreferences.ScaleSize.CurrentValue);
 		OnShowCloseButtonsChanged(UserPreferences.ShowCloseButtons.CurrentValue);
 		OnUseMouseOnMobileChanged(UserPreferences.UseMouseOnMobile.CurrentValue);
@@ -62,6 +64,12 @@ public class ClientRunner : MonoBehaviour
 		UpdateTextureFiltering(UserPreferences.TextureFiltering.CurrentValue);
 		OnJoystickDeadZoneChanged(UserPreferences.JoystickDeadZone.CurrentValue);
 		OnJoystickRunThresholdChanged(UserPreferences.JoystickRunThreshold.CurrentValue);
+		OnContainerItemSelectionChanged(UserPreferences.ContainerItemSelection.CurrentValue);
+	}
+
+	private void OnContainerItemSelectionChanged(int currentValue)
+	{
+		ItemGump.PixelCheck = currentValue == (int) PreferenceEnums.ContainerItemSelection.Fine;
 	}
 
 	private void OnJoystickRunThresholdChanged(int currentValue)
@@ -223,7 +231,7 @@ public class ClientRunner : MonoBehaviour
 	    Settings.GlobalSettings.Plugins = new string[0];
 	    
 	    //If connecting to UO Outlands, set shard type to 2 for outlands
-	    Settings.GlobalSettings.ShardType = config.UoServerUrl.ToLower().Contains("ououtlands") ? 2 : 0;
+	    Settings.GlobalSettings.ShardType = config.UoServerUrl.ToLower().Contains("uooutlands") ? 2 : 0;
 
 	    //Try to detect old client version to set ShardType to 1, for using StatusGumpOld. Otherwise, it's possible
 	    //to get null-refs in StatusGumpModern.

@@ -62,4 +62,10 @@ namespace PreferenceEnums
         Medium = 1,
         High = 2
     }
+
+    public enum ContainerItemSelection
+    {
+        Coarse = 0,
+        Fine = 1
+    }
 }
