@@ -50,6 +50,7 @@ public class DownloadPresenter : MonoBehaviour
     private void OnDisable()
     {
         backButton.onClick.RemoveAllListeners();
+        counterText.text = "Getting list of files to download...";
     }
 
     public void ShowError(string error)
