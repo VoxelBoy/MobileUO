@@ -894,7 +894,7 @@ namespace ClassicUO
                     if (finger.Age < 0.1f)
                     {
                         var mousePositionPoint = ConvertUnityMousePosition(finger.ScreenPosition, oneOverScale);
-                        controlsUnderFingers[i] = UIManager.GetMouseOverControl(mousePositionPoint).RootParent;
+                        controlsUnderFingers[i] = UIManager.GetMouseOverControl(mousePositionPoint)?.RootParent;
                         if (controlsUnderFingers[i] != null)
                         {
                             for (int k = 0; k < i; k++)
@@ -995,8 +995,10 @@ namespace ClassicUO
             if (UnityEngine.Application.isMobilePlatform)
             {
                 var text = TouchScreenKeyboard?.text;
-                if (_ignoreNextTextInput == false && string.IsNullOrEmpty(text) == false && TouchScreenKeyboard?.status == UnityEngine.TouchScreenKeyboard.Status.Done)
+                if (_ignoreNextTextInput == false && TouchScreenKeyboard?.status == UnityEngine.TouchScreenKeyboard.Status.Done)
                 {
+                    //Set keyboard to null so we process its text only once when its status is set to Done 
+                    TouchScreenKeyboard = null;
                     //Need to clear the existing text in textbox before "pasting" new text from TouchScreenKeyboard
                     if (UIManager.KeyboardFocusControl is StbTextBox stbTextBox)
                     {

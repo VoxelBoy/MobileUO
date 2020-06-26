@@ -8,4 +8,7 @@
     <assembly fullname="System">
         <type fullname="System.ComponentModel*" preserve="all"/>
     </assembly>
+    <assembly fullname="Assembly-CSharp">
+        <type fullname="ClassicUO.Configuration.Profile" preserve="all"/>
+    </assembly>
 </linker>
