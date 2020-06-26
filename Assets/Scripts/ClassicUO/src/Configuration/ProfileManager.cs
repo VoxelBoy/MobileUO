@@ -23,7 +23,9 @@ using System.IO;
 
 using ClassicUO.Utility;
 
-using Newtonsoft.Json;
+using Microsoft.Xna.Framework;
+
+using TinyJson;
 
 namespace ClassicUO.Configuration
 {
@@ -44,12 +46,7 @@ namespace ClassicUO.Configuration
                 Current = new Profile(username, servername, charactername);
             else
             {
-                Current = ConfigurationResolver.Load<Profile>(fileToLoad,
-                                                              new JsonSerializerSettings
-                                                              {
-                                                                  TypeNameHandling = TypeNameHandling.All,
-                                                                  MetadataPropertyHandling = MetadataPropertyHandling.ReadAhead
-                                                              });
+                Current = ConfigurationResolver.Load<Profile>(fileToLoad);
                 if (Current == null)
                 {
                     Current = new Profile(username, servername, charactername);
@@ -62,7 +59,22 @@ namespace ClassicUO.Configuration
                 }
             }
 
+            ValidateFields(Current);
+            
             ProfileLoaded?.Invoke();
+        }
+
+
+        private static void ValidateFields(Profile profile)
+        {
+            if (profile == null)
+                return;
+
+            if (profile.WindowClientBounds.X < 600)
+                profile.WindowClientBounds = new Point(600, profile.WindowClientBounds.Y);
+            if (profile.WindowClientBounds.Y < 480)
+                profile.WindowClientBounds = new Point(profile.WindowClientBounds.X, 480);
+            
         }
 
         public static void UnLoadProfile()

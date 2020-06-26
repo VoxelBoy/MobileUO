@@ -225,8 +225,9 @@ namespace ClassicUO.Game.UI.Gumps.Login
                 Y = offsetY,
                 Width = 190,
                 Height = 25,
-                Text = Settings.GlobalSettings.Username
             });
+
+            _textboxAccount.SetText(Settings.GlobalSettings.Username);
 
             Add(_passwordFake = new PasswordStbTextBox(5, 16, 190, false, hue: 0x034F)
             {
@@ -245,19 +246,19 @@ namespace ClassicUO.Game.UI.Gumps.Login
             int htmlX = 130;
             int htmlY = 442;
 
-            Add(new HtmlControl(htmlX, htmlY, 300, 100,
+            Add(new HtmlControl(htmlX, htmlY, 150, 15,
                                 false, false,
                                 false,
                                 text: "<body link=\"#ad9413\" vlink=\"#00FF00\" ><a href=\"https://www.paypal.me/muskara\">> Support ClassicUO",
                                 0x32, true, isunicode: true, style: FontStyle.BlackBorder));
-            Add(new HtmlControl(htmlX, htmlY + 20, 300, 100,
+            Add(new HtmlControl(htmlX, htmlY + 20, 150, 15,
                                 false, false,
                                 false,
-                                text: "<body link=\"#ad9413\" vlink=\"#00FF00\" ><a href=\"https://www.patreon.com/user?u=21694183\">> Become a Patreon!",
+                                text: "<body link=\"#ad9413\" vlink=\"#00FF00\" ><a href=\"https://www.patreon.com/classicuo\">> Become a Patreon!",
                                 0x32, true, isunicode: true, style: FontStyle.BlackBorder));
 
 
-            Add(new HtmlControl(505, htmlY + 19, 300, 100,
+            Add(new HtmlControl(505, htmlY + 19, 100, 15,
                                            false, false,
                                            false,
                                            text: "<body link=\"#6a6a62\" vlink=\"#00FF00\" ><a href=\"https://discord.gg/VdyCpjQ\">CUO Discord",
@@ -368,7 +369,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
                 }
                 set
                 {
-                    Text = value;
+                    SetText(value);
                 }
             }
 
@@ -452,7 +453,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
             {
                 Rectangle scissor = ScissorStack.CalculateScissors(Matrix.Identity, x, y, Width, Height);
 
-                if (ScissorStack.PushScissors(scissor))
+                if (ScissorStack.PushScissors(batcher.GraphicsDevice, scissor))
                 {
                     batcher.EnableScissorTest(true);
                     DrawSelection(batcher, x, y);
@@ -462,7 +463,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
                     DrawCaret(batcher, x, y);
 
                     batcher.EnableScissorTest(false);
-                    ScissorStack.PopScissors();
+                    ScissorStack.PopScissors(batcher.GraphicsDevice);
                 }
 
                 return true;

@@ -266,7 +266,12 @@ namespace ClassicUO.IO.Resources
 
             if(c < NOPRINT_CHARS)
                 return _font[font][0].Width;
-            return _font[font][c - NOPRINT_CHARS].Width;
+
+            int index = c - NOPRINT_CHARS;
+            if (index < _font[font].Length)
+                return _font[font][index].Width;
+
+            return 0;
         }
 
         public int GetWidthExASCII(byte font, string text, int maxwidth, TEXT_ALIGN_TYPE align, ushort flags)
@@ -618,11 +623,11 @@ namespace ClassicUO.IO.Resources
                 }
 
                 ref FontCharacterData fcd = ref fd[GetASCIIIndex(si)];
-
+                int eval = ptr.CharStart;
                 if (si == '\n' || ptr.Width + readWidth + fcd.Width > width)
                 {
                     if (lastSpace == ptr.CharStart && lastSpace == 0 && si != '\n')
-                        ptr.CharStart = 1;
+                        ++eval;
                     if (si == '\n')
                     {
                         ptr.Width += readWidth;
@@ -649,7 +654,7 @@ namespace ClassicUO.IO.Resources
                         continue;
                     }
 
-                    if (lastSpace + 1 == ptr.CharStart && !isFixed && !isCropped)
+                    if (lastSpace + 1 == eval && !isFixed && !isCropped)
                     {
                         ptr.Width += readWidth;
                         ptr.CharCount += charCount;
@@ -694,7 +699,7 @@ namespace ClassicUO.IO.Resources
 
                         if (ptr.Width == 0)
                             ptr.Width = 1;
-                        else if (countspaces && si != '\0' && lastSpace - ptr.CharStart == ptr.CharCount)
+                        else if (countspaces && si != '\0' && lastSpace - eval == ptr.CharCount)
                             ptr.CharCount++;
 
                         if (ptr.MaxHeight == 0)
@@ -999,11 +1004,11 @@ namespace ClassicUO.IO.Resources
                     lastspace_charcolor = charcolor;
                     lastaspace_current_charcolor = current_charcolor;
                 }
-
+                int eval = ptr.CharStart;
                 if (ptr.Width + readWidth + (sbyte) data[0] + (sbyte) data[2] > width || si == '\n')
                 {
                     if (lastSpace == ptr.CharStart && lastSpace == 0 && si != '\n')
-                        ptr.CharStart = 1;
+                        ++eval;
 
                     if (si == '\n')
                     {
@@ -1032,7 +1037,7 @@ namespace ClassicUO.IO.Resources
                         continue;
                     }
 
-                    if (lastSpace + 1 == ptr.CharStart && !isFixed && !isCropped)
+                    if (lastSpace + 1 == eval && !isFixed && !isCropped)
                     {
                         ptr.Width += readWidth;
                         ptr.CharCount += charCount;
@@ -1078,7 +1083,7 @@ namespace ClassicUO.IO.Resources
 
                         if (ptr.Width == 0)
                             ptr.Width = 1;
-                        else if (countspaces && si != '\0' && lastSpace - ptr.CharStart == ptr.CharCount)
+                        else if (countspaces && si != '\0' && lastSpace - eval == ptr.CharCount)
                             ptr.CharCount++;
 
                         if (ptr.MaxHeight == 0)
@@ -2893,7 +2898,7 @@ namespace ClassicUO.IO.Resources
                         else if (ch == ' ')
                             x += UNICODE_SPACE_WIDTH;
 
-                        if (info.CharStart + i + (info.CharStart != 1 ? 1 : 0) == pos)
+                        if (info.CharStart + i + 1 == pos)
                             return (x, y);
                     }
                 }
@@ -3064,7 +3069,7 @@ namespace ClassicUO.IO.Resources
                     {
                         x += fd[GetASCIIIndex(info.Data[i].Item)].Width;
 
-                        if (info.CharStart + i + (info.CharStart != 1 ? 1 : 0) == pos)
+                        if (info.CharStart + i + 1 == pos)
                             return (x, y);
                     }
                 }

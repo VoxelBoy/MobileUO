@@ -27,7 +27,7 @@ using ClassicUO.Utility;
 
 namespace ClassicUO.IO.Resources
 {
-    internal class LightsLoader : UOFileLoader<UOTexture16>
+    internal class LightsLoader : UOFileLoader<UOTexture32>
     {
         private UOFileMul _file;
 
@@ -74,7 +74,7 @@ namespace ClassicUO.IO.Resources
             _instance = null;
         }
 
-        public override UOTexture16 GetTexture(uint id, bool keepData = false)
+        public override UOTexture32 GetTexture(uint id, bool keepData = false)
         {
             if (id >= Resources.Length)
                 return null;
@@ -83,12 +83,12 @@ namespace ClassicUO.IO.Resources
 
             if (texture == null || texture.IsDisposed)
             {
-                ushort[] pixels = GetLight(id, out int w, out int h);
+                uint[] pixels = GetLight(id, out int w, out int h);
 
                 if (w == 0 && h == 0)
                     return null;
 
-                texture = new UOTexture16(w, h);
+                texture = new UOTexture32(w, h);
                 texture.PushData(pixels);
 
                 SaveID(id);
@@ -102,7 +102,7 @@ namespace ClassicUO.IO.Resources
         }
 
 
-        private ushort[] GetLight(uint idx, out int width, out int height)
+        private uint[] GetLight(uint idx, out int width, out int height)
         {
             ref var entry = ref GetValidRefEntry((int) idx);
 
@@ -114,7 +114,7 @@ namespace ClassicUO.IO.Resources
                 return null;
             }
 
-            ushort[] pixels = new ushort[width * height];
+            uint[] pixels = new uint[width * height];
 
             _file.Seek(entry.Offset);
 
@@ -126,7 +126,10 @@ namespace ClassicUO.IO.Resources
                 {
                     ushort val = _file.ReadByte();
                     val = (ushort) ((val << 10) | (val << 5) | val);
-                    pixels[pos + j] = (ushort) ((val != 0 ? 0x8000 : 0) | val);
+                    if (val != 0)
+                    {
+                        pixels[pos + j] = Utility.HuesHelper.Color16To32(val) | 0xFF_00_00_00;;
+                    }
                 }
             }
 

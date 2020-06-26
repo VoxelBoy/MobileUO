@@ -133,16 +133,11 @@ namespace ClassicUO.IO.Resources
             return s;
         }
 
-        public string Translate(int baseCliloc, string arg = "", bool capitalize = false)
+        public string Translate(int clilocNum, string arg = "", bool capitalize = false)
         {
-            return Translate(GetString(baseCliloc), arg, capitalize);
-        }
-
-        public string Translate(string baseCliloc, string arg = "", bool capitalize = false)
-        {
+            string baseCliloc = GetString(clilocNum);
             if (baseCliloc == null)
                 return null;
-
 
             while (arg.Length != 0 && arg[0] == '\t')
                 arg = arg.Remove(0, 1);
@@ -181,7 +176,7 @@ namespace ClassicUO.IO.Resources
             //    }
             //}
 
-            int index = 0;
+            int index;
             while (true)
             {
                 int pos = baseCliloc.IndexOf('~');
@@ -190,11 +185,18 @@ namespace ClassicUO.IO.Resources
                     break;
 
                 int pos2 = baseCliloc.IndexOf('~', pos + 1);
-
-                if (pos2 == -1)
+                if (pos2 == -1)//non valid arg
                     break;
 
-                string a = index >= arguments.Count ? string.Empty : arguments[index];
+                index = baseCliloc.IndexOf('_', pos + 1, pos2 - (pos + 1));
+                if (index <= pos)
+                    index = pos2;//there is no underscore inside the bounds, so we use all the part to get the number of argument
+
+                if (!int.TryParse(baseCliloc.Substring(pos + 1, index - (pos + 1)), out index))
+                    return $"MegaCliloc: error for {clilocNum}";
+                --index;
+
+                string a = index < 0 || index >= arguments.Count ? string.Empty : arguments[index];
 
                 if (a.Length > 1)
                 {
@@ -213,7 +215,6 @@ namespace ClassicUO.IO.Resources
                 }
 
                 baseCliloc = baseCliloc.Remove(pos, pos2 - pos + 1).Insert(pos, index >= arguments.Count ? string.Empty : arguments[index]);
-                index++;
             }
 
             //for (int i = 0; i < arguments.Count; i++)

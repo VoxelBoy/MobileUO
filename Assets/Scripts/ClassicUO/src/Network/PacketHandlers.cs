@@ -1847,7 +1847,7 @@ namespace ClassicUO.Network
                         }
                     }
                 }
-                if (pageNum < pageCnt)
+                if (pageNum < pageCnt && pageNum >= 0)
                 {
                     var lineCnt = p.ReadUShort();
 
@@ -3572,10 +3572,10 @@ namespace ClassicUO.Network
                             if ((spells & (1 << i)) != 0)
                             {
                                 ushort cc = (ushort) ((j * 32) + i + 1);
-
-                                Item spellItem = new Item(cc)
+                                // FIXME: should i call Item.Create ?
+                                Item spellItem = new Item()
                                 {
-                                    Graphic = 0x1F2E, Amount = cc, Container = spellbook
+                                   Serial = cc, Graphic = 0x1F2E, Amount = cc, Container = spellbook
                                 };
                                 spellbook.PushToBack(spellItem);
                             }
@@ -5382,7 +5382,7 @@ namespace ClassicUO.Network
 
                         if (World.ClientFeatures.TooltipsEnabled)
                         {
-                            string text = ClilocLoader.Instance.GetString(int.Parse(gparams[1]));
+                            string text = null;
 
                             if (gparams.Count > 2 && gparams[2].Length != 0)
                             {
@@ -5391,11 +5391,17 @@ namespace ClassicUO.Network
                                 for (int i = 3; i < gparams.Count; i++)
                                     args += '\t' + gparams[i];
 
-                                if (args.Length != 0)
-                                    text = ClilocLoader.Instance.Translate(text, args, true);
-                                else
+                                if (args.Length == 0)
+                                {
+                                    text = ClilocLoader.Instance.GetString(int.Parse(gparams[1]));
                                     Log.Error($"String '{args}' too short, something wrong with gump tooltip: {text}");
+                                }
+                                else
+                                    text = ClilocLoader.Instance.Translate(int.Parse(gparams[1]), args, true);
+                                
                             }
+                            else
+                                 text = ClilocLoader.Instance.GetString(int.Parse(gparams[1]));
 
                             var last = gump.Children.Count != 0 ? gump.Children[gump.Children.Count - 1] : null;
 
@@ -5422,7 +5428,7 @@ namespace ClassicUO.Network
                         {
                             gump.Children[gump.Children.Count - 1].SetTooltip(SerialHelper.Parse(gparams[1]));
 
-                            if (uint.TryParse(gparams[1], out uint s) && !World.OPL.Contains(s))
+                            if (uint.TryParse(gparams[1], out uint s) && (!World.OPL.TryGetRevision(s, out uint rev) || rev == 0))
                             {
                                 AddMegaClilocRequest(s);
                             }

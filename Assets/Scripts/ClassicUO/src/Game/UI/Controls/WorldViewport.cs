@@ -69,7 +69,7 @@ namespace ClassicUO.Game.UI.Controls
 
             Rectangle rectangle = ScissorStack.CalculateScissors(Matrix.Identity, x, y, Width, Height);
 
-            if (ScissorStack.PushScissors(rectangle))
+            if (ScissorStack.PushScissors(batcher.GraphicsDevice, rectangle))
             {
                 batcher.EnableScissorTest(true);
 
@@ -80,7 +80,7 @@ namespace ClassicUO.Game.UI.Controls
                     // draw regular world
                     if (_xBR == null)
                     {
-                        _xBR = new XBREffect(Client.Game.GraphicsDevice);
+                        _xBR = new XBREffect(batcher.GraphicsDevice);
                     }
 
                     _xBR.SetSize(_scene.ViewportTexture.Width, _scene.ViewportTexture.Height);
@@ -120,7 +120,7 @@ namespace ClassicUO.Game.UI.Controls
                 base.Draw(batcher, x, y);
 
                 batcher.EnableScissorTest(false);
-                ScissorStack.PopScissors();
+                ScissorStack.PopScissors(batcher.GraphicsDevice);
             }
 
             return true;

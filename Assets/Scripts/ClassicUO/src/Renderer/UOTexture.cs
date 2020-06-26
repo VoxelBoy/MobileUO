@@ -28,16 +28,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ClassicUO.Renderer
 {
-    internal class UOTexture16 : UOTexture
+    internal class UOTexture32 : UOTexture
     {
-        private ushort[] _data;
+        private uint[] _data;
 
-        public UOTexture16(int width, int height) : base(width, height, SurfaceFormat.Bgra5551)
+        public UOTexture32(int width, int height) : base(width, height, SurfaceFormat.Color)
         {
 
         }
 
-        public void PushData(ushort[] data, bool keepData = false)
+        public uint[] Data => _data;
+
+        public void PushData(uint[] data, bool keepData = false)
         {
             if (keepData)
             {
@@ -46,8 +48,6 @@ namespace ClassicUO.Renderer
 
             SetData(data);
         }
-
-        public ushort[] Data => _data;
 
         public override bool Contains(int x, int y, bool pixelCheck = true)
         {
@@ -86,38 +86,6 @@ namespace ClassicUO.Renderer
         }
     }
 
-    internal class UOTexture32 : UOTexture
-    {
-        private uint[] _data;
-
-        public UOTexture32(int width, int height) : base(width, height, SurfaceFormat.Color)
-        {
-
-        }
-
-        public void PushData(uint[] data)
-        {
-            _data = data;
-            SetData(data);
-        }
-
-        public override bool Contains(int x, int y, bool pixelCheck = true)
-        {
-            if (_data != null && x >= 0 && y >= 0 && x < Width && y < Height)
-            {
-                if (!pixelCheck)
-                    return true;
-
-                int pos = y * Width + x;
-
-                if (pos < _data.Length)
-                    return _data[pos] != 0;
-            }
-
-            return false;
-        }
-    }
-
     internal abstract class UOTexture : Texture2D
     {
         protected UOTexture(int width, int height, SurfaceFormat format) : base(Client.Game.GraphicsDevice, width, height, false, format)
@@ -142,7 +110,7 @@ namespace ClassicUO.Renderer
         public RawList<WebLinkRect> Links { get; }
     }
 
-    internal class AnimationFrameTexture : UOTexture16
+    internal class AnimationFrameTexture : UOTexture32
     {
         public AnimationFrameTexture(int width, int height) : base(width, height)
         {
@@ -153,7 +121,7 @@ namespace ClassicUO.Renderer
         public short CenterY { get; set; }
     }
 
-    internal class ArtTexture : UOTexture16
+    internal class ArtTexture : UOTexture32
     {
         public ArtTexture(int offsetX, int offsetY, int offsetW, int offsetH, int width, int height) : base(width, height)
         {
@@ -165,6 +133,6 @@ namespace ClassicUO.Renderer
             ImageRectangle = rect;
         }
 
-        public readonly Rectangle ImageRectangle;
+        public Rectangle ImageRectangle;
     }
 }

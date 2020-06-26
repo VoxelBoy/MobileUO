@@ -4,15 +4,12 @@ using UnityEngine.Networking;
 
 public class RenaissanceDownloader : DownloaderBase
 {
-    private int port;
-    private const string OUTLANDS_VERSION_PREF_KEY = "OUTLANDS_VERSION";
-    
     public override void Initialize(DownloadState downloadState, ServerConfiguration serverConfiguration,
         DownloadPresenter downloadPresenter)
     {
         base.Initialize(downloadState, serverConfiguration, downloadPresenter);
         
-        port = int.Parse(serverConfiguration.FileDownloadServerPort);
+        var port = int.Parse(serverConfiguration.FileDownloadServerPort);
         
         //Make payload.json request
         var uri = DownloadState.GetUri(serverConfiguration.FileDownloadServerUrl, port, "downloads/launcher/payload.json");
@@ -29,7 +26,7 @@ public class RenaissanceDownloader : DownloaderBase
             var payloadDictionary = JToken.Parse(request.downloadHandler.text);
             var files = payloadDictionary["Files"].Select(x => x["Name"].Value<string>());
             
-            //For files with the right extension, remove first character (backslash)
+            //Find the files with the right extension
             var filesToDownload = files.Where(x => downloadState.NeededUoFileExtensions.Any(x.Contains)).ToList();
             
             //Get rid of paths with backslash in them now to prevent downloading files from subdirectories

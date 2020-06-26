@@ -413,7 +413,7 @@ namespace ClassicUO.Game.Scenes
                         light.ID = 1;
                     else
                     {
-                        ref readonly var data = ref TileDataLoader.Instance.StaticData[obj.Graphic];
+                        ref var data = ref TileDataLoader.Instance.StaticData[obj.Graphic];
                         light.ID = data.Layer;
                     }
                 }
@@ -633,7 +633,7 @@ namespace ClassicUO.Game.Scenes
             if (TargetManager.IsTargeting && TargetManager.TargetingState == CursorTarget.MultiPlacement && World.CustomHouseManager == null && TargetManager.MultiTargetInfo != null)
             {
                 if (_multi == null)
-                    _multi = new Item(0)
+                    _multi = new Item()
                     {
                         Graphic = TargetManager.MultiTargetInfo.Model,
                         Hue = TargetManager.MultiTargetInfo.Hue,
@@ -849,7 +849,7 @@ namespace ClassicUO.Game.Scenes
                 var lightColor = World.Light.IsometricLevel;
 
                 if (ProfileManager.Current.UseDarkNights)
-                    lightColor -= 0.02f;
+                    lightColor -= 0.04f;
 
                 _vectorClear.X = _vectorClear.Y = _vectorClear.Z = lightColor;
 

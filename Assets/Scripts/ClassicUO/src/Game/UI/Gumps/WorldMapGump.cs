@@ -914,7 +914,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 var rect = ScissorStack.CalculateScissors(Matrix.Identity, gX, gY, gWidth, gHeight);
 
-                if (ScissorStack.PushScissors(rect))
+                if (ScissorStack.PushScissors(batcher.GraphicsDevice, rect))
                 {
                     batcher.EnableScissorTest(true);
 
@@ -931,7 +931,7 @@ namespace ClassicUO.Game.UI.Gumps
                     DrawAll(batcher, gX, gY, halfWidth, halfHeight);
 
                     batcher.EnableScissorTest(false);
-                    ScissorStack.PopScissors();
+                    ScissorStack.PopScissors(batcher.GraphicsDevice);
                 }
             }
 
