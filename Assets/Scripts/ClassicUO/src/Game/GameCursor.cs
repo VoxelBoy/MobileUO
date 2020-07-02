@@ -57,13 +57,13 @@ namespace ClassicUO.Game
             }
         };
 
-        private Texture2D _aura;
+        private readonly Texture2D _aura;
         private readonly int[,] _cursorOffset = new int[2, 16];
         private readonly IntPtr[,] _cursors_ptr = new IntPtr[3, 16];
         private readonly Tooltip _tooltip;
         private Vector3 _auraVector = new Vector3(0, 13, 0);
         private readonly RenderedText _targetDistanceText = RenderedText.Create(String.Empty, 0x0481, style: FontStyle.BlackBorder);
-        private UOTexture _draggedItemTexture;
+        private UOTexture32 _draggedItemTexture;
         private ushort _graphic = 0x2073;
         private bool _needGraphicUpdate = true;
         private Point _offset;
@@ -241,6 +241,7 @@ namespace ClassicUO.Game
                     //                 uint* p_line_end = pixels_ptr + w;
                     //                 uint* p_img_end = pixels_ptr + (stride * h);
                     //                 int delta = stride - w;
+                    //                 Color c = default;
                     //
                     //                 while (pixels_ptr < p_img_end)
                     //                 {
@@ -248,7 +249,8 @@ namespace ClassicUO.Game
                     //                     {
                     //                         if (*pixels_ptr != 0 && *pixels_ptr != 0xFF_00_00_00)
                     //                         {
-                    //                             *pixels_ptr = HuesHelper.Color16To32(HuesLoader.Instance.GetColor16( (ushort) (HuesHelper.Color32To16(*pixels_ptr) ) , 0x0033)) | 0xFF_00_00_00;
+                    //                             c.PackedValue = *pixels_ptr;
+                    //                             * pixels_ptr = HuesHelper.Color16To32(HuesLoader.Instance.GetColor16(HuesHelper.ColorToHue(c), 0x0033)) | 0xFF_00_00_00;
                     //                         }
                     //
                     //                         ++pixels_ptr;
@@ -733,7 +735,6 @@ namespace ClassicUO.Game
         public void Dispose()
         {
             _aura?.Dispose();
-            _aura = null;
         }
     }
 }

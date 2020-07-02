@@ -14,7 +14,7 @@ namespace Microsoft.Xna.Framework
         private bool INTERNAL_isActive;
         private bool isDisposed;
 
-        public TimeSpan TargetElapsedTime
+        protected TimeSpan TargetElapsedTime
         {
 	        get
 	        {
@@ -27,6 +27,8 @@ namespace Microsoft.Xna.Framework
 		        this.INTERNAL_targetElapsedTime = value;
 	        }
         }
+
+        protected TimeSpan InactiveSleepTime;
 
         public bool IsFixedTimeStep { get; set; }
 

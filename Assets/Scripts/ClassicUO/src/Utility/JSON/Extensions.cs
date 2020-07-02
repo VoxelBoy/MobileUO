@@ -3,18 +3,68 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace TinyJson
 {
+    public static class StringExtensions 
+    {
+		private static readonly StringBuilder _sb = new StringBuilder(256);
 
-	public static class StringExtensions {
-		public static string SnakeCaseToCamelCase(this string snakeCaseName) {
-			return snakeCaseName.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries).Select(s => char.ToUpperInvariant(s[0]) + s.Substring(1, s.Length - 1)).Aggregate(string.Empty, (s1, s2) => s1 + s2);
-		}
+		public static string SnakeCaseToCamelCase(this string snakeCaseName)
+        {
+            _sb.Clear();
 
-		public static string CamelCaseToSnakeCase(this string camelCaseName) {
-			return string.Concat(camelCaseName.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()).ToArray()).ToLower(CultureInfo.InvariantCulture);
-		}
+            bool next_upper = true;
+
+            for (int i = 0; i < snakeCaseName.Length; i++)
+            {
+				if(snakeCaseName[i] == '_')
+                {
+                    next_upper = true;
+                }
+                else
+                {
+                    if (next_upper)
+                    {
+                        _sb.Append(char.ToUpperInvariant(snakeCaseName[i]));
+                        next_upper = false;
+					}
+                    else
+                    {
+                        _sb.Append(snakeCaseName[i]);
+                    }
+                }
+            }
+
+            return _sb.ToString();
+        }
+
+		public static string CamelCaseToSnakeCase(this string camelCaseName) 
+        {
+            _sb.Clear();
+
+			if (char.IsUpper(camelCaseName[0]))
+            {
+                _sb.Append(char.ToLowerInvariant(camelCaseName[0]));
+            }
+
+			for (int i = 1; i < camelCaseName.Length; i++)
+            {
+                if (char.IsUpper(camelCaseName[i]))
+                {
+                    _sb.Append("_");
+                    _sb.Append(char.ToLowerInvariant(camelCaseName[i]));
+                }
+				else
+                {
+                    _sb.Append(camelCaseName[i]);
+                }
+            }
+
+            return _sb.ToString();
+        }
 	}
 
 	public static class TypeExtensions {
@@ -32,57 +82,46 @@ namespace TinyJson
 			return interfaceTest(type) || type.GetInterfaces().Any(i => interfaceTest(i));
 		}
 
-		static string UnwrapFieldName(string name) {
-			if (name.StartsWith("<", StringComparison.Ordinal) && name.Contains(">")) {
-				return name.Substring(name.IndexOf("<", StringComparison.Ordinal) + 1, name.IndexOf(">", StringComparison.Ordinal) - 1);
-			}
-			return name;
+        static string UnwrapFieldName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (name[0] == '<')
+                {
+                    for (int i = 1; i < name.Length; i++)
+                    {
+                        if (name[i] == '>')
+                            return name.Substring(1, i - 1);
+                    }
+                }
+            }
+            return name;
+        }
+
+        public static string UnwrappedPropertyName(this PropertyInfo property)
+        {
+            var attr = property.GetCustomAttribute<JsonPropertyAttribute>(true);
+
+            if (attr != null)
+            {
+                return attr.Name;
+            }
+
+			return property.Name;
 		}
 
-		public static Dictionary<Type, PropertyInfo[]> typeToProperties = new Dictionary<Type, PropertyInfo[]>();
-		public static string UnwrappedFieldName(this FieldInfo field, Type type, bool convertSnakeCase) {
-			string name = UnwrapFieldName(field.Name);
+        public static string UnwrappedFieldName(this FieldInfo field)
+        {
+            var attr = field.GetCustomAttribute<JsonPropertyAttribute>(true);
 
-			if (field.GetCustomAttributes(typeof(JsonPropertyAttribute), true).Length == 1) {
-				var jsonProperty = field.GetCustomAttributes(typeof(JsonPropertyAttribute), true)[0] as JsonPropertyAttribute;
-				name = jsonProperty.Name;
-			} else {
-				if (typeToProperties.TryGetValue(type, out var properties) == false)
-				{
-					properties = type.GetProperties();
-					typeToProperties[type] = properties;
-				}
-				foreach (var property in properties) {
-					if (UnwrapFieldName(property.Name).Equals(name, StringComparison.OrdinalIgnoreCase)) {
-						name = property.UnwrappedPropertyName();
-						break;
-					}
-				}
-			}
+            if (attr != null)
+            {
+                return attr.Name;
+            }
 
-			return convertSnakeCase ? name.SnakeCaseToCamelCase() : name;
-		}
-
-		public static string UnwrappedPropertyName(this PropertyInfo property) {
-			string name = UnwrapFieldName(property.Name);
-
-			if (property.GetCustomAttributes(typeof(JsonPropertyAttribute), true).Length == 1) {
-				var jsonProperty = property.GetCustomAttributes(typeof(JsonPropertyAttribute), true)[0] as JsonPropertyAttribute;
-				name = jsonProperty.Name;
-			}
-
-			return name;
-		}
-
-		public static bool MatchFieldName(this FieldInfo field, String name, Type type, bool matchSnakeCase) {
-			string fieldName = field.UnwrappedFieldName(type, matchSnakeCase);
-			if (matchSnakeCase) {
-				name = name.SnakeCaseToCamelCase();
-			}
-
-			return name.Equals(fieldName, StringComparison.CurrentCultureIgnoreCase);
-		}
-	}
+            return UnwrapFieldName(field.Name);
+        }
+    }
 
 	public static class JsonExtensions {
 		public static bool IsNullable(this Type type) {
@@ -125,12 +164,6 @@ namespace TinyJson
 				default:
 					return false;
 			}
-		}
-	}
-
-	public static class StringBuilderExtensions {
-		public static void Clear(this System.Text.StringBuilder sb) {
-			sb.Length = 0;
 		}
 	}
 }

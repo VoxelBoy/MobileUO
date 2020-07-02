@@ -28,15 +28,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ClassicUO.Renderer
 {
-    internal class UOTexture32 : UOTexture
+    internal class UOTexture32 : Texture2D
     {
         private uint[] _data;
 
-        public UOTexture32(int width, int height) : base(width, height, SurfaceFormat.Color)
+        public UOTexture32(int width, int height) : base(Client.Game.GraphicsDevice, width, height, false, SurfaceFormat.Color)
         {
-
+            Ticks = Time.Ticks + 3000;
         }
 
+        public long Ticks { get; set; }
         public uint[] Data => _data;
 
         public void PushData(uint[] data, bool keepData = false)
@@ -49,7 +50,7 @@ namespace ClassicUO.Renderer
             SetData(data);
         }
 
-        public override bool Contains(int x, int y, bool pixelCheck = true)
+        public bool Contains(int x, int y, bool pixelCheck = true)
         {
             if (x >= 0 && y >= 0 && x < Width && y < Height)
             {
@@ -86,17 +87,6 @@ namespace ClassicUO.Renderer
 
             return 0;
         }
-    }
-
-    internal abstract class UOTexture : Texture2D
-    {
-        protected UOTexture(int width, int height, SurfaceFormat format) : base(Client.Game.GraphicsDevice, width, height, false, format)
-        {
-            Ticks = Time.Ticks + 3000;
-        }
-        public long Ticks { get; set; }
-
-        public abstract bool Contains(int x, int y, bool pixelCheck = true);
     }
 
     internal class FontTexture : UOTexture32

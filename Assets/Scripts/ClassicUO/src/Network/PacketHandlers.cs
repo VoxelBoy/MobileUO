@@ -200,7 +200,7 @@ namespace ClassicUO.Network
         {
             if (World.ClientFeatures.TooltipsEnabled && Handlers._clilocRequests.Count != 0)
             {
-                if (Client.Version >= Data.ClientVersion.CV_500A)
+                if (Client.Version >= Data.ClientVersion.CV_5090)
                 {
                     if (Handlers._clilocRequests.Count != 0)
                         NetClient.Socket.Send(new PMegaClilocRequest(ref Handlers._clilocRequests));
@@ -689,7 +689,17 @@ namespace ClassicUO.Network
             ushort hue = p.ReadUShort();
             ushort font = p.ReadUShort();
             string name = p.ReadASCII(30);
-            string text = p.ReadASCII();
+            string text;
+
+            if (p.Length > 44)
+            {
+                p.Seek(44);
+                text = p.ReadASCII();
+            }
+            else
+            {
+                text = string.Empty;
+            }
 
             if (serial == 0 && graphic == 0 && type == MessageType.Regular && font == 0xFFFF && hue == 0xFFFF && name.StartsWith("SYSTEM"))
             {
@@ -703,7 +713,9 @@ namespace ClassicUO.Network
                 if (entity != null)
                 {
                     if (string.IsNullOrEmpty(entity.Name))
-                        entity.Name = name;
+                    {
+                        entity.Name = string.IsNullOrEmpty(name) ? text : name;
+                    }
                 }
             }
 
@@ -787,6 +799,13 @@ namespace ClassicUO.Network
                 }
                 // else
                 {
+                    BaseHealthBarGump bar = UIManager.GetGump<BaseHealthBarGump>(serial);
+
+                    if (bar == null)
+                    {
+                        NetClient.Socket.Send(new PCloseStatusBarGump(serial));
+                    }
+
                     World.RemoveMobile(serial, true);
                 }
             }
@@ -1223,7 +1242,7 @@ namespace ClassicUO.Network
                             {
                                 Console.WriteLine("=== DENY === ADD TO PAPERDOLL");
 
-                                RemoveItemFromContainer(item);
+                                World.RemoveItemFromContainer(item);
                                 container.PushToBack(item);
                                 item.Container = container.Serial;
                                 UIManager.GetGump<PaperDollGump>(item.Container)?.RequestUpdateContents();
@@ -1232,7 +1251,6 @@ namespace ClassicUO.Network
                             {
                                 Console.WriteLine("=== DENY === SOMETHING WRONG");
 
-                                RemoveItemFromContainer(item);
                                 World.RemoveItem(item, true);
                             }
                         }
@@ -1240,7 +1258,7 @@ namespace ClassicUO.Network
                         {
                             Console.WriteLine("=== DENY === ADD TO TERRAIN");
 
-                            RemoveItemFromContainer(item);
+                            World.RemoveItemFromContainer(item);
                             item.AddToTile();
                             item.UpdateScreenPosition();
                         }
@@ -1347,7 +1365,7 @@ namespace ClassicUO.Network
             if (item.Graphic != 0 && item.Layer != Layer.Backpack)
             {
                 //ClearContainerAndRemoveItems(item);
-                RemoveItemFromContainer(item);
+                World.RemoveItemFromContainer(item);
             }
 
             if (SerialHelper.IsValid(item.Container))
@@ -2335,7 +2353,7 @@ namespace ClassicUO.Network
                 item.Graphic = itemGraphic;
                 item.FixHue(item_hue);
                 item.Amount = 1;
-                RemoveItemFromContainer(item);
+                World.RemoveItemFromContainer(item);
                 item.Container = serial;
 
                 //{
@@ -2521,12 +2539,12 @@ namespace ClassicUO.Network
 
                 if (layer - 1 != Layer.Backpack)
                 {
-                Item item = World.GetOrCreateItem(item_serial);
+                    Item item = World.GetOrCreateItem(item_serial);
 
-                RemoveItemFromContainer(item);
-                item.Container = serial;
-                item.Layer = layer - 1;
-                corpse.PushToBack(item);
+                    World.RemoveItemFromContainer(item);
+                    item.Container = serial;
+                    item.Layer = layer - 1;
+                    corpse.PushToBack(item);
                 }
 
                 layer = (Layer) p.ReadByte();
@@ -2781,7 +2799,11 @@ namespace ClassicUO.Network
 
             if (!string.IsNullOrEmpty(url))
             {
-                if (UnityEngine.Application.isMobilePlatform == false)
+                if (UnityEngine.Application.isMobilePlatform)
+                {
+                    UnityEngine.Application.OpenURL(url);
+                }
+                else
                 {
                     try
                     {
@@ -2926,7 +2948,7 @@ namespace ClassicUO.Network
                 if (entity != null)
                 {
                     if (string.IsNullOrEmpty(entity.Name))
-                        entity.Name = name;
+                        entity.Name = string.IsNullOrEmpty(name) ? text : name;
                 }           
             }
 
@@ -3815,7 +3837,11 @@ namespace ClassicUO.Network
                   (!string.IsNullOrEmpty(name) && name.ToLower() == "system")) && entity != null)
             {
                 //entity.Graphic = graphic;
-                entity.Name = name;
+
+                if (string.IsNullOrEmpty(entity.Name))
+                {
+                    entity.Name = name;
+                }
             }
 
             MessageManager.HandleMessage(entity, text, name, hue, type, (byte) font, true);
@@ -3905,76 +3931,76 @@ namespace ClassicUO.Network
                     argument = p.ReadUnicodeReversed(length);
                 }
 
-                    string str = ClilocLoader.Instance.Translate(cliloc, argument, true);
+                string str = ClilocLoader.Instance.Translate(cliloc, argument, true);
 
-                    for (int i = 0; i < list.Count; i++)
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var tempstr = list[i];
+
+                    if (tempstr == str)
                     {
-                        var tempstr = list[i];
-
-                        if (tempstr == str)
-                        {
-                            list.RemoveAt(i);
-                            break;
-                        }
-                    }
-
-                    list.Add(str);
-                }
-
-                Item container = null;
-
-                if (entity is Item it && SerialHelper.IsValid(it.Container))
-                {
-                    container = World.Items.Get(it.Container);
-                }
-
-                bool inBuyList = false;
-
-                if (container != null)
-                {
-                    inBuyList = container.Layer == Layer.ShopBuy ||
-                                container.Layer == Layer.ShopBuyRestock ||
-                                container.Layer == Layer.ShopSell;
-                }
-
-
-                bool first = true;
-
-                string name = string.Empty;
-                string data = string.Empty;
-
-                if (list.Count != 0)
-                {
-                    foreach (string str in list)
-                    {
-                        if (first)
-                        {
-                            name = str;
-
-                            if (entity != null && !SerialHelper.IsMobile(serial))
-                            {
-                                entity.Name = str;
-                            }
-
-                            first = false;
-                        }
-                        else
-                        {
-                            if (data.Length != 0)
-                                data += "\n";
-
-                            data += str;
-                        }
+                        list.RemoveAt(i);
+                        break;
                     }
                 }
 
-                World.OPL.Add(serial, revision, name, data);
+                list.Add(str);
+            }
 
-                if (inBuyList && container != null && SerialHelper.IsValid(container.Serial))
+            Item container = null;
+
+            if (entity is Item it && SerialHelper.IsValid(it.Container))
+            {
+                container = World.Items.Get(it.Container);
+            }
+
+            bool inBuyList = false;
+
+            if (container != null)
+            {
+                inBuyList = container.Layer == Layer.ShopBuy ||
+                            container.Layer == Layer.ShopBuyRestock ||
+                            container.Layer == Layer.ShopSell;
+            }
+
+
+            bool first = true;
+
+            string name = string.Empty;
+            string data = string.Empty;
+
+            if (list.Count != 0)
+            {
+                foreach (string str in list)
                 {
-                UIManager.GetGump<ShopGump>(container.RootContainer)?.SetNameTo((Item) entity, name);
+                    if (first)
+                    {
+                        name = str;
+
+                        if (entity != null && !SerialHelper.IsMobile(serial))
+                        {
+                            entity.Name = str;
+                        }
+
+                        first = false;
+                    }
+                    else
+                    {
+                        if (data.Length != 0)
+                            data += "\n";
+
+                        data += str;
+                    }
                 }
             }
+
+            World.OPL.Add(serial, revision, name, data);
+
+            if (inBuyList && container != null && SerialHelper.IsValid(container.Serial))
+            {
+                UIManager.GetGump<ShopGump>(container.RootContainer)?.SetNameTo((Item) entity, name);
+            }
+        }
 
         private static void GenericAOSCommandsR(Packet p)
         {
@@ -4664,13 +4690,12 @@ namespace ClassicUO.Network
 
             if (item != null && (container.Graphic != 0x2006 || item.Layer == Layer.Invalid))
             {
-                RemoveItemFromContainer(item);
-                World.Items.Remove(item);
-                item.Destroy();
+                World.RemoveItem(item, true);
             }
 
             item = World.GetOrCreateItem(serial);
             item.Graphic = graphic;
+            item.CheckGraphicChange();
             item.Amount = amount;
             item.FixHue(hue);
             item.X = x;
@@ -4679,8 +4704,9 @@ namespace ClassicUO.Network
 
             if (SerialHelper.IsValid(item.Container))
             {
-                RemoveItemFromContainer(item);
+                World.RemoveItemFromContainer(item);
             }
+
             item.Container = containerSerial;
 
             container.PushToBack(item);
@@ -4722,11 +4748,11 @@ namespace ClassicUO.Network
                         
                         if (ProfileManager.Current.GridLootType > 0)
                         {
-                            var tradingGump = UIManager.GetGump<GridLootGump>(containerSerial);
+                            var grid_gump = UIManager.GetGump<GridLootGump>(containerSerial);
 
-                            if (tradingGump != null)
+                            if (grid_gump != null)
                             {
-                                tradingGump.RequestUpdateContents();
+                                grid_gump.RequestUpdateContents();
                             }
                             else if (SerialHelper.IsValid(_requestedGridLoot) && _requestedGridLoot == containerSerial)
                             {
@@ -4824,7 +4850,7 @@ namespace ClassicUO.Network
 
                     if (SerialHelper.IsValid(item.Container))
                     {
-                        RemoveItemFromContainer(item);
+                        World.RemoveItemFromContainer(item);
                     }
                 }
                 else
@@ -5022,35 +5048,7 @@ namespace ClassicUO.Network
             }
         }
 
-        private static void RemoveItemFromContainer(Item obj)
-        {
-            uint containerSerial = obj.Container;
-
-            if (SerialHelper.IsValid(containerSerial))
-            {
-                if (SerialHelper.IsMobile(containerSerial))
-                {
-                    UIManager.GetGump<PaperDollGump>(containerSerial)?.RequestUpdateContents();
-                }
-                else if (SerialHelper.IsItem(containerSerial))
-                {
-                    UIManager.GetGump<ContainerGump>(containerSerial)?.RequestUpdateContents();
-                }
-
-                Entity container = World.Get(containerSerial);
-
-                if (container != null)
-                {
-                    container.Remove(obj);
-                }
-
-                obj.Next = null;
-                obj.Previous = null;
-                obj.Container = 0;
-            }
-
-            obj.RemoveFromTile();
-        }
+        
 
         private static void ClearContainerAndRemoveItems(Entity container, bool remove_unequipped = false)
         {
@@ -5074,9 +5072,7 @@ namespace ClassicUO.Network
                 }
                 else
                 {
-                    RemoveItemFromContainer(it);
-                    World.Items.Remove(it);
-                    it.Destroy();
+                    World.RemoveItem(it, true);
                 }
 
                 first = next;

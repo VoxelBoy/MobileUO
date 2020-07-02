@@ -45,7 +45,7 @@ namespace ClassicUO.Game.Scenes
 {
     internal partial class GameScene : Scene
     {
-        //NOTE: Added these to be able to test portrait mode on mobile
+        //NOTE: Added these to allow the game viewport to be smaller than what CUO was allowing
         public static int MinimumViewportWidth = 200;
         public static int MinimumViewportHeight = 300;
 
@@ -521,8 +521,8 @@ namespace ClassicUO.Game.Scenes
             }
 
 
-            UpdateTextServerEntities(World.Mobiles);
-            UpdateTextServerEntities(World.Items);
+            UpdateTextServerEntities(World.Mobiles, true);
+            UpdateTextServerEntities(World.Items, false);
 
             _renderIndex++;
 
@@ -531,11 +531,11 @@ namespace ClassicUO.Game.Scenes
             UpdateDrawPosition = false;
         }
 
-        private void UpdateTextServerEntities(IEnumerable<Entity> entities)
+        private void UpdateTextServerEntities<T>(IEnumerable<T> entities, bool force) where T : Entity
         {
-            foreach (Entity e in entities)
+            foreach (T e in entities)
             {
-                if (e.UseInRender != _renderIndex && e.TextContainer != null)
+                if (e.UseInRender != _renderIndex && e.TextContainer != null && !e.TextContainer.IsEmpty && (force || e.Graphic == 02006))
                 {
                     e.UpdateRealScreenPosition(_offset.X, _offset.Y);
                     e.UseInRender = (byte) _renderIndex;
@@ -780,8 +780,6 @@ namespace ClassicUO.Game.Scenes
 
             batcher.GraphicsDevice.Clear(Color.Black);
             batcher.GraphicsDevice.SetRenderTarget(_viewportRenderTarget);
-            //NOTE: This extra Clear is important because it clears the viewportRenderTarget and without it the game viewport is all black on Android
-            batcher.GraphicsDevice.Clear(ClearOptions.Stencil | ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 0, 0);
 
             batcher.SetBrightlight(ProfileManager.Current.Brighlight);
 
@@ -868,7 +866,7 @@ namespace ClassicUO.Game.Scenes
             {
                 ref var l = ref _lights[i];
 
-                UOTexture texture = LightsLoader.Instance.GetTexture(l.ID);
+                UOTexture32 texture = LightsLoader.Instance.GetTexture(l.ID);
                 if (texture == null)
                     continue;
 

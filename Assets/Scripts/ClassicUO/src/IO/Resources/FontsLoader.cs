@@ -99,7 +99,7 @@ namespace ClassicUO.IO.Resources
 
 
 
-        public override Task Load()
+        public override unsafe Task Load()
         {
             return Task.Run(() =>
             {
@@ -118,7 +118,7 @@ namespace ClassicUO.IO.Resources
                     }
                 }
 
-                int fontHeaderSize = UnsafeMemoryManager.SizeOf<FontHeader>();
+                int fontHeaderSize = sizeof(FontHeader);
                 FontCount = 0;
 
                 while (fonts.Position < fonts.Length)
@@ -3184,9 +3184,9 @@ namespace ClassicUO.IO.Resources
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct FontHeader
+    internal ref struct FontHeader
     {
-        public readonly byte Width, Height, Unknown;
+        public byte Width, Height, Unknown;
     }
 
 
@@ -3226,7 +3226,7 @@ namespace ClassicUO.IO.Resources
         }
     }
 
-    internal readonly struct MultilinesFontData
+    internal struct MultilinesFontData
     {
         public MultilinesFontData(uint color, ushort flags, byte font, char item, ushort linkid)
         {
@@ -3237,11 +3237,11 @@ namespace ClassicUO.IO.Resources
             LinkID = linkid;
         }
 
-        public readonly uint Color;
-        public readonly ushort Flags;
-        public readonly byte Font;
-        public readonly char Item;
-        public readonly ushort LinkID;
+        public uint Color;
+        public ushort Flags;
+        public byte Font;
+        public char Item;
+        public ushort LinkID;
         //public MultilinesFontData Next;
     }
 

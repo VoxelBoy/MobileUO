@@ -80,6 +80,7 @@ namespace ClassicUO
 
             IsFixedTimeStep = false; // Settings.GlobalSettings.FixedTimeStep;
             TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / 250.0);
+            InactiveSleepTime = TimeSpan.Zero;
         }
 
         public Scene Scene => _scene;
@@ -156,10 +157,11 @@ namespace ClassicUO
         {
             SDL.SDL_GetWindowBordersSize(Window.Handle, out int top, out int left, out int bottom, out int right);
             Settings.GlobalSettings.WindowPosition = new Point(Math.Max(0, Window.ClientBounds.X - left), Math.Max(0, Window.ClientBounds.Y - top));
-            
+
+            _scene?.Unload();
             Settings.GlobalSettings.Save();
             Plugin.OnClosing();
-            
+
             ArtLoader.Instance.Dispose();
             GumpsLoader.Instance.Dispose();
             TexmapsLoader.Instance.Dispose();

@@ -11,4 +11,7 @@
     <assembly fullname="Assembly-CSharp">
         <type fullname="ClassicUO.Configuration.Profile" preserve="all"/>
     </assembly>
+    <assembly fullname="Assembly-CSharp">
+        <type fullname="ClassicUO.Configuration.Settings" preserve="all"/>
+    </assembly>
 </linker>

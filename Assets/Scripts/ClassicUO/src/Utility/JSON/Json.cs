@@ -5,9 +5,7 @@ namespace TinyJson
 			if (string.IsNullOrEmpty(json)) return default(T);
 			object jsonObj = JsonParser.ParseValue(json);
 			if (jsonObj == null) return default(T);
-			T obj = JsonMapper.DecodeJsonObject<T>(jsonObj);
-			TypeExtensions.typeToProperties.Clear();
-			return obj;
+			return JsonMapper.DecodeJsonObject<T>(jsonObj);
 		}
 		
 		public static string Encode(this object value, bool pretty = false) {

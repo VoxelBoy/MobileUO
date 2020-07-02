@@ -46,16 +46,9 @@ namespace ClassicUO.Configuration
 
         }
 
-        public Profile(string username, string servername, string charactername)
-        {
-            Username = username;
-            ServerName = servername;
-            CharacterName = charactername;
-        }
-
-        public string Username { get; set; }
-        public string ServerName { get; set; }
-        public string CharacterName { get; set; }
+        [JsonIgnore] public string Username { get; set; }
+        [JsonIgnore] public string ServerName { get; set; }
+        [JsonIgnore] public string CharacterName { get; set; }
 
         // sounds
         public bool EnableSound { get; set; } = true;

@@ -100,7 +100,8 @@ namespace ClassicUO.Game.Managers
 
                     if (value != null && value.AcceptKeyboardInput)
                     {
-                        value.OnFocusEnter();
+                        if (!value.IsFocused)
+                            value.OnFocusEnter();
                     }
                 }
             }
@@ -820,13 +821,6 @@ namespace ClassicUO.Game.Managers
             DraggingControl?.InvokeDragEnd(mousePosition);
             DraggingControl = null;
             _isDraggingControl = false;
-        }
-
-        //NOTE: Necessary for mobile joystick to work properly even if click doesn't start on world viewport
-        public static void SetMouseOverControlToWorldViewport()
-        {
-            var worldViewportGump = (WorldViewportGump) Gumps.FirstOrDefault(gump => gump is WorldViewportGump);
-            MouseOverControl = worldViewportGump?.Viewport;
         }
     }
 }

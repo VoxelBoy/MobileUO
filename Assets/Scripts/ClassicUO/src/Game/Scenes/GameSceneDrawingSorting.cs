@@ -719,7 +719,7 @@ namespace ClassicUO.Game.Scenes
             */
         }
 
-        public void GetViewPort()
+        private void GetViewPort()
         {
             int oldDrawOffsetX = _offset.X;
             int oldDrawOffsetY = _offset.Y;
@@ -829,15 +829,13 @@ namespace ClassicUO.Game.Scenes
             {
                 UpdateDrawPosition = true;
 
-                var scaledWidth = (int) (winGameWidth * Scale);
-                var scaledHeight = (int) (winGameHeight * Scale);
-                if (_viewportRenderTarget == null || _viewportRenderTarget.Width != scaledWidth || _viewportRenderTarget.Height != scaledHeight)
+                if (_viewportRenderTarget == null || _viewportRenderTarget.Width != (int)(winGameWidth * Scale) || _viewportRenderTarget.Height != (int)(winGameHeight * Scale))
                 {
                     _viewportRenderTarget?.Dispose();
                     _lightRenderTarget?.Dispose();
 
-                    _viewportRenderTarget = new RenderTarget2D(Client.Game.GraphicsDevice, scaledWidth, scaledHeight, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
-                    _lightRenderTarget = new RenderTarget2D(Client.Game.GraphicsDevice, scaledWidth, scaledHeight, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+                    _viewportRenderTarget = new RenderTarget2D(Client.Game.GraphicsDevice, (int)(winGameWidth * Scale), (int)(winGameHeight * Scale), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+                    _lightRenderTarget = new RenderTarget2D(Client.Game.GraphicsDevice, (int)(winGameWidth * Scale), (int)(winGameHeight * Scale), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
                 }
             }
 

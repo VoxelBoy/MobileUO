@@ -258,7 +258,11 @@ namespace ClassicUO.Game.UI.Controls
                         {
                             Log.Info("LINK CLICKED: " + result.Link);
 
-                            if(UnityEngine.Application.isMobilePlatform == false)
+                            if (UnityEngine.Application.isMobilePlatform)
+                            {
+                                UnityEngine.Application.OpenURL(result.Link);
+                            }
+                            else
                             {
                                 try
                                 {
