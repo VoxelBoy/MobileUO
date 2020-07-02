@@ -14,8 +14,6 @@ Shader "Unlit/XbrShader"
         Pass
         {
             CGPROGRAM
-// Upgrade NOTE: excluded shader from OpenGL ES 2.0 because it uses non-square matrices
-#pragma exclude_renderers gles
             #pragma vertex vert
             #pragma fragment frag
 
@@ -72,40 +70,41 @@ Shader "Unlit/XbrShader"
                 float2 dx = float2(IN.Normal.x, 0);
                 float2 dy = float2(0, IN.Normal.y);
             
-                float3 A = tex2D(_MainTex, IN.TexCoord - dx - dy).xyz;
-                float3 B = tex2D(_MainTex, IN.TexCoord - dy).xyz;
-                float3 C = tex2D(_MainTex, IN.TexCoord + dx - dy).xyz;
-                float3 D = tex2D(_MainTex, IN.TexCoord - dx).xyz;
-                float3 E = tex2D(_MainTex, IN.TexCoord).xyz;
-                float3 F = tex2D(_MainTex, IN.TexCoord + dx).xyz;
-                float3 G = tex2D(_MainTex, IN.TexCoord - dx + dy).xyz;
-                float3 H = tex2D(_MainTex, IN.TexCoord + dy).xyz;
-                float3 I = tex2D(_MainTex, IN.TexCoord + dx + dy).xyz;
-                float3 A1 = tex2D(_MainTex, IN.TexCoord - dx - 2.0 * dy).xyz;
-                float3 C1 = tex2D(_MainTex, IN.TexCoord + dx - 2.0 * dy).xyz;
-                float3 A0 = tex2D(_MainTex, IN.TexCoord - 2.0 * dx - dy).xyz;
-                float3 G0 = tex2D(_MainTex, IN.TexCoord - 2.0 * dx + dy).xyz;
-                float3 C4 = tex2D(_MainTex, IN.TexCoord + 2.0 * dx - dy).xyz;
-                float3 I4 = tex2D(_MainTex, IN.TexCoord + 2.0 * dx + dy).xyz;
-                float3 G5 = tex2D(_MainTex, IN.TexCoord - dx + 2.0 * dy).xyz;
-                float3 I5 = tex2D(_MainTex, IN.TexCoord + dx + 2.0 * dy).xyz;
-                float3 B1 = tex2D(_MainTex, IN.TexCoord - 2.0 * dy).xyz;
-                float3 D0 = tex2D(_MainTex, IN.TexCoord - 2.0 * dx).xyz;
-                float3 H5 = tex2D(_MainTex, IN.TexCoord + 2.0 * dy).xyz;
-                float3 F4 = tex2D(_MainTex, IN.TexCoord + 2.0 * dx).xyz;
+                float4 A = tex2D(_MainTex, IN.TexCoord - dx - dy);
+                float4 B = tex2D(_MainTex, IN.TexCoord - dy);
+                float4 C = tex2D(_MainTex, IN.TexCoord + dx - dy);
+                float4 D = tex2D(_MainTex, IN.TexCoord - dx);
+                float4 E = tex2D(_MainTex, IN.TexCoord);
+                float4 F = tex2D(_MainTex, IN.TexCoord + dx);
+                float4 G = tex2D(_MainTex, IN.TexCoord - dx + dy);
+                float4 H = tex2D(_MainTex, IN.TexCoord + dy);
+                float4 I = tex2D(_MainTex, IN.TexCoord + dx + dy);
+                float4 A1 = tex2D(_MainTex, IN.TexCoord - dx - 2.0 * dy);
+                float4 C1 = tex2D(_MainTex, IN.TexCoord + dx - 2.0 * dy);
+                float4 A0 = tex2D(_MainTex, IN.TexCoord - 2.0 * dx - dy);
+                float4 G0 = tex2D(_MainTex, IN.TexCoord - 2.0 * dx + dy);
+                float4 C4 = tex2D(_MainTex, IN.TexCoord + 2.0 * dx - dy);
+                float4 I4 = tex2D(_MainTex, IN.TexCoord + 2.0 * dx + dy);
+                float4 G5 = tex2D(_MainTex, IN.TexCoord - dx + 2.0 * dy);
+                float4 I5 = tex2D(_MainTex, IN.TexCoord + dx + 2.0 * dy);
+                float4 B1 = tex2D(_MainTex, IN.TexCoord - 2.0 * dy);
+                float4 D0 = tex2D(_MainTex, IN.TexCoord - 2.0 * dx);
+                float4 H5 = tex2D(_MainTex, IN.TexCoord + 2.0 * dy);
+                float4 F4 = tex2D(_MainTex, IN.TexCoord + 2.0 * dx);
             
-                float4 b = mul(float4x3(B, D, H, F), yuv_weighted);
-                float4 c = mul(float4x3(C, A, G, I), yuv_weighted);
-                float4 e = mul(float4x3(E, E, E, E), yuv_weighted);
+                //YLMZ: Changed these matrices to be 4x4, previously they were 4x3 but non-square matrices don't work on GLES2 apparently
+                float4 b = mul(float4x4(B, D, H, F), yuv_weighted);
+                float4 c = mul(float4x4(C, A, G, I), yuv_weighted);
+                float4 e = mul(float4x4(E, E, E, E), yuv_weighted);
                 float4 d = b.yzwx;
                 float4 f = b.wxyz;
                 float4 g = c.zwxy;
                 float4 h = b.zwxy;
                 float4 i = c.wxyz;
             
-                float4 i4 = mul(float4x3(I4, C1, A0, G5), yuv_weighted);
-                float4 i5 = mul(float4x3(I5, C4, A1, G0), yuv_weighted);
-                float4 h5 = mul(float4x3(H5, F4, B1, D0), yuv_weighted);
+                float4 i4 = mul(float4x4(I4, C1, A0, G5), yuv_weighted);
+                float4 i5 = mul(float4x4(I5, C4, A1, G0), yuv_weighted);
+                float4 h5 = mul(float4x4(H5, F4, B1, D0), yuv_weighted);
                 float4 f4 = h5.yzwx;
             
                 float4 Ao = float4(1.0, -1.0, -1.0, 1.0);

@@ -267,13 +267,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         }
 
-        internal Effect(GraphicsDevice graphicsDevice)
+        internal Effect(GraphicsDevice graphicsDevice) : base(graphicsDevice)
 		{
-			if (graphicsDevice == null)
-				throw new ArgumentNullException ("Graphics Device Cannot Be Null");
-
-			this.graphicsDevice = graphicsDevice;
-		}
+			
+        }
 
         protected Effect(Effect cloneSource)
         {

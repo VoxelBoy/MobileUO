@@ -1,7 +1,3 @@
-using System;
-using System.Diagnostics;
-
-
 namespace Microsoft.Xna.Framework.Graphics
 {
 	public class RasterizerState : GraphicsResource
@@ -15,9 +11,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public bool MultiSampleAntiAlias { get; set; }
         public bool ScissorTestEnable { get; set; }
         public float SlopeScaleDepthBias { get; set; }
-
-		public static readonly RasterizerState CullClockwise;		
-		public static readonly RasterizerState CullCounterClockwise;
+        
 		public static readonly RasterizerState CullNone;
 
 		public RasterizerState ()
@@ -32,12 +26,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		static RasterizerState ()
 		{
-			CullClockwise = new RasterizerState () {
-				CullMode = CullMode.CullClockwiseFace
-			};
-			CullCounterClockwise = new RasterizerState () {
-				CullMode = CullMode.CullCounterClockwiseFace
-			};
 			CullNone = new RasterizerState () {
 				CullMode = CullMode.None
 			};

@@ -2,6 +2,8 @@ namespace PreferenceEnums
 {
     public enum ScaleSizes
     {
+        Fifty = 50,
+        SeventyFive = 75,
         Default = 100,
         OneTwentyFive = 125,
         OneHalf = 150,
@@ -70,6 +72,12 @@ namespace PreferenceEnums
     }
 
     public enum ForceUseXbr
+    {
+        Off = 0,
+        On = 1
+    }
+
+    public enum VisualizeFingerInput
     {
         Off = 0,
         On = 1

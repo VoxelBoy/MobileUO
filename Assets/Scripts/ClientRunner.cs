@@ -22,8 +22,6 @@ using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 public class ClientRunner : MonoBehaviour
 {
 	[SerializeField]
-	private bool useDynamicAtlas;
-	[SerializeField]
 	public bool useGraphicsDrawTexture;
 	[SerializeField]
 	private bool forceEnterWorld;
@@ -186,11 +184,9 @@ public class ClientRunner : MonoBehaviour
 		    return;
 
 	    GL.LoadPixelMatrix( 0, Screen.width, Screen.height, 0 );
-
-        Client.Game.Batcher.UseDynamicAtlas = useDynamicAtlas;
+	    
         Client.Game.Batcher.UseGraphicsDrawTexture = useGraphicsDrawTexture;
         Client.Game.DrawUnity(UnityEngine.Time.deltaTime);
-        Client.Game.Batcher.Reset();
 
         forceEnterWorld = false;
 

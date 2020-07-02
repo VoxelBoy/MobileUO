@@ -43,44 +43,22 @@ namespace Microsoft.Xna.Framework.Graphics
 {	
 	public abstract class GraphicsResource : IDisposable
 	{
-		private bool disposed;
+		protected readonly GraphicsDevice GraphicsDevice;
 		
-		protected GraphicsDevice graphicsDevice;
-		
-		protected virtual void DoDisposing(EventArgs e) 
+		protected GraphicsResource()
 		{
-			if (Disposing != null)
-				Disposing(this, e);
 			
-			disposed = true;
+		}
+
+		protected GraphicsResource(GraphicsDevice graphicsDevice)
+		{
+			GraphicsDevice = graphicsDevice;
 		}
 		
 		public virtual void Dispose()
         {
-			DoDisposing(EventArgs.Empty);
+			
         }
-		
-		public event EventHandler<EventArgs> Disposing;
-		
-		public GraphicsDevice GraphicsDevice
-		{
-			get
-			{
-				return graphicsDevice;
-			}
-		}
-		
-		public bool IsDisposed
-		{
-			get
-			{
-				return disposed;
-			}
-		}
-		
-		public string Name { get; set; }
-		
-		public Object Tag { get; set; }
 	}
 }
 

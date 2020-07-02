@@ -28,8 +28,6 @@ namespace ClassicUO.Renderer
         private DepthStencilState _stencil;
         private bool _useScissor;
         private int _numSprites;
-        
-        public HashSet<UnityTexture> TexturesToAtlas = new HashSet<UnityTexture>();
 
         private Material hueMaterial;
         private Material xbrMaterial;
@@ -37,18 +35,8 @@ namespace ClassicUO.Renderer
         private MeshHolder reusedMesh = new MeshHolder(1);
 
         public float scale = 1;
-
-        public bool UseDynamicAtlas;
+        
         public bool UseGraphicsDrawTexture;
-        public CustomDynamicAtlas smallTexturesAtlas;
-        private int smallTexturesAtlasSize = 2048;
-
-        // public Mesh drawSpriteMesh;
-        // private int spriteMeshCustomVertexWriteIndex = 0;
-        // private CustomVertex[] _customVertices;
-        // private const int spriteMeshQuadCount = 800;
-        // private const int spriteMeshVertexCount = spriteMeshQuadCount * 4;
-        // private const int spriteMeshTriangleIndexCount = spriteMeshVertexCount * 3;
 
         private Mesh draw2DMesh;
         private static readonly int SrcBlend = Shader.PropertyToID("_SrcBlend");
@@ -60,14 +48,6 @@ namespace ClassicUO.Renderer
         private static readonly int Scissor = Shader.PropertyToID("_Scissor");
         private static readonly int ScissorRect = Shader.PropertyToID("_ScissorRect");
         private static readonly int TextureSize = Shader.PropertyToID("textureSize");
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct CustomVertex
-        {
-            public Vector3 pos;
-            public Vector2 uv;
-            // public Vector3 color;
-        }
 
         public UltimaBatcher2D(GraphicsDevice device)
         {
@@ -90,38 +70,6 @@ namespace ClassicUO.Renderer
 
             hueMaterial = new Material(UnityEngine.Resources.Load<Shader>("HueShader"));
             xbrMaterial = new Material(UnityEngine.Resources.Load<Shader>("XbrShader"));
-
-            if (UseDynamicAtlas)
-            {
-                smallTexturesAtlas = new CustomDynamicAtlas(smallTexturesAtlasSize, smallTexturesAtlasSize,
-                    nameof(smallTexturesAtlas));
-            }
-
-            // drawSpriteMesh = new Mesh();
-            // //Initialize draw sprite mesh with a lot of quads quads
-            // drawSpriteMesh.SetVertexBufferParams(spriteMeshVertexCount,
-            //     new VertexAttributeDescriptor(VertexAttribute.Position),
-            //     new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2));
-            //     // new VertexAttributeDescriptor(VertexAttribute.Color));
-            //
-            // _customVertices = new CustomVertex[spriteMeshVertexCount];
-            //
-            // drawSpriteMesh.SetIndexBufferParams(spriteMeshTriangleIndexCount, IndexFormat.UInt16);
-            //
-            // var indexBufferData = new ushort[spriteMeshTriangleIndexCount];
-            // var index = 0;
-            // for (int i = 0; i < spriteMeshQuadCount; i++)
-            // {
-            //     var vertexIndex = i * 4;
-            //     indexBufferData[index] = (ushort) vertexIndex;
-            //     indexBufferData[index+1] = (ushort) (vertexIndex+1);
-            //     indexBufferData[index+2] = (ushort) (vertexIndex+2);
-            //     indexBufferData[index+3] = (ushort) (vertexIndex+2);
-            //     indexBufferData[index+4] = (ushort) (vertexIndex+1);
-            //     indexBufferData[index+5] = (ushort) (vertexIndex+3);
-            //     index += 6;
-            // }
-            // drawSpriteMesh.SetIndexBufferData(indexBufferData, 0, 0, spriteMeshTriangleIndexCount, (MeshUpdateFlags) 15);
         }
 
         private MatrixEffect DefaultEffect { get; }
@@ -239,6 +187,11 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public bool DrawSprite(Texture2D texture, int x, int y, bool mirror, ref XnaVector3 hue)
         {
+            if (texture.UnityTexture == null)
+            {
+                return false;
+            }
+            
             int w = texture.Width;
             int h = texture.Height;
 
@@ -345,59 +298,17 @@ namespace ClassicUO.Renderer
                 RenderVertex(vertex, texture, hue);
             }
 
-            /*
-            if (UseDynamicAtlas &&
-                smallTexturesAtlas.TextureToRectDictionary.TryGetValue(texture.Hash, out var atlasRect) &&
-                spriteMeshCustomVertexWriteIndex < spriteMeshVertexCount - 4)
-            {
-                //Add custom vertices to be batched
-                var atlasXMin = atlasRect.xMin / smallTexturesAtlasSize;
-                var atlasXMax = atlasRect.xMax / smallTexturesAtlasSize;
-                //yMin and yMax are flipped here, otherwise the textures draw flipped in y-axis
-                //might be a rendertexture thing and might act differently on different platforms? need to double check
-                var atlasYMin = atlasRect.yMax / smallTexturesAtlasSize;
-                var atlasYMax = atlasRect.yMin / smallTexturesAtlasSize;
-
-                var leftUvX = mirror ? atlasXMax : atlasXMin;
-                var rightUvX = mirror ? atlasXMin : atlasXMax;
-
-                var vert = new CustomVertex();
-
-                vert.pos = new Vector3(rect.xMin, rect.yMax, 1);
-                vert.uv = new Vector2(leftUvX, atlasYMax);
-                // vert.color = Vector3.one;
-                _customVertices[spriteMeshCustomVertexWriteIndex++] = vert;
-
-                vert.pos = new Vector3(rect.xMax, rect.yMax, 1);
-                vert.uv = new Vector2(rightUvX, atlasYMax);
-                // vert.color = Vector3.one;
-                _customVertices[spriteMeshCustomVertexWriteIndex++] = vert;
-
-                vert.pos = new Vector3(rect.xMin, rect.yMin, 1);
-                vert.uv = new Vector2(leftUvX, atlasYMin);
-                // vert.color = Vector3.one;
-                _customVertices[spriteMeshCustomVertexWriteIndex++] = vert;
-
-                vert.pos = new Vector3(rect.xMax, rect.yMin, 1);
-                vert.uv = new Vector2(rightUvX, atlasYMin);
-                // vert.color = Vector3.one;
-                _customVertices[spriteMeshCustomVertexWriteIndex++] = vert;
-
-                return true;
-            }
-            */
-
-            if (UseDynamicAtlas && ShouldAtlas(texture))
-            {
-                TexturesToAtlas.Add(texture.UnityTexture);
-            }
-
             return true;
         }
 
         [MethodImpl(256)]
         public void DrawSpriteRotated(Texture2D texture, int x, int y, int destX, int destY, ref XnaVector3 hue, float angle)
         {
+            if (texture.UnityTexture == null)
+            {
+                return;
+            }
+            
             float ww = texture.Width * 0.5f;
             float hh = texture.Height * 0.5f;
 
@@ -454,6 +365,11 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public bool DrawSpriteLand(Texture2D texture, int x, int y, ref Rectangle rect, ref XnaVector3 normal0, ref XnaVector3 normal1, ref XnaVector3 normal2, ref XnaVector3 normal3, ref XnaVector3 hue)
         {
+            if (texture.UnityTexture == null)
+            {
+                return false;
+            }
+            
             var vertex = new PositionTextureColor4();
 
             vertex.TextureCoordinate0.x = 0;
@@ -500,6 +416,11 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public void DrawSpriteShadow(Texture2D texture, int x, int y, bool flip)
         { 
+            if (texture.UnityTexture == null)
+            {
+                return;
+            }
+            
             var vertex = new PositionTextureColor4();
 
             float width = texture.Width;
@@ -595,26 +516,6 @@ namespace ClassicUO.Renderer
             mat.SetColor(Hue, new Color(hue.x,hue.y,hue.z));
             mat.SetPass(0);
 
-            if (UseDynamicAtlas && ShouldAtlas(texture))
-            {
-                if (smallTexturesAtlas.TextureToRectDictionary.TryGetValue(texture.Hash, out var atlasRect))
-                {
-                    //Modify material and mesh uvs to use the atlas
-                    var atlasXMin = atlasRect.xMin / smallTexturesAtlasSize;
-                    var atlasXMax = atlasRect.xMax / smallTexturesAtlasSize;
-                    //yMin and yMax are flipped here, otherwise the textures draw flipped in y-axis
-                    //might be a rendertexture thing and might act differently on different platforms? need to double check
-                    var atlasYMin = atlasRect.yMax / smallTexturesAtlasSize;
-                    var atlasYMax = atlasRect.yMin / smallTexturesAtlasSize;
-
-                    //TODO: CONTINUE
-                }
-                else
-                {
-                    TexturesToAtlas.Add(texture.UnityTexture);
-                }
-            }
-
             Graphics.DrawMeshNow(reusedMesh.Mesh, Vector3.zero, Quaternion.identity);
         }
 
@@ -675,37 +576,6 @@ namespace ClassicUO.Renderer
 
                 if (h6mod != 0.0f)
                 {
-                    //if (h3mod == 0.0f)
-                    //{
-                    //    if (idx + count + 2 >= MAX_SPRITES)
-                    //        Flush();
-
-                    //    ref var vertex4 = ref VertexInfo[idx + count++];
-                    //    ref var vertex5 = ref VertexInfo[idx + count++];
-
-                    //    vertex4.Position.x = x + width;
-                    //    vertex4.Position.y = y;
-                    //    vertex4.Position.z = 0;
-                    //    vertex4.TextureCoordinate.x = 0;
-                    //    vertex4.TextureCoordinate.y = 0;
-                    //    vertex4.TextureCoordinate.z = 0;
-
-                    //    vertex5.Position.x = x;
-                    //    vertex5.Position.y = y;
-                    //    vertex5.Position.z = 0;
-                    //    vertex5.TextureCoordinate.x = 1;
-                    //    vertex5.TextureCoordinate.y = 0;
-                    //    vertex5.TextureCoordinate.z = 0;
-
-                    //    vertex4.Normal.x = vertex4.Normal.y = vertex5.Normal.x = vertex5.Normal.y = 0;
-                    //    vertex4.Normal.z = vertex5.Normal.z = 1;
-                    //    vertex4.Hue = vertex5.Hue = hue;
-                    //}
-
-                    //if (_numSprites + count >= MAX_SPRITES)
-                    //{
-                    //    Flush();
-                    //}
 
                     var vertex = new PositionTextureColor4();
 
@@ -723,20 +593,6 @@ namespace ClassicUO.Renderer
                     vertex.TextureCoordinate1.y = h3mod;
                     vertex.TextureCoordinate1.z = 0;
 
-                    //vertex4_s.Position.x = x + width;
-                    //vertex4_s.Position.y = y;
-                    //vertex4_s.Position.z = 0;
-                    //vertex4_s.TextureCoordinate.x = 0;
-                    //vertex4_s.TextureCoordinate.y = 0;
-                    //vertex4_s.TextureCoordinate.z = 0;
-
-                    //vertex5_s.Position.x = x;
-                    //vertex5_s.Position.y = y;
-                    //vertex5_s.Position.z = 0;
-                    //vertex5_s.TextureCoordinate.x = 1;
-                    //vertex5_s.TextureCoordinate.y = 0;
-                    //vertex5_s.TextureCoordinate.z = 0;
-
                     vertex.Position2.x = x + widthOffset;
                     vertex.Position2.y = y + h06;
                     vertex.Position2.z = 0;
@@ -753,61 +609,11 @@ namespace ClassicUO.Renderer
 
                     vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
 
-                    //vertex4_s.Position.x = x + widthOffset;
-                    //vertex4_s.Position.y = y + h06;
-                    //vertex4_s.Position.z = 0;
-                    //vertex4_s.TextureCoordinate.x = 0;
-                    //vertex4_s.TextureCoordinate.y = h6mod;
-                    //vertex4_s.TextureCoordinate.z = 0;
-
-                    //vertex5_s.Position.x = x + SITTING_OFFSET;
-                    //vertex5_s.Position.y = y + h06;
-                    //vertex5_s.Position.z = 0;
-                    //vertex5_s.TextureCoordinate.x = 1;
-                    //vertex5_s.TextureCoordinate.y = h6mod;
-                    //vertex5_s.TextureCoordinate.z = 0;
-
-                    //vertex4_s.Normal.x = vertex4_s.Normal.y = vertex5_s.Normal.x = vertex5_s.Normal.y = 0;
-                    //vertex4_s.Normal.z = vertex5_s.Normal.z = 1;
-                    //vertex4_s.Hue = vertex5_s.Hue = new Vector3(51, 1, 0);
-
                     RenderVertex(vertex, texture, hue);
                 }
 
                 if (h9mod != 0.0f)
                 {
-                    //if (h6mod == 0.0f)
-                    //{
-                    //    if (idx + count + 2 >= MAX_SPRITES)
-                    //        Flush();
-
-                    //    ref var vertex6 = ref VertexInfo[idx + count++];
-                    //    ref var vertex7 = ref VertexInfo[idx + count++];
-
-                    //    vertex6.Position.x = x + widthOffset;
-                    //    vertex6.Position.y = y;
-                    //    vertex6.Position.z = 0;
-                    //    vertex6.TextureCoordinate.x = 0;
-                    //    vertex6.TextureCoordinate.y = 0;
-                    //    vertex6.TextureCoordinate.z = 0;
-
-                    //    vertex7.Position.x = x + SITTING_OFFSET;
-                    //    vertex7.Position.y = y;
-                    //    vertex7.Position.z = 0;
-                    //    vertex7.TextureCoordinate.x = 1;
-                    //    vertex7.TextureCoordinate.y = 0;
-                    //    vertex7.TextureCoordinate.z = 0;
-
-                    //    vertex6.Normal.x = vertex6.Normal.y = vertex7.Normal.x = vertex7.Normal.y = 0;
-                    //    vertex6.Normal.z = vertex7.Normal.z = 1;
-                    //    vertex6.Hue = vertex7.Hue = hue;
-                    //}
-
-                    //if (_numSprites + count >= MAX_SPRITES)
-                    //{
-                    //    Flush();
-                    //}
-
                     var vertex = new PositionTextureColor4();
 
                     vertex.Position0.x = x + widthOffset;
@@ -840,24 +646,6 @@ namespace ClassicUO.Renderer
 
                     vertex.Hue0 = vertex.Hue1 = vertex.Hue2 = vertex.Hue3 = hue;
 
-                    //vertex6_s.Position.x = x + widthOffset;
-                    //vertex6_s.Position.y = y + h09;
-                    //vertex6_s.Position.z = 0;
-                    //vertex6_s.TextureCoordinate.x = 0;
-                    //vertex6_s.TextureCoordinate.y = 1;
-                    //vertex6_s.TextureCoordinate.z = 0;
-
-                    //vertex7_s.Position.x = x + SITTING_OFFSET;
-                    //vertex7_s.Position.y = y + h09;
-                    //vertex7_s.Position.z = 0;
-                    //vertex7_s.TextureCoordinate.x = 1;
-                    //vertex7_s.TextureCoordinate.y = 1;
-                    //vertex7_s.TextureCoordinate.z = 0;
-
-                    //vertex6_s.Normal.x = vertex6_s.Normal.y = vertex7_s.Normal.x = vertex7_s.Normal.y = 0;
-                    //vertex6_s.Normal.z = vertex7_s.Normal.z = 1;
-                    //vertex6_s.Hue = vertex7_s.Hue = hue;
-
                     RenderVertex(vertex, texture, hue);
                 }
             }
@@ -865,11 +653,6 @@ namespace ClassicUO.Renderer
             {
                 if (h3mod != 0.0f)
                 {
-                    //if (_numSprites + count >= MAX_SPRITES)
-                    //{
-                    //    Flush();
-                    //}
-
                     var vertex = new PositionTextureColor4();
 
                     vertex.Position0.x = x + SITTING_OFFSET;
@@ -994,7 +777,12 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool Draw2D(Texture2D texture, int x, int y, ref XnaVector3 hue)
-        { 
+        {
+            if (texture.UnityTexture == null)
+            {
+                return false;
+            }
+            
             if (UseGraphicsDrawTexture)
             {
                 var rect = new Rect(x * scale, y * scale, texture.Width * scale, texture.Height * scale);
@@ -1047,6 +835,11 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public bool Draw2D(Texture2D texture, int x, int y, int sx, int sy, float swidth, float sheight, ref XnaVector3 hue)
         { 
+            if (texture.UnityTexture == null)
+            {
+                return false;
+            }
+            
             float minX = sx / (float) texture.Width;
             float maxX = (sx + swidth) / texture.Width;
             float minY = sy / (float) texture.Height;
@@ -1111,7 +904,12 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool Draw2D(Texture2D texture, float dx, float dy, float dwidth, float dheight, int sx, int sy, float swidth, float sheight, ref XnaVector3 hue, float angle = 0.0f)
-        { 
+        {
+            if (texture.UnityTexture == null)
+            {
+                return false;
+            }
+            
             float minX = sx / (float) texture.Width, maxX = (sx + swidth) / texture.Width;
             float minY = sy / (float) texture.Height, maxY = (sy + sheight) / texture.Height;
 
@@ -1238,7 +1036,12 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool Draw2D(Texture2D texture, int x, int y, float width, float height, ref XnaVector3 hue)
-        { 
+        {
+            if (texture.UnityTexture == null)
+            {
+                return false;
+            }
+            
             if (UseGraphicsDrawTexture)
             {
                 if (CustomEffect is XBREffect xbrEffect)
@@ -1307,7 +1110,12 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool Draw2DTiled(Texture2D texture, int dx, int dy, float dwidth, float dheight, ref XnaVector3 hue)
-        { 
+        {
+            if (texture.UnityTexture == null)
+            {
+                return false;
+            }
+            
             int y = dy;
             int h = (int) dheight;
 
@@ -1337,7 +1145,12 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public bool DrawRectangle(Texture2D texture, int x, int y, int width, int height, ref XnaVector3 hue)
-        { 
+        {
+            if (texture.UnityTexture == null)
+            {
+                return false;
+            }
+            
             Draw2D(texture, x, y, width, 1, ref hue);
             Draw2D(texture, x + width, y, 1, height + 1, ref hue);
             Draw2D(texture, x, y + height, width, 1, ref hue);
@@ -1348,7 +1161,12 @@ namespace ClassicUO.Renderer
 
         [MethodImpl(256)]
         public void DrawLine(Texture2D texture, int startX, int startY, int endX, int endY, int originX, int originY)
-        { 
+        {
+            if (texture.UnityTexture == null)
+            {
+                return;
+            }
+            
             var vertex = new PositionTextureColor4();
 
             const int WIDTH = 1;
@@ -1428,36 +1246,6 @@ namespace ClassicUO.Renderer
         public void End()
         {
             CustomEffect = null;
-            
-            //Draw batched meshes
-            /*
-            if (spriteMeshCustomVertexWriteIndex != 0)
-            {
-                drawSpriteMesh.SetVertexBufferData(_customVertices, 0, 0, spriteMeshCustomVertexWriteIndex, 0,
-                    (MeshUpdateFlags) 15);
-                drawSpriteMesh.SetSubMesh(0,
-                    new SubMeshDescriptor(0, spriteMeshCustomVertexWriteIndex / 4 * 6)); //, (MeshUpdateFlags) 15);
-                spriteMeshCustomVertexWriteIndex = 0;
-
-                var mat = MaterialPool.Get(smallTexturesAtlas.AtlasTexture);
-                mat.SetTexture("_HueTex1", GraphicsDevice.Textures[1].UnityTexture);
-                mat.SetTexture("_HueTex2", GraphicsDevice.Textures[2].UnityTexture);
-                //Set blend to premultiplied alpha
-                SetMaterialBlendState(mat, BlendMode.One, BlendMode.OneMinusSrcAlpha);
-                mat.SetPass(0);
-
-                Graphics.DrawMeshNow(drawSpriteMesh, Vector3.zero, Quaternion.identity);
-            }
-            */
-        }
-
-        public void Reset()
-        {
-            if (TexturesToAtlas.Count > 0)
-            {
-                smallTexturesAtlas.Insert(TexturesToAtlas);
-                TexturesToAtlas.Clear();
-            }
         }
 
         //Because XNA's Blend enum starts with 1, we duplicate BlendMode.Zero for 0th index
@@ -1494,11 +1282,6 @@ namespace ClassicUO.Renderer
         {
             mat.SetFloat(SrcBlend, (float) src);
             mat.SetFloat(DstBlend, (float) dst);
-        }
-
-        private static bool ShouldAtlas(Texture2D texture)
-        {
-            return texture.UnityTexture is RenderTexture == false && texture.Width <= 64 && texture.Height <= 64;
         }
 
         private void ApplyStates()

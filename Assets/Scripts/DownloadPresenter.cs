@@ -16,9 +16,12 @@ public class DownloadPresenter : MonoBehaviour
     
     [SerializeField]
     private FileNameView fileNameViewInstance;
-
+    
     [SerializeField]
-    private Button backButton;
+    private Button backOrCancelButton;
+    
+    [SerializeField]
+    private Text backOrCancelButtonText;
 
     [SerializeField]
     private GameObject cellularWarningParent;
@@ -37,27 +40,28 @@ public class DownloadPresenter : MonoBehaviour
 
     private void OnEnable()
     {
-        backButton.onClick.AddListener(() => BackButtonPressed?.Invoke());
+        backOrCancelButton.onClick.AddListener(() => BackButtonPressed?.Invoke());
         cellularWarningYesButton.onClick.AddListener(() => CellularWarningYesButtonPressed?.Invoke());
         cellularWarningNoButton.onClick.AddListener(() => CellularWarningNoButtonPressed?.Invoke());
         
         cellularWarningParent.gameObject.SetActive(false);
-        backButton.gameObject.SetActive(false);
+        backOrCancelButton.gameObject.SetActive(false);
         errorText.gameObject.SetActive(false);
         fileNameViewInstance.gameObject.SetActive(false);
     }
 
     private void OnDisable()
     {
-        backButton.onClick.RemoveAllListeners();
+        backOrCancelButton.onClick.RemoveAllListeners();
         counterText.text = "Getting list of files to download...";
     }
 
     public void ShowError(string error)
     {
-        backButton.gameObject.SetActive(true);
-        errorText.gameObject.SetActive(true);
+        backOrCancelButton.gameObject.SetActive(true);
+        backOrCancelButtonText.text = "Back";
         errorText.text = error;
+        errorText.gameObject.SetActive(true);
     }
 
     public void UpdateView(int numberOfFilesDownloaded, int numberOfFilesToDownload)
@@ -89,6 +93,8 @@ public class DownloadPresenter : MonoBehaviour
             newFileNameText.gameObject.SetActive(true);
         });
         filesScrollView.SetActive(true);
+        backOrCancelButton.gameObject.SetActive(true);
+        backOrCancelButtonText.text = "Cancel";
     }
 
     public void ClearFileList()

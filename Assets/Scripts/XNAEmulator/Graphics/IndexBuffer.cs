@@ -5,18 +5,18 @@ namespace Microsoft.Xna.Framework.Graphics
     
     public class DynamicIndexBuffer : IndexBuffer
     {
-        public DynamicIndexBuffer(GraphicsDevice graphicsDevice, IndexElementSize indexElementSize, int maxIndices, BufferUsage writeOnly)
+        public DynamicIndexBuffer(GraphicsDevice graphicsDevice, IndexElementSize indexElementSize, int maxIndices, BufferUsage writeOnly) : base(graphicsDevice)
         {   
             
         }
     }
     public class IndexBuffer : GraphicsResource
     {
-        public IndexBuffer()
+        protected IndexBuffer(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
             
         }
-        public IndexBuffer(GraphicsDevice graphicsDevice, IndexElementSize sixteenBits, int maxIndices, BufferUsage writeOnly)
+        public IndexBuffer(GraphicsDevice graphicsDevice, IndexElementSize sixteenBits, int maxIndices, BufferUsage writeOnly) : base(graphicsDevice)
         {
         }
 
@@ -24,7 +24,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
 

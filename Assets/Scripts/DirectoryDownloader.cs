@@ -96,6 +96,12 @@ public class DirectoryDownloader : DownloaderBase
 
     private void SingleFileDownloadFinished(UnityWebRequest request, string fileName)
     {
+        //If download coroutine was stopped, do nothing
+        if (downloadCoroutine == null)
+        {
+            return;
+        }
+        
         --concurrentDownloadCounter;
         activeRequestAndFileNameTupleList.RemoveAll(x => x.Item1 == request);
         if (request.isHttpError || request.isNetworkError)
@@ -135,7 +141,12 @@ public class DirectoryDownloader : DownloaderBase
         filesToDownload = null;
         downloadAttemptsPerFile?.Clear();
         downloadAttemptsPerFile = null;
-        activeRequestAndFileNameTupleList?.ForEach(kvp => kvp.Item1?.Dispose());
+        activeRequestAndFileNameTupleList?.ForEach(tuple =>
+        {
+            var webRequest = tuple.Item1;
+            webRequest?.Abort();
+            webRequest?.Dispose();
+        });
         activeRequestAndFileNameTupleList?.Clear();
         activeRequestAndFileNameTupleList = null;
         concurrentDownloadCounter = 0;

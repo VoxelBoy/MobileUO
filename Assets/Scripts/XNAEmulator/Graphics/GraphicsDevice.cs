@@ -34,7 +34,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (renderTarget != null)
             {
                 UnityEngine.Graphics.SetRenderTarget(renderTarget.UnityTexture as RenderTexture);
-                GL.LoadPixelMatrix(0, renderTarget.UnityTexture.width, renderTarget.UnityTexture.height, 0);
+                GL.LoadPixelMatrix(0, renderTarget.Width, renderTarget.Height, 0);
             }
             else
             {

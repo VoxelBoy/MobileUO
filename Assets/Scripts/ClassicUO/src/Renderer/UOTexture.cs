@@ -51,13 +51,15 @@ namespace ClassicUO.Renderer
 
         public override bool Contains(int x, int y, bool pixelCheck = true)
         {
-            if (UnityTexture != null && x >= 0 && y >= 0 && x < Width && y < Height)
+            if (x >= 0 && y >= 0 && x < Width && y < Height)
             {
                 if (!pixelCheck)
                     return true;
 
-                int pos = y * Width + x;
+                if (UnityTexture == null)
+                    return false;
                 
+                int pos = y * Width + x;
                 return GetDataAtPos(pos) != 0;
             }
 
@@ -68,7 +70,7 @@ namespace ClassicUO.Renderer
         private uint GetDataAtPos(int pos)
         {
             //The index calculation here is the same as in Texture2D.SetData
-            var width = UnityTexture.width;
+            var width = Width;
             int x = pos % width;
             int y = pos / width;
             y *= width;
