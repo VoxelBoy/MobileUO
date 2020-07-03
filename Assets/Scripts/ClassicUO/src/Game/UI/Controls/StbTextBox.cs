@@ -774,19 +774,12 @@ namespace ClassicUO.Game.UI.Controls
                 UpdateCaretScreenPosition();
             }
 
-            if (IsEditable)
+            if (UnityEngine.Application.isMobilePlatform && IsEditable &&
+                UserPreferences.DisableTouchscreenKeyboardOnMobile.CurrentValue == (int) PreferenceEnums.DisableTouchscreenKeyboardOnMobile.Off)
             {
                 //NOTE: Show touchscreen keyboard when abstract text box is selected
-#if UNITY_2019_3_OR_NEWER
-                //This code seems to be necessary on 2019.3 and newer to fix the touchscreen keyboard not re-appearing if previously dismissed by clicking somewhere on the screen instead of by clicking the OK/Done button
-                if (GameController.TouchScreenKeyboard != null)
-                {
-                    GameController.TouchScreenKeyboard.active = false;
-                    GameController.TouchScreenKeyboard = null;
-                }
-#endif
                 GameController.TouchScreenKeyboard = UnityEngine.TouchScreenKeyboard.Open(_stb.text,
-                    UnityEngine.TouchScreenKeyboardType.Default, false, false, this is LoginGump.PasswordStbTextBox);
+                    UnityEngine.TouchScreenKeyboardType.Default, false, Multiline, this is LoginGump.PasswordStbTextBox);
             }
 
             base.OnMouseDown(x, y, button);

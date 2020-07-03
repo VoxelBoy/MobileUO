@@ -38,7 +38,29 @@ namespace ClassicUO.IO
     {
         public static string GetUOFilePath(string file)
         {
-            return Path.Combine(Settings.GlobalSettings.UltimaOnlineDirectory, file);
+            var filePath = Path.Combine(Settings.GlobalSettings.UltimaOnlineDirectory, file);
+            
+            //NOTE: Potential fix file not found issues on iOS due to filesystem case sensitivity
+            //If the file with the given name doesn't exist, check for it with alternative casing
+            if (File.Exists(filePath) == false)
+            {
+                var firstChar = file[0];
+                if (char.IsUpper(firstChar))
+                {
+                    file = char.ToLowerInvariant(firstChar) + file.Substring(1);
+                }
+                else
+                {
+                    file = char.ToUpperInvariant(firstChar) + file.Substring(1);
+                }
+                var newFilePath = Path.Combine(Settings.GlobalSettings.UltimaOnlineDirectory, file);
+                if (File.Exists(newFilePath))
+                {
+                    return newFilePath;
+                }
+            }
+
+            return filePath;
         }
 
 

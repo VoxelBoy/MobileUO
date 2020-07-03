@@ -7,8 +7,8 @@ public class CustomizeJoystickButtonPresenter : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private JoystickScaler joystickScaler;
 
-    [SerializeField] private Color activeColor;
-    [SerializeField] private Color inactiveColor;
+    private readonly Color activeColor = Color.white;
+    private readonly Color inactiveColor = new Color(155 / 255f, 1f, 1f, 1f);
 
     private void Awake()
     {

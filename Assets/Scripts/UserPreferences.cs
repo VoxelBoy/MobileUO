@@ -66,6 +66,7 @@ public static class UserPreferences
     
     public static IntPreference ShowCloseButtons;
     public static IntPreference UseMouseOnMobile;
+    public static IntPreference DisableTouchscreenKeyboardOnMobile;
     public static IntPreference ScaleSize;
     public static IntPreference TextureFiltering;
     public static IntPreference TargetFrameRate;
@@ -77,6 +78,7 @@ public static class UserPreferences
     public static IntPreference ContainerItemSelection;
     public static IntPreference ForceUseXbr;
     public static IntPreference VisualizeFingerInput;
+    public static IntPreference ShowModifierKeyButtons;
 
     public static void Initialize()
     {
@@ -93,5 +95,7 @@ public static class UserPreferences
         ContainerItemSelection = new IntPreference(nameof(ContainerItemSelection), (int) PreferenceEnums.ContainerItemSelection.Coarse);
         ForceUseXbr = new IntPreference(nameof(ForceUseXbr), (int) PreferenceEnums.ForceUseXbr.Off);
         VisualizeFingerInput = new IntPreference(nameof(VisualizeFingerInput), (int) PreferenceEnums.VisualizeFingerInput.Off);
+        ShowModifierKeyButtons = new IntPreference(nameof(ShowModifierKeyButtons), (int) PreferenceEnums.ShowModifierKeyButtons.Off);
+        DisableTouchscreenKeyboardOnMobile = new IntPreference(nameof(DisableTouchscreenKeyboardOnMobile), (int) PreferenceEnums.DisableTouchscreenKeyboardOnMobile.Off);
     }
 }

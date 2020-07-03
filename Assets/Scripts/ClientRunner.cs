@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using ClassicUO.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
+using SDL2;
+using GameObject = UnityEngine.GameObject;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 
 public class ClientRunner : MonoBehaviour
@@ -37,6 +39,14 @@ public class ClientRunner : MonoBehaviour
 	private float[] joystickDeadZoneValues;
 	[SerializeField]
 	private float[] joystickRunThresholdValues;
+	[SerializeField]
+	private GameObject modifierKeyButtonsParent;
+	[SerializeField]
+	private ModifierKeyButtonPresenter ctrlKeyButtonPresenter;
+	[SerializeField]
+	private ModifierKeyButtonPresenter altKeyButtonPresenter;
+	[SerializeField]
+	private ModifierKeyButtonPresenter shiftKeyButtonPresenter;
 
 	private int lastScreenWidth;
 	private int lastScreenHeight;
@@ -56,6 +66,7 @@ public class ClientRunner : MonoBehaviour
 		UserPreferences.JoystickDeadZone.ValueChanged += OnJoystickDeadZoneChanged;
 		UserPreferences.JoystickRunThreshold.ValueChanged += OnJoystickRunThresholdChanged;
 		UserPreferences.ContainerItemSelection.ValueChanged += OnContainerItemSelectionChanged;
+		UserPreferences.ShowModifierKeyButtons.ValueChanged += OnShowModifierKeyButtonsChanged;
 		OnCustomScaleSizeChanged(UserPreferences.ScaleSize.CurrentValue);
 		OnForceUseXbrChanged(UserPreferences.ForceUseXbr.CurrentValue);
 		OnShowCloseButtonsChanged(UserPreferences.ShowCloseButtons.CurrentValue);
@@ -65,6 +76,12 @@ public class ClientRunner : MonoBehaviour
 		OnJoystickDeadZoneChanged(UserPreferences.JoystickDeadZone.CurrentValue);
 		OnJoystickRunThresholdChanged(UserPreferences.JoystickRunThreshold.CurrentValue);
 		OnContainerItemSelectionChanged(UserPreferences.ContainerItemSelection.CurrentValue);
+		OnShowModifierKeyButtonsChanged(UserPreferences.ShowModifierKeyButtons.CurrentValue);
+	}
+
+	private void OnShowModifierKeyButtonsChanged(int currentValue)
+	{
+		modifierKeyButtonsParent.SetActive(currentValue == (int) PreferenceEnums.ShowModifierKeyButtons.On);
 	}
 
 	private void OnForceUseXbrChanged(int currentValue)
@@ -137,7 +154,7 @@ public class ClientRunner : MonoBehaviour
 		}
 	}
 
-	private void Update ()
+	private void Update()
 	{
 		if (Client.Game == null)
 			return;
@@ -174,7 +191,22 @@ public class ClientRunner : MonoBehaviour
         {
 	        gameScene.JoystickInput = new Microsoft.Xna.Framework.Vector2(movementJoystick.Input.x, -1 * movementJoystick.Input.y);
         }
-        
+
+        var keymod = SDL.SDL_Keymod.KMOD_NONE;
+        if (ctrlKeyButtonPresenter.ToggledOn)
+        {
+	        keymod |= SDL.SDL_Keymod.KMOD_CTRL;
+        }
+        if (altKeyButtonPresenter.ToggledOn)
+        {
+	        keymod |= SDL.SDL_Keymod.KMOD_ALT;
+        }
+        if (shiftKeyButtonPresenter.ToggledOn)
+        {
+	        keymod |= SDL.SDL_Keymod.KMOD_SHIFT;
+        }
+
+        Client.Game.KeymodOverride = keymod;
         Client.Game.Tick(deltaTime);
 	}
 

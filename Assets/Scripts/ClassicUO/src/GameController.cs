@@ -825,6 +825,7 @@ namespace ClassicUO
         private readonly UnityEngine.KeyCode[] _keyCodeEnumValues = (UnityEngine.KeyCode[]) Enum.GetValues(typeof(UnityEngine.KeyCode));
         private readonly Control[] controlsUnderFingers = new Control[5];
         private UnityEngine.Vector3 lastMousePosition;
+        public SDL_Keymod KeymodOverride;
 
         private void MouseUpdate()
         {
@@ -951,7 +952,7 @@ namespace ClassicUO
             }
 
             //Keyboard handling
-            var keymod = SDL.SDL_Keymod.KMOD_NONE;
+            var keymod = KeymodOverride;
             if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftAlt))
             {
                 keymod |= SDL_Keymod.KMOD_LALT;
@@ -982,25 +983,38 @@ namespace ClassicUO
                 if (UnityEngine.Input.GetKeyDown(keyCode))
                 {
                     Keyboard.OnKeyDown(key);
-                    UIManager.KeyboardFocusControl?.InvokeKeyDown(key.keysym.sym, key.keysym.mod);
-                    _scene.OnKeyDown(key);
+
+                    if (Plugin.ProcessHotkeys((int) key.keysym.sym, (int) key.keysym.mod, true))
+                    {
+                        _ignoreNextTextInput = false;
+                        UIManager.KeyboardFocusControl?.InvokeKeyDown(key.keysym.sym, key.keysym.mod);
+                        _scene.OnKeyDown(key);
+                    }
+                    else
+                        _ignoreNextTextInput = true;
                 }
                 if (UnityEngine.Input.GetKeyUp(keyCode))
                 {
                     Keyboard.OnKeyUp(key);
                     UIManager.KeyboardFocusControl?.InvokeKeyUp(key.keysym.sym, key.keysym.mod);
                     _scene.OnKeyUp(key);
+                    Plugin.ProcessHotkeys(0, 0, false);
                 }
             }
 
             //Input text handling
-            if (UnityEngine.Application.isMobilePlatform)
+            if (UnityEngine.Application.isMobilePlatform && TouchScreenKeyboard != null)
             {
-                var text = TouchScreenKeyboard?.text;
-                if (_ignoreNextTextInput == false && TouchScreenKeyboard?.status == UnityEngine.TouchScreenKeyboard.Status.Done)
+                var text = TouchScreenKeyboard.text;
+                
+                if (_ignoreNextTextInput == false && TouchScreenKeyboard.status == UnityEngine.TouchScreenKeyboard.Status.Done)
                 {
-                    //Set keyboard to null so we process its text only once when its status is set to Done 
+                    //Clear the text of TouchScreenKeyboard, otherwise it stays there and is re-evaluated every frame
+                    TouchScreenKeyboard.text = string.Empty;
+                    
+                    //Set keyboard to null so we process its text only once when its status is set to Done
                     TouchScreenKeyboard = null;
+                    
                     //Need to clear the existing text in textbox before "pasting" new text from TouchScreenKeyboard
                     if (UIManager.KeyboardFocusControl is StbTextBox stbTextBox)
                     {
@@ -1013,11 +1027,13 @@ namespace ClassicUO
                     //When targeting SystemChat textbox, "auto-press" return key so that the text entered on the TouchScreenKeyboard is submitted right away
                     if (UIManager.KeyboardFocusControl != null && UIManager.KeyboardFocusControl == UIManager.SystemChat?.TextBoxControl)
                     {
+                        //Handle different chat modes
+                        HandleChatMode(text);
+                        //"Press" return
                         UIManager.KeyboardFocusControl.InvokeKeyDown(SDL_Keycode.SDLK_RETURN, SDL_Keymod.KMOD_NONE);
+                        //Revert chat mode to default
+                        UIManager.SystemChat.Mode = ChatMode.Default;
                     }
-                    
-                    //Clear the text of TouchScreenKeyboard, otherwise it stays there and is re-evaluated every frame
-                    TouchScreenKeyboard.text = string.Empty;
                 }
             }
             else
@@ -1033,7 +1049,57 @@ namespace ClassicUO
             }
         }
 
-        private Point ConvertUnityMousePosition(UnityEngine.Vector2 screenPosition, float oneOverScale)
+        private void HandleChatMode(string text)
+        {
+            if (text.Length > 0)
+            {
+                switch (text[0])
+                {                  
+                    case '/':
+                        UIManager.SystemChat.Mode = ChatMode.Party;
+                        //Textbox text has been cleared, set it again
+                        UIManager.SystemChat.TextBoxControl.InvokeTextInput(text.Substring(1));
+                        break;
+                    case '\\':
+                        UIManager.SystemChat.Mode = ChatMode.Guild;
+                        //Textbox text has been cleared, set it again
+                        UIManager.SystemChat.TextBoxControl.InvokeTextInput(text.Substring(1));
+                        break;
+                    case '|':
+                        UIManager.SystemChat.Mode = ChatMode.Alliance;
+                        //Textbox text has been cleared, set it again
+                        UIManager.SystemChat.TextBoxControl.InvokeTextInput(text.Substring(1));
+                        break;
+                    case '-':
+                        UIManager.SystemChat.Mode = ChatMode.ClientCommand;
+                        //Textbox text has been cleared, set it again
+                        UIManager.SystemChat.TextBoxControl.InvokeTextInput(text.Substring(1));
+                        break;
+                    case ',' when UOChatManager.ChatIsEnabled == CHAT_STATUS.ENABLED:
+                        UIManager.SystemChat.Mode = ChatMode.UOChat;
+                        //Textbox text has been cleared, set it again
+                        UIManager.SystemChat.TextBoxControl.InvokeTextInput(text.Substring(1));
+                        break;
+                    case ':' when text.Length > 1 && text[1] == ' ':
+                        UIManager.SystemChat.Mode = ChatMode.Emote;
+                        //Textbox text has been cleared, set it again
+                        UIManager.SystemChat.TextBoxControl.InvokeTextInput(text.Substring(2));
+                        break;
+                    case ';' when text.Length > 1 && text[1] == ' ':
+                        UIManager.SystemChat.Mode = ChatMode.Whisper;
+                        //Textbox text has been cleared, set it again
+                        UIManager.SystemChat.TextBoxControl.InvokeTextInput(text.Substring(2));
+                        break;
+                    case '!' when text.Length > 1 && text[1] == ' ':
+                        UIManager.SystemChat.Mode = ChatMode.Yell;
+                        //Textbox text has been cleared, set it again
+                        UIManager.SystemChat.TextBoxControl.InvokeTextInput(text.Substring(2));
+                        break;
+                }
+            }
+        }
+
+        private static Point ConvertUnityMousePosition(UnityEngine.Vector2 screenPosition, float oneOverScale)
         {
             var x = UnityEngine.Mathf.RoundToInt(screenPosition.x * oneOverScale);
             var y = UnityEngine.Mathf.RoundToInt((UnityEngine.Screen.height - screenPosition.y) * oneOverScale);
