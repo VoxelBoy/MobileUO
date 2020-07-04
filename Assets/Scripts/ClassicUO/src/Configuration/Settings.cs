@@ -108,6 +108,8 @@ namespace ClassicUO.Configuration
         [JsonProperty("plugins")]
         public string[] Plugins { get; set; } = { @"./Assistant/Razor.dll" };
 
+        [JsonProperty("internal_assistant")]
+        public bool EnableInternalAssistant { get; set; } = true;
 
         public const string SETTINGS_FILENAME = "settings.json";
         public static string CustomSettingsFilepath = null;

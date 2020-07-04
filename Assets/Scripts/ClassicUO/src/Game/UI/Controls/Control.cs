@@ -62,6 +62,8 @@ namespace ClassicUO.Game.UI.Controls
 
         protected const int MOBILE_CLOSE_BUTTON_ID = -9999;
 
+        public Control ControlToForwardMouseEventsTo;
+
         protected static void ResetHueVector()
         {
             _hueVector.X = 0;
@@ -502,6 +504,7 @@ namespace ClassicUO.Game.UI.Controls
             int y = position.Y - Y - ParentY;
             OnMouseDown(x, y, button);
             MouseDown.Raise(new MouseEventArgs(x, y, button, ButtonState.Pressed), this);
+            ControlToForwardMouseEventsTo?.InvokeMouseDown(position, button);
         }
 
         public void InvokeMouseUp(Point position, MouseButtonType button)
@@ -510,12 +513,15 @@ namespace ClassicUO.Game.UI.Controls
             int y = position.Y - Y - ParentY;
             OnMouseUp(x, y, button);
             MouseUp.Raise(new MouseEventArgs(x, y, button), this);
+            ControlToForwardMouseEventsTo?.InvokeMouseUp(position, button);
         }
 
         public void InvokeMouseCloseGumpWithRClick()
         {
             if (CanCloseWithRightClick)
                 CloseWithRightClick();
+
+            ControlToForwardMouseEventsTo?.InvokeMouseCloseGumpWithRClick();
         }
 
         public void InvokeMouseOver(Point position)
@@ -524,6 +530,7 @@ namespace ClassicUO.Game.UI.Controls
             int y = position.Y - Y - ParentY;
             OnMouseOver(x, y);
             MouseOver.Raise(new MouseEventArgs(x, y), this);
+            ControlToForwardMouseEventsTo?.InvokeMouseOver(position);
         }
 
         public void InvokeMouseEnter(Point position)
@@ -532,6 +539,7 @@ namespace ClassicUO.Game.UI.Controls
             int y = position.Y - Y - ParentY;
             OnMouseEnter(x, y);
             MouseEnter.Raise(new MouseEventArgs(x, y), this);
+            ControlToForwardMouseEventsTo?.InvokeMouseEnter(position);
         }
 
         public void InvokeMouseExit(Point position)
@@ -540,6 +548,7 @@ namespace ClassicUO.Game.UI.Controls
             int y = position.Y - Y - ParentY;
             OnMouseExit(x, y);
             MouseExit.Raise(new MouseEventArgs(x, y), this);
+            ControlToForwardMouseEventsTo?.InvokeMouseExit(position);
         }
 
         public bool InvokeMouseDoubleClick(Point position, MouseButtonType button)
@@ -551,6 +560,8 @@ namespace ClassicUO.Game.UI.Controls
             var arg = new MouseDoubleClickEventArgs(x, y, button);
             MouseDoubleClick.Raise(arg, this);
             result |= arg.Result;
+            
+            ControlToForwardMouseEventsTo?.InvokeMouseDoubleClick(position, button);
 
             return result;
         }
@@ -578,6 +589,7 @@ namespace ClassicUO.Game.UI.Controls
         {
             OnMouseWheel(delta);
             MouseWheel.Raise(new MouseWheelEventArgs(delta), this);
+            ControlToForwardMouseEventsTo?.InvokeMouseWheel(delta);
         }
 
         public void InvokeDragBegin(Point position)

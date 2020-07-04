@@ -67,6 +67,7 @@ public class ClientRunner : MonoBehaviour
 		UserPreferences.JoystickRunThreshold.ValueChanged += OnJoystickRunThresholdChanged;
 		UserPreferences.ContainerItemSelection.ValueChanged += OnContainerItemSelectionChanged;
 		UserPreferences.ShowModifierKeyButtons.ValueChanged += OnShowModifierKeyButtonsChanged;
+		UserPreferences.EnableAssistant.ValueChanged += OnEnableAssistantChanged;
 		OnCustomScaleSizeChanged(UserPreferences.ScaleSize.CurrentValue);
 		OnForceUseXbrChanged(UserPreferences.ForceUseXbr.CurrentValue);
 		OnShowCloseButtonsChanged(UserPreferences.ShowCloseButtons.CurrentValue);
@@ -77,6 +78,23 @@ public class ClientRunner : MonoBehaviour
 		OnJoystickRunThresholdChanged(UserPreferences.JoystickRunThreshold.CurrentValue);
 		OnContainerItemSelectionChanged(UserPreferences.ContainerItemSelection.CurrentValue);
 		OnShowModifierKeyButtonsChanged(UserPreferences.ShowModifierKeyButtons.CurrentValue);
+		OnEnableAssistantChanged(UserPreferences.EnableAssistant.CurrentValue);
+	}
+
+	private void OnEnableAssistantChanged(int enableAssistantCurrentValue)
+	{
+		if (UserPreferences.EnableAssistant.CurrentValue == (int) PreferenceEnums.EnableAssistant.On && Client.Game != null)
+		{
+			if (Plugin.LoadInternalAssistant())
+			{
+				//If we're already in the GameScene, trigger OnConnected callback since the Assistant won't receive it and
+				//because it's needed for initialization
+				if (Client.Game.Scene is GameScene)
+				{
+					Plugin.OnConnected();
+				}
+			}
+		}
 	}
 
 	private void OnShowModifierKeyButtonsChanged(int currentValue)
@@ -309,6 +327,11 @@ public class ClientRunner : MonoBehaviour
 	    {
 		    Client.SceneChanged += OnSceneChanged;
 		    Client.Run();
+		    if (UserPreferences.EnableAssistant.CurrentValue == (int) PreferenceEnums.EnableAssistant.On)
+		    {
+			    Plugin.LoadInternalAssistant();
+		    }
+
 		    Client.Game.Exiting += OnGameExiting;
 		    ApplyScalingFactor();
 	    }

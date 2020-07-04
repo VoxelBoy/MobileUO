@@ -79,6 +79,7 @@ public static class UserPreferences
     public static IntPreference ForceUseXbr;
     public static IntPreference VisualizeFingerInput;
     public static IntPreference ShowModifierKeyButtons;
+    public static IntPreference EnableAssistant;
 
     public static void Initialize()
     {
@@ -97,5 +98,6 @@ public static class UserPreferences
         VisualizeFingerInput = new IntPreference(nameof(VisualizeFingerInput), (int) PreferenceEnums.VisualizeFingerInput.Off);
         ShowModifierKeyButtons = new IntPreference(nameof(ShowModifierKeyButtons), (int) PreferenceEnums.ShowModifierKeyButtons.Off);
         DisableTouchscreenKeyboardOnMobile = new IntPreference(nameof(DisableTouchscreenKeyboardOnMobile), (int) PreferenceEnums.DisableTouchscreenKeyboardOnMobile.Off);
+        EnableAssistant = new IntPreference(nameof(EnableAssistant), (int) PreferenceEnums.EnableAssistant.Off);
     }
 }

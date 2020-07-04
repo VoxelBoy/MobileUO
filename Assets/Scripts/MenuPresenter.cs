@@ -45,6 +45,9 @@ public class MenuPresenter : MonoBehaviour
         GetOptionEnumViewInstance().Initialize(typeof(JoystickRunThreshold), UserPreferences.JoystickRunThreshold, "Joystick Run Threshold", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(ShowModifierKeyButtons), UserPreferences.ShowModifierKeyButtons, "Show Modifier Key Buttons", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(VisualizeFingerInput), UserPreferences.VisualizeFingerInput, "Visualize Finger Input", false, false);
+#if ENABLE_INTERNAL_ASSISTANT
+        GetOptionEnumViewInstance().Initialize(typeof(EnableAssistant), UserPreferences.EnableAssistant, "Enable Assistant", false, false);
+#endif
         
         //Only show customize joystick button when UO client is running and we're in the game scene
         customizeJoystickButtonGameObject.transform.SetAsLastSibling();

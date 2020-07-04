@@ -94,4 +94,10 @@ namespace PreferenceEnums
         Off = 0,
         On = 1
     }
+    
+    public enum EnableAssistant
+    {
+        Off = 0,
+        On = 1
+    }
 }

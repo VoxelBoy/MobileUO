@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -50,29 +51,31 @@ namespace ClassicUO.Network
         private readonly string _path;
         public string PluginPath => _path;
 
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnCastSpell _castSpell;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnGetPacketLength _getPacketLength;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnGetPlayerPosition _getPlayerPosition;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnGetStaticImage _getStaticImage;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnGetUOFilePath _getUoFilePath;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnClientClose _onClientClose;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnConnected _onConnected;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnDisconnected _onDisconnected;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnFocusGained _onFocusGained;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnFocusLost _onFocusLost;
+        private const string hardcodedInternalAssistantPath = "internal_assistant";
 
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnHotkey _onHotkeyPressed;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnInitialize _onInitialize;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnMouse _onMouse;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnUpdatePlayerPosition _onUpdatePlayerPosition;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnPacketSendRecv _recv, _send, _onRecv, _onSend;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private RequestMove _requestMove;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnSetTitle _setTitle;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnTick _tick;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnPacketSendRecv_new  _onRecv_new, _onSend_new;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnPacketSendRecv_new_intptr _recv_new, _send_new;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnDrawCmdList _draw_cmd_list;
-        [MarshalAs(UnmanagedType.FunctionPtr)] private OnWndProc _on_wnd_proc;
+        private OnCastSpell _castSpell;
+        private OnGetPacketLength _getPacketLength;
+        private OnGetPlayerPosition _getPlayerPosition;
+        private OnGetStaticImage _getStaticImage;
+        private OnGetUOFilePath _getUoFilePath;
+        private OnClientClose _onClientClose;
+        private OnConnected _onConnected;
+        private OnDisconnected _onDisconnected;
+        private OnFocusGained _onFocusGained;
+        private OnFocusLost _onFocusLost;
+
+        private OnHotkey _onHotkeyPressed;
+        private OnInitialize _onInitialize;
+        private OnMouse _onMouse;
+        private OnUpdatePlayerPosition _onUpdatePlayerPosition;
+        private OnPacketSendRecv _recv, _send, _onRecv, _onSend;
+        private RequestMove _requestMove;
+        private OnSetTitle _setTitle;
+        private OnTick _tick;
+        private OnPacketSendRecv_new  _onRecv_new, _onSend_new;
+        private OnPacketSendRecv_new_intptr _recv_new, _send_new;
+        private OnDrawCmdList _draw_cmd_list;
+        private OnWndProc _on_wnd_proc;
 
 
         private delegate void OnInstall(void* header);
@@ -159,6 +162,28 @@ namespace ClassicUO.Network
             return p;
         }
 
+        public static bool LoadInternalAssistant()
+        {
+            //If the plugin has already been created, don't create it again
+            if (_plugins.Any(x => x._path == hardcodedInternalAssistantPath))
+            {
+                return false;
+            }
+            
+            var plugin = new Plugin(hardcodedInternalAssistantPath);
+            plugin.Load();
+            
+            if (plugin.IsValid == false)
+            {
+                Log.Warn($"Invalid plugin: {plugin._path}");
+                return false;
+            }
+            
+            Log.Trace($"Plugin: {plugin._path} loaded.");
+            _plugins.Add(plugin);
+            return true;
+        }
+
 
         public void Load()
         {
@@ -174,6 +199,7 @@ namespace ClassicUO.Network
             _requestMove = RequestMove;
             _setTitle = SetWindowTitle;
 
+            /*
             SDL.SDL_SysWMinfo info = new SDL.SDL_SysWMinfo();
             SDL.SDL_VERSION(out info.version);
             SDL.SDL_GetWindowWMInfo(SDL.SDL_GL_GetCurrentWindow(), ref info);
@@ -311,7 +337,47 @@ namespace ClassicUO.Network
                 _draw_cmd_list = Marshal.GetDelegateForFunctionPointer<OnDrawCmdList>(header.OnDrawCmdList);
             if (header.OnWndProc != IntPtr.Zero)
                 _on_wnd_proc = Marshal.GetDelegateForFunctionPointer<OnWndProc>(header.OnWndProc);
+            */
+            
+#if ENABLE_INTERNAL_ASSISTANT
+            if (_path == hardcodedInternalAssistantPath)
+            {
+                try
+                {
+                    Assistant.Engine.Install(null);
+                    
+                    Assistant.Engine.UOSteamClient._sendToClient = OnPluginRecv;
+                    Assistant.Engine.UOSteamClient._sendToServer = OnPluginSend;
+                    Assistant.Engine.UOSteamClient._getPacketLength = PacketsTable.GetPacketLength;
+                    Assistant.Engine.UOSteamClient._getPlayerPosition = GetPlayerPosition;
+                    Assistant.Engine.UOSteamClient._castSpell = GameActions.CastSpell;
+                    Assistant.Engine.UOSteamClient._getStaticImage = GetStaticImage;
+                    Assistant.Engine.UOSteamClient._requestMove = RequestMove;
+                    Assistant.Engine.UOSteamClient._setTitle = SetWindowTitle;
+                    Assistant.Engine.UOSteamClient._uoFilePath = GetUOFilePath;
 
+                    _onRecv = Assistant.Engine.UOSteamClient._recv;
+                    _onSend = Assistant.Engine.UOSteamClient._send;
+                    _onHotkeyPressed = Assistant.Engine.UOSteamClient._onHotkeyPressed;
+                    _onMouse = Assistant.Engine.UOSteamClient._onMouse;
+                    _onUpdatePlayerPosition = Assistant.Engine.UOSteamClient._onUpdatePlayerPosition;
+                    _onClientClose = Assistant.Engine.UOSteamClient._onClientClose;
+                    _onInitialize = Assistant.Engine.UOSteamClient._onInitialize;
+                    _onConnected = Assistant.Engine.UOSteamClient._onConnected;
+                    _onDisconnected = Assistant.Engine.UOSteamClient._onDisconnected;
+                    _onFocusGained = Assistant.Engine.UOSteamClient._onFocusGained;
+                    _onFocusLost = Assistant.Engine.UOSteamClient._onFocusLost;
+                    _tick = Assistant.Engine.UOSteamClient._tick;
+                }
+                catch (Exception err)
+                {
+                    Log.Error(
+                        $"Plugin threw an error during Initialization. {err.Message} {err.StackTrace} {err.InnerException?.Message} {err.InnerException?.StackTrace}");
+
+                    return;
+                }
+            }
+#endif
 
             IsValid = true;
 

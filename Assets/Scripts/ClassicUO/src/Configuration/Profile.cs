@@ -536,6 +536,9 @@ namespace ClassicUO.Configuration
                                 case GUMP_TYPE.GT_MACROBUTTON:
                                     gump = new MacroButtonGump();
                                     break;
+                                case GUMP_TYPE.GT_ASSISTANTMACROBUTTON:
+                                    gump = new AssistantMacroButtonGump();
+                                    break;
                                 case GUMP_TYPE.GT_MINIMAP:
                                     gump = new MiniMapGump();
                                     break;
@@ -646,6 +649,9 @@ namespace ClassicUO.Configuration
                                         break;
                                     case GUMP_TYPE.GT_MACROBUTTON:
                                         gump = new MacroButtonGump();
+                                        break;
+                                    case GUMP_TYPE.GT_ASSISTANTMACROBUTTON:
+                                        gump = new AssistantMacroButtonGump();
                                         break;
                                 }
 

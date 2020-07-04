@@ -8,3 +8,8 @@
 /Builds/
 /*.sln
 /*.csproj
+
+# Ignore assistant files since developer does not want them to be public at this point
+/Assets/Resources/Resources.resx*
+/Assets/Scripts/Assistant/*
+/Assets/Scripts/Assistant.meta
