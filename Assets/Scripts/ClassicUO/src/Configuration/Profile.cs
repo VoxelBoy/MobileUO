@@ -231,7 +231,7 @@ namespace ClassicUO.Configuration
 
         public int GridLootType { get; set; } // 0 = none, 1 = only grid, 2 = both
 
-        public bool ReduceFPSWhenInactive { get; set; }
+        public bool ReduceFPSWhenInactive { get; set; } = true;
 
         public bool OverrideAllFonts { get; set; }
         public bool OverrideAllFontsIsUnicode { get; set; } = true;
@@ -259,6 +259,10 @@ namespace ClassicUO.Configuration
         public bool UseSmoothBoatMovement { get; set; } = false;
 
         public bool IgnoreStaminaCheck { get; set; } = false;
+
+        public bool ShowJournalClient { get; set; } = true;
+        public bool ShowJournalObjects { get; set; } = true;
+        public bool ShowJournalSystem { get; set; } = true;
 
         public int WorldMapWidth { get; set; } = 400;
         public int WorldMapHeight { get; set; } = 400;

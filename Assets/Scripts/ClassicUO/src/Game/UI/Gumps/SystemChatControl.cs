@@ -229,6 +229,9 @@ namespace ClassicUO.Game.UI.Gumps
 
         private void ChatOnMessageReceived(object sender, UOMessageEventArgs e)
         {
+            if (e.TextType == TEXT_TYPE.CLIENT)
+                return;
+
             switch (e.Type)
             {
                 case MessageType.Regular when e.Parent == null || !SerialHelper.IsValid(e.Parent.Serial):
@@ -547,7 +550,7 @@ namespace ClassicUO.Game.UI.Gumps
                                 if (World.Party.Leader == 0 || World.Party.Leader == World.Player)
                                     GameActions.RequestPartyInviteByTarget();
                                 else
-                                    MessageManager.HandleMessage(null, "You are not party leader.", "System", 0xFFFF, MessageType.Regular, 3);
+                                    MessageManager.HandleMessage(null, "You are not party leader.", "System", 0xFFFF, MessageType.Regular, 3, TEXT_TYPE.SYSTEM);
 
                                 break;
 
@@ -556,7 +559,7 @@ namespace ClassicUO.Game.UI.Gumps
                                 if (World.Party.Leader != 0)
                                     World.Party.CanLoot = !World.Party.CanLoot;
                                 else
-                                    MessageManager.HandleMessage(null, "You are not in a party.", "System", 0xFFFF, MessageType.Regular, 3);
+                                    MessageManager.HandleMessage(null, "You are not in a party.", "System", 0xFFFF, MessageType.Regular, 3, TEXT_TYPE.SYSTEM);
 
 
                                 break;
@@ -564,7 +567,7 @@ namespace ClassicUO.Game.UI.Gumps
                             case "quit":
 
                                 if (World.Party.Leader == 0)
-                                    MessageManager.HandleMessage(null, "You are not in a party.", "System", 0xFFFF, MessageType.Regular, 3);
+                                    MessageManager.HandleMessage(null, "You are not in a party.", "System", 0xFFFF, MessageType.Regular, 3, TEXT_TYPE.SYSTEM);
                                 else
                                 {
                                     GameActions.RequestPartyQuit();
@@ -587,7 +590,7 @@ namespace ClassicUO.Game.UI.Gumps
                                     World.Party.Inviter = 0;
                                 }
                                 else
-                                    MessageManager.HandleMessage(null, "No one has invited you to be in a party.", "System", 0xFFFF, MessageType.Regular, 3);
+                                    MessageManager.HandleMessage(null, "No one has invited you to be in a party.", "System", 0xFFFF, MessageType.Regular, 3, TEXT_TYPE.SYSTEM);
 
                                 break;
 
@@ -600,7 +603,7 @@ namespace ClassicUO.Game.UI.Gumps
                                     World.Party.Inviter = 0;
                                 }
                                 else
-                                    MessageManager.HandleMessage(null, "No one has invited you to be in a party.", "System", 0xFFFF, MessageType.Regular, 3);
+                                    MessageManager.HandleMessage(null, "No one has invited you to be in a party.", "System", 0xFFFF, MessageType.Regular, 3, TEXT_TYPE.SYSTEM);
 
 
                                 break;
