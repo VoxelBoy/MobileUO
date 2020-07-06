@@ -977,6 +977,12 @@ namespace ClassicUO
             {
                 keymod |= SDL_Keymod.KMOD_RCTRL;
             }
+            
+            //Potential fix for hold alt to move gumps not working on mobile?
+            Keyboard.Shift = (keymod & SDL_Keymod.KMOD_SHIFT) != SDL_Keymod.KMOD_NONE;
+            Keyboard.Alt = (keymod & SDL_Keymod.KMOD_ALT) != SDL_Keymod.KMOD_NONE;
+            Keyboard.Ctrl = (keymod & SDL_Keymod.KMOD_CTRL) != SDL_Keymod.KMOD_NONE;
+            
             foreach (var keyCode in _keyCodeEnumValues)
             {
                 var key = new SDL_KeyboardEvent {keysym = new SDL_Keysym {sym = (SDL_Keycode) keyCode, mod = keymod}};
