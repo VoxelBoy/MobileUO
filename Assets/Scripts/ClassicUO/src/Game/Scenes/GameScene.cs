@@ -780,6 +780,9 @@ namespace ClassicUO.Game.Scenes
 
             batcher.GraphicsDevice.Clear(Color.Black);
             batcher.GraphicsDevice.SetRenderTarget(_viewportRenderTarget);
+            
+            //NOTE: This extra Clear is important, otherwise hall-of-mirrors effects can happen in areas which are not drawn, such as black tiles inside of caves
+            batcher.GraphicsDevice.Clear(ClearOptions.Stencil | ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 0, 0);
 
             batcher.SetBrightlight(ProfileManager.Current.Brighlight);
 
