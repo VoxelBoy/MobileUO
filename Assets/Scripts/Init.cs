@@ -21,9 +21,6 @@ public class Init : MonoBehaviour
     private Canvas inGameDebugConsoleCanvas;
 
     [SerializeField]
-    private bool hideInGameDebugConsoleOnAwake;
-
-    [SerializeField]
     private SupportedServerConfigurations supportedServerConfigurations;
 
     private void Awake()
@@ -31,21 +28,23 @@ public class Init : MonoBehaviour
         ConsoleRedirect.Redirect();
         
         UserPreferences.Initialize();
+        UserPreferences.ShowDebugConsole.ValueChanged += OnShowDebugConsoleChanged;
+        OnShowDebugConsoleChanged(UserPreferences.ShowDebugConsole.CurrentValue);
 
         StateManager.AddState(new BootState());
         StateManager.AddState(new ServerConfigurationState(serverConfigurationUiParent));
         StateManager.AddState(new DownloadState(downloadPresenter, forceDownloadsInEditor, inGameDebugConsoleCanvas));
         StateManager.AddState(new GameState(clientRunner, errorPresenter, inGameDebugConsoleCanvas));
 
-        if (hideInGameDebugConsoleOnAwake)
-        {
-            inGameDebugConsoleCanvas.enabled = false;
-        }
-
         Input.simulateMouseWithTouches = false;
         
         ServerConfigurationModel.Initialize(supportedServerConfigurations);
         
         StateManager.GoToState<BootState>();
+    }
+
+    private void OnShowDebugConsoleChanged(int currentValue)
+    {
+        inGameDebugConsoleCanvas.enabled = currentValue == (int) PreferenceEnums.ShowDebugConsole.On;
     }
 }

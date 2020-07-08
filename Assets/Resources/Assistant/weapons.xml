@@ -1,0 +1,123 @@
+<weapons>
+<!-- Axes -->
+<weapon name="Axe" graphic="0xF49" primary="4" secondary="6" twohanded="true" />
+<weapon name="Battle Axe" graphic="0xF47" primary="2" secondary="3" twohanded="true" />
+<weapon name="Double Axe" graphic="0xF4B" primary="7" secondary="13" twohanded="true" />
+<weapon name="Executioners Axe" graphic="0xF45" primary="2" secondary="9" twohanded="true" />
+<weapon name="Hatchet" graphic="0xF43" primary="1" secondary="5" twohanded="true" />
+<weapon name="Large Battle Axe" graphic="0x13FB" primary="13" secondary="2" twohanded="true" />
+<weapon name="Pickaxe" graphic="0xE86" primary="7" secondary="5" />
+<weapon name="Two Handed Axe" graphic="0x1443" primary="7" secondary="12" twohanded="true" />
+<weapon name="War Axe" graphic="0x13B0" primary="1" secondary="2" />
+<!-- Knives -->
+<weapon name="Butcher Knife" graphic="0x13F6" primary="8" secondary="5" />
+<weapon name="Cleaver" graphic="0xEC3" primary="2" secondary="8" />
+<weapon name="Dagger" graphic="0xF52" primary="8" secondary="12" />
+<weapon name="Skinning Knife" graphic="0xEC4" primary="12" secondary="5" />
+<!-- Maces -->
+<weapon name="Club" graphic="0x13B4" primary="12" secondary="6" />
+<weapon name="Hammer Pick" graphic="0x143D" primary="1" secondary="9" />
+<weapon name="Mace" graphic="0xF5C" primary="3" secondary="5" />
+<weapon name="Magic Wand" graphic="0xDF2" primary="6" secondary="5" />
+<weapon name="Maul" graphic="0x143B" primary="4" secondary="3" />
+<weapon name="Scepter" graphic="0x26BC" primary="4" secondary="9" />
+<weapon name="War Hammer" graphic="0x1439" primary="13" secondary="4" twohanded="true" />
+<weapon name="War Mace" graphic="0x1407" primary="4" secondary="2" />
+<!-- Pole -->
+<weapon name="Bardiche" graphic="0xF4D" primary="11" secondary="6" twohanded="true" />
+<weapon name="Halberd" graphic="0x143E" primary="13" secondary="3" twohanded="true" />
+<weapon name="Scythe" graphic="0x26BA" primary="2" secondary="11" twohanded="true" />
+<!-- Ranged -->
+<weapon name="Bow" graphic="0x13B2" primary="11" secondary="9" twohanded="true" />
+<weapon name="Bow" graphic="0x13B1" primary="11" secondary="9" twohanded="true" />
+<weapon name="Composite Bow" graphic="0x26C2" primary="1" secondary="10" twohanded="true" />
+<weapon name="Crossbow" graphic="0xF50" primary="3" secondary="9" twohanded="true" />
+<weapon name="Heavy Crossbow" graphic="0x13FD" primary="10" secondary="6" twohanded="true" />
+<weapon name="Repeating Crossbow" graphic="0x26C3" primary="7" secondary="10" twohanded="true" />
+<weapon name="Magical Shortbow" graphic="0x2D1F" primary="26" secondary="27" twohanded="true" />
+<!-- Spears and Forks -->
+<weapon name="Bladed Staff" graphic="0x26BD" primary="1" secondary="6" twohanded="true" />
+<weapon name="Double Bladed Staff" graphic="0x26BF" primary="7" secondary="8" twohanded="true" />
+<weapon name="Pike" graphic="0x26BE" primary="11" secondary="8" twohanded="true" />
+<weapon name="Pitchfork" graphic="0xE87" primary="2" secondary="6" twohanded="true" />
+<weapon name="Short Spear" graphic="0x1403" primary="12" secondary="9" twohanded="true" />
+<weapon name="Spear" graphic="0xF62" primary="1" secondary="11" twohanded="true" />
+<weapon name="War Fork" graphic="0x1405" primary="2" secondary="5" />
+<!-- Staves -->
+<weapon name="Black Staff" graphic="0xDF0" primary="13" secondary="11" twohanded="true" />
+<weapon name="Gnarled Staff" graphic="0x13F8" primary="3" secondary="11" twohanded="true" />
+<weapon name="Quarter Staff" graphic="0xE89" primary="7" secondary="3" twohanded="true" />
+<weapon name="Shepherds Crook" graphic="0xE81" primary="4" secondary="5" twohanded="true" />
+<!-- Swords -->
+<weapon name="Bone Harvester" graphic="0x26BB" primary="11" secondary="9" />
+<weapon name="Bone Harvester" graphic="0x26C5" primary="11" secondary="9" />
+<weapon name="Broadsword" graphic="0xF5E" primary="4" secondary="1" />
+<weapon name="Crescent Blade" graphic="0x26C1" primary="7" secondary="9" twohanded="true" />
+<weapon name="Cutlass" graphic="0x1441" primary="2" secondary="12" />
+<weapon name="Katana" graphic="0x13FF" primary="7" secondary="1" />
+<weapon name="Kryss" graphic="0x1401" primary="1" secondary="8" />
+<weapon name="Kryss" graphic="0x1400" primary="1" secondary="8" />
+<weapon name="Lance" graphic="0x26C0" primary="6" secondary="3" />
+<weapon name="Longsword" graphic="0xF61" primary="1" secondary="3" />
+<weapon name="Scimitar" graphic="0x13B6" primary="7" secondary="11" />
+<weapon name="Viking Sword" graphic="0x13B9" primary="4" secondary="11" />
+<!-- Samurai Empire -->
+<weapon name="Bokuto" graphic="0x27A8" primary="20" secondary="18" />
+<weapon name="Daisho" graphic="0x27A9" primary="20" secondary="7" twohanded="true" />
+<weapon name="Kama" graphic="0x27AD" primary="13" secondary="17" twohanded="true" />
+<weapon name="Lajatang" graphic="0x27A7" primary="17" secondary="15" twohanded="true" />
+<weapon name="No-Dachi" graphic="0x27A2" primary="4" secondary="14" twohanded="true" />
+<weapon name="Nunchaku" graphic="0x27AE" primary="16" secondary="20" />
+<weapon name="Sai" graphic="0x27AF" primary="16" secondary="23" twohanded="true" />
+<weapon name="Tekagi" graphic="0x27AB" primary="21" secondary="19" twohanded="true" />
+<weapon name="Tessen" graphic="0x27A3" primary="20" secondary="21" twohanded="true" />
+<weapon name="Tetsubo" graphic="0x27A6" primary="15" secondary="4" twohanded="true" />
+<weapon name="Wakizashi" graphic="0x27A4" primary="15" secondary="7" />
+<weapon name="Yumi" graphic="0x27A5" primary="23" secondary="22" twohanded="true" />
+<!-- Mondain's Legacy -->
+<weapon name="Assassin Spike" graphic="0x2D21" primary="8" secondary="12" />
+<weapon name="Diamond Mace" graphic="0x2D24" primary="3" secondary="4" />
+<weapon name="Elven Composite Longbow" graphic="0x2D1E" primary="25" secondary="28" />
+<weapon name="Elven Machete" graphic="0x2D35" primary="17" secondary="24" />
+<weapon name="Elven Spellblade" graphic="0x2D20" primary="27" secondary="2" twohanded="true" />
+<weapon name="Leafblade" graphic="0x2D22" primary="20" secondary="1" />
+<weapon name="Magical Shortbow" graphic="0x2D2B" primary="26" secondary="27" />
+<weapon name="Ornate Axe" graphic="0x2D28" primary="5" secondary="4" twohanded="true" />
+<weapon name="Radiant Scimitar" graphic="0x2D33" primary="13" secondary="24" />
+<weapon name="Rune Blade" graphic="0x2D32" primary="5" secondary="24" twohanded="true" />
+<weapon name="War Cleaver" graphic="0x2D2F" primary="5" secondary="24" />
+<weapon name="Wild Staff" graphic="0x2D25" primary="16" secondary="29" />
+<!-- Stygian Abyss -->
+<weapon name="Soul Glaive" graphic="0x406b" secondary="9" primary="1" />
+<weapon name="Cyclone" graphic="0x406c" secondary="30" primary="10" />
+<weapon name="Boomerang" graphic="0x4067" secondary="3" primary="31" />
+<weapon name="Bloodblade" graphic="0x8FE" primary="2" secondary="11" />
+<weapon name="Disc Mace" graphic="0x903" primary="1" secondary="5" />
+<weapon name="Dread Sword" graphic="0x90B" primary="4" secondary="3" />
+<weapon name="Dual Pointed Spear" graphic="0x904" primary="7" secondary="5" twohanded="true" />
+<weapon name="Dual Short Axes" graphic="0x8FD" primary="7" secondary="8" twohanded="true" />
+<weapon name="Gargish Axe" graphic="0x48B2" primary="4" secondary="6" twohanded="true" />
+<weapon name="Gargish Bardiche" graphic="0x48B4" primary="11" secondary="6" twohanded="true" />
+<weapon name="Gargish Battle Axe" graphic="0x48B0" primary="2" secondary="3" twohanded="true" />
+<weapon name="Gargish Bone Harvester" graphic="0x48C6" primary="11" secondary="9" />
+<weapon name="Gargish Butcher Knife" graphic="0x48B6" primary="8" secondary="5" />
+<weapon name="Gargish Cleaver" graphic="0x48AE" primary="2" secondary="8" />
+<weapon name="Gargish Dagger" graphic="0x902" primary="8" secondary="12" />
+<weapon name="Gargish Daisho" graphic="0x48D0" primary="20" secondary="7" twohanded="true" />
+<weapon name="Gargish Gnarled Staff" graphic="0x48B8" primary="3" secondary="11" twohanded="true" />
+<weapon name="Gargish Katana" graphic="0x48BA" primary="7" secondary="1" />
+<weapon name="Gargish Kryss" graphic="0x48BC" primary="1" secondary="8" />
+<weapon name="Gargish Lance" graphic="0x48CA" primary="6" secondary="3" />
+<weapon name="Gargish Maul" graphic="0x48C2" primary="4" secondary="3" />
+<weapon name="Gargish Pike" graphic="0x48C8" primary="11" secondary="8" twohanded="true" />
+<weapon name="Gargish Scythe" graphic="0x48C4" primary="2" secondary="11" twohanded="true" />
+<weapon name="Gargish Talwar" graphic="0x908" primary="13" secondary="6" twohanded="true" />
+<weapon name="Gargish Tekagi" graphic="0x48CE" primary="21" secondary="19" twohanded="true" />
+<weapon name="Gargish Tessen" graphic="0x48CC" primary="20" secondary="16" twohanded="true" />
+<weapon name="Gargish War Hammer" graphic="0x48C0" primary="13" secondary="4" />
+<weapon name="Glass Staff" graphic="0x905" primary="7" secondary="9" twohanded="true" />
+<weapon name="Glass Sword" graphic="0x90C" primary="2" secondary="9" />
+<weapon name="Serpentstone Staff" graphic="0x906" primary="4" secondary="6" twohanded="true" />
+<weapon name="Shortblade" graphic="0x907" primary="1" secondary="9" />
+<weapon name="Stone War Sword" graphic="0x900" primary="1" secondary="11" />
+</weapons>

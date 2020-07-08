@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<skills>	
+	<skill name="Alchemy" />
+	<skill name="Anatomy" passive="false" />
+	<skill name="Animal Lore" passive="false" />
+	<skill name="Item Identification" passive="false" />
+	<skill name="Arms Lore" passive="false" />
+	<skill name="Parrying" />
+	<skill name="Begging" passive="false" />
+	<skill name="Blacksmithy" />
+	<skill name="Bowcraft" />
+	<skill name="Peacemaking" passive="false" />
+	<skill name="Camping" />
+	<skill name="Carpentry" />
+	<skill name="Cartography" />
+	<skill name="Cooking" />
+	<skill name="Detecting Hidden" passive="false" />
+	<skill name="Discordance" passive="false" />
+	<skill name="Evaluating Intelligence" passive="false" />
+	<skill name="Healing" />
+	<skill name="Fishing" />
+	<skill name="Forensic Evaluation" />
+	<skill name="Herding" />
+	<skill name="Hiding" passive="false" />
+	<skill name="Provocation" passive="false" />
+	<skill name="Inscription" />
+	<skill name="Lockpicking" />
+	<skill name="Magery" />
+	<skill name="Resisting Spells" />
+	<skill name="Tactics" />
+	<skill name="Snooping" />
+	<skill name="Musicianship" />
+	<skill name="Poisoning" passive="false" />
+	<skill name="Archery" />
+	<skill name="Spirit Speak" passive="false" />
+	<skill name="Stealing" passive="false" />
+	<skill name="Tailoring" />
+	<skill name="Animal Taming" passive="false" />
+	<skill name="Taste Identification" passive="false" />
+	<skill name="Tinkering" />
+	<skill name="Tracking" passive="false" />
+	<skill name="Veterinary" />
+	<skill name="Swordsmanship" />
+	<skill name="Mace Fighting" />
+	<skill name="Fencing" />
+	<skill name="Wrestling" />
+	<skill name="Lumberjacking" />
+	<skill name="Mining" />
+	<skill name="Meditation" passive="false" />
+	<skill name="Stealth" passive="false" />
+	<skill name="Remove Trap" passive="false" />
+	<skill name="Necromancy" />
+	<skill name="Focus" />
+	<skill name="Chivalry" />
+	<skill name="Bushido" />
+	<skill name="Ninjitsu" />
+	<skill name="Spellweaving" />
+	<skill name="Mysticism" />
+	<skill name="Imbuing" passive="false" />
+	<skill name="Throwing" />
+</skills>

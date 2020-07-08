@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<properties>
+	<property group="Magic" name="Faster Casting" />
+	<property group="Magic" name="Faster Cast Recovery" />
+	<property group="Magic" name="Spell Damage Increase" />
+	<property group="Magic" name="Spell Channeling" />
+	<property group="Status" name="Hit Point Increase" />
+	<property group="Status" name="Stamina Increase" />
+	<property group="Status" name="Mana Increase" />
+	<property group="Status" name="Strength Bonus" />
+	<property group="Status" name="Dexterity Bonus" />
+	<property group="Status" name="Intelligence Bonus" />
+	<property group="Status" name="Intelligence Bonus" />
+	<property group="Status" name="Hit Point Regeneration" />
+	<property group="Status" name="Mana Regeneration" />
+	<property group="Others" name="Lower Reagent Cost" />
+	<property group="Others" name="Lower Mana Cost" />
+	<property group="Others" name="Defense Chance Increase" />
+	<property group="Weapons" name="Damage Increase" />
+	<property group="Weapons" name="Hit Chance Increase" />
+	<property group="Weapons" name="Hit Mana Leech" />
+	<property group="Weapons" name="Hit Life Leech" />
+	<property group="Weapons" name="Hit Stamina Leech" />
+	<property group="Weapons" name="Hit Lightning" />
+	<property group="Weapons" name="Hit Fireball" />
+	<property group="Weapons" name="Swing Speed Increase" />
+	<property group="Weapons" name="Balanced" />
+	<property group="Weapons" name="Velocity" />
+	<property group="Weapons" name="Splintering Weapon" />
+	<property group="Resistances" name="Physical Resist" />
+	<property group="Resistances" name="Fire Resist" />
+	<property group="Resistances" name="Cold Resist" />
+	<property group="Resistances" name="Poison Resist" />
+	<property group="Resistances" name="Energy Resist" />
+	<property group="Others" name="Luck" />
+</properties>

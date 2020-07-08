@@ -1,0 +1,42 @@
+<config>
+ <data name="LastProfile">Default.xml</data>
+ <data name="SmartProfile">True</data>
+ <data name="LootSystem">0</data>
+ <data name="NegotiateFeatures">True</data>
+ <data name="MinimizeToTray">False</data>
+ <data name="LightLevel">0</data>
+ <links/>
+ <snapshots>
+  <imageFormat>jpg</imageFormat>
+  <delay>0</delay>
+  <datetime>True</datetime>
+  <ownDeath>False</ownDeath>
+  <othersDeath>False</othersDeath>
+  <cropPixels>False</cropPixels>
+  <cropTop>0</cropTop>
+  <cropBottom>0</cropBottom>
+  <cropLeft>0</cropLeft>
+  <cropRight>0</cropRight>
+ </snapshots>
+ <mapuo>
+  <geometry width="323" x="846" y="127" height="281"/>
+  <zoom>1.5</zoom>
+  <borderless>False</borderless>
+  <smoothImage>False</smoothImage>
+  <visibilityLinked>True</visibilityLinked>
+  <openOnLogin>False</openOnLogin>
+  <displayStatics>True</displayStatics>
+  <displayGuardZones>True</displayGuardZones>
+  <displayDeathMarker>True</displayDeathMarker>
+  <displayCoordinates>True</displayCoordinates>
+  <displayDirections>True</displayDirections>
+  <displayPartyMembers>True</displayPartyMembers>
+  <displayGuildMembers>True</displayGuildMembers>
+  <displayTeamHits>True</displayTeamHits>
+ </mapuo>
+ <autoloot>
+  <item limit="100" name="scudo dell'Ordine: 0x1bc4" type="7108_1550684054279">
+   <property name="Cold Resist" intensity="0"/>
+  </item>
+ </autoloot>
+</config>

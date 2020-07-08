@@ -80,6 +80,7 @@ public static class UserPreferences
     public static IntPreference VisualizeFingerInput;
     public static IntPreference ShowModifierKeyButtons;
     public static IntPreference EnableAssistant;
+    public static IntPreference ShowDebugConsole;
 
     public static void Initialize()
     {
@@ -99,5 +100,6 @@ public static class UserPreferences
         ShowModifierKeyButtons = new IntPreference(nameof(ShowModifierKeyButtons), (int) PreferenceEnums.ShowModifierKeyButtons.Off);
         DisableTouchscreenKeyboardOnMobile = new IntPreference(nameof(DisableTouchscreenKeyboardOnMobile), (int) PreferenceEnums.DisableTouchscreenKeyboardOnMobile.Off);
         EnableAssistant = new IntPreference(nameof(EnableAssistant), (int) PreferenceEnums.EnableAssistant.Off);
+        ShowDebugConsole = new IntPreference(nameof(ShowDebugConsole), (int) PreferenceEnums.ShowDebugConsole.Off);
     }
 }

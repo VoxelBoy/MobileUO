@@ -68,30 +68,48 @@ namespace ClassicUO.IO
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            List<Task> tasks = new List<Task>
-            {
-                AnimationsLoader.Instance.Load(),
-                AnimDataLoader.Instance.Load(),
-                ArtLoader.Instance.Load(),
-                MapLoader.Instance.Load(),
-                ClilocLoader.Instance.Load(Settings.GlobalSettings.ClilocFile),
-                GumpsLoader.Instance.Load(),
-                FontsLoader.Instance.Load(),
-                HuesLoader.Instance.Load(),
-                TileDataLoader.Instance.Load(),
-                MultiLoader.Instance.Load(),
-                SkillsLoader.Instance.Load().ContinueWith(t => ProfessionLoader.Instance.Load()),
-                TexmapsLoader.Instance.Load(),
-                SpeechesLoader.Instance.Load(),
-                LightsLoader.Instance.Load(),
-                SoundsLoader.Instance.Load(),
-                MultiMapLoader.Instance.Load()
-            };
-
-            if (!Task.WhenAll(tasks).Wait(TimeSpan.FromSeconds(10)))
-            {
-                Log.Panic("Loading files timeout.");
-            }
+            // List<Task> tasks = new List<Task>
+            // {
+            //     AnimationsLoader.Instance.Load(),
+            //     AnimDataLoader.Instance.Load(),
+            //     ArtLoader.Instance.Load(),
+            //     MapLoader.Instance.Load(),
+            //     ClilocLoader.Instance.Load(Settings.GlobalSettings.ClilocFile),
+            //     GumpsLoader.Instance.Load(),
+            //     FontsLoader.Instance.Load(),
+            //     HuesLoader.Instance.Load(),
+            //     TileDataLoader.Instance.Load(),
+            //     MultiLoader.Instance.Load(),
+            //     SkillsLoader.Instance.Load().ContinueWith(t => ProfessionLoader.Instance.Load()),
+            //     TexmapsLoader.Instance.Load(),
+            //     SpeechesLoader.Instance.Load(),
+            //     LightsLoader.Instance.Load(),
+            //     SoundsLoader.Instance.Load(),
+            //     MultiMapLoader.Instance.Load()
+            // };
+            //
+            // if (!Task.WhenAll(tasks).Wait(TimeSpan.FromSeconds(10)))
+            // {
+            //     Log.Panic("Loading files timeout.");
+            // }
+            
+            AnimationsLoader.Instance.Load().Wait();
+            AnimDataLoader.Instance.Load().Wait();
+            ArtLoader.Instance.Load().Wait();
+            MapLoader.Instance.Load().Wait();
+            ClilocLoader.Instance.Load(Settings.GlobalSettings.ClilocFile).Wait();
+            GumpsLoader.Instance.Load().Wait();
+            FontsLoader.Instance.Load().Wait();
+            HuesLoader.Instance.Load().Wait();
+            TileDataLoader.Instance.Load().Wait();
+            MultiLoader.Instance.Load().Wait();
+            SkillsLoader.Instance.Load().Wait();
+            ProfessionLoader.Instance.Load().Wait();
+            TexmapsLoader.Instance.Load().Wait();
+            SpeechesLoader.Instance.Load().Wait();
+            LightsLoader.Instance.Load().Wait();
+            SoundsLoader.Instance.Load().Wait();
+            MultiMapLoader.Instance.Load().Wait();
 
 
             UOFileMul verdata = Verdata.File;

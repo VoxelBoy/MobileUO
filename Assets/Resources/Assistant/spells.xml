@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<spells>
+	<spell id="1" circle="1" name="Clumsy" words="Uus Jux" flag="Harmful" timeout="500" reagents="0xF7B,0xF88" />
+	<spell id="2" circle="1" name="Create Food" words="In Mani Ylem" flag="Neutral" timeout="500" reagents="0xF84,0xF85,0xF86" />
+	<spell id="3" circle="1" name="Feeblemind" words="Rel Wis" flag="Harmful" timeout="500" reagents="0xF85,0xF88" />
+	<spell id="4" circle="1" name="Heal" words="In Mani" flag="Beneficial" timeout="500" reagents="0xF84,0xF85,0xF8D" />
+	<spell id="5" circle="1" name="Magic Arrow" words="In Por Ylem" flag="Harmful" timeout="500" reagents="0xF8C" />
+	<spell id="6" circle="1" name="Night Sight" words="In Lor" flag="Beneficial" timeout="500" reagents="0xF8C,0xF8D" />
+	<spell id="7" circle="1" name="Reactive Armor" words="Flam Sanct" flag="Beneficial" timeout="500" reagents="0xF84,0xF8D,0xF8C" />
+	<spell id="8" circle="1" name="Weaken" words="Des Mani" flag="Harmful" timeout="500" reagents="0xF84,0xF88" />
+	<spell id="9" circle="2" name="Agility" words="Ex Uus" flag="Beneficial" timeout="750" reagents="0xF7B,0xF86" />
+	<spell id="10" circle="2" name="Cunning" words="Uus Wis" flag="Beneficial" timeout="750" reagents="0xF86,0xF88" />
+	<spell id="11" circle="2" name="Cure" words="An Nox" flag="Beneficial" timeout="750" reagents="0xF84,0xF85" />
+	<spell id="12" circle="2" name="Harm" words="An Mani" flag="Harmful" timeout="750" reagents="0xF88,0xF8D" />
+	<spell id="13" circle="2" name="Magic Trap" words="In Jux" flag="Neutral" timeout="750" reagents="0xF84,0xF8D,0xF8C" />
+	<spell id="14" circle="2" name="Magic Untrap" words="An Jux" flag="Neutral" timeout="750" reagents="0xF7B,0xF8C" />
+	<spell id="15" circle="2" name="Protection" words="Uus Sanct" flag="Beneficial" timeout="750" reagents="0xF84,0xF85,0xF8C" />
+	<spell id="16" circle="2" name="Strength" words="Uus Mani" flag="Beneficial" timeout="750" reagents="0xF86,0xF88" />
+	<spell id="17" circle="3" name="Bless" words="Rel Sanct" flag="Beneficial" timeout="1000" reagents="0xF84,0xF86" />
+	<spell id="18" circle="3" name="Fireball" words="Vas Flam" flag="Harmful" timeout="1000" reagents="0xF7A" />
+	<spell id="19" circle="3" name="Magic Lock" words="An Por" flag="Neutral" timeout="1000" reagents="0xF84,0xF7B,0xF8C" />
+	<spell id="20" circle="3" name="Poison" words="In Nox" flag="Harmful" timeout="1000" reagents="0xF88" />
+	<spell id="21" circle="3" name="Telekinesis" words="Ort Por Ylem" flag="Neutral" timeout="1000" reagents="0xF7B,0xF86" />
+	<spell id="22" circle="3" name="Teleport" words="Rel Por" flag="Neutral" timeout="1000" reagents="0xF7B,0xF86" />
+	<spell id="23" circle="3" name="Unlock" words="Ex Por" flag="Neutral" timeout="1000" reagents="0xF7B,0xF8C" />
+	<spell id="24" circle="3" name="Wall of Stone" words="In Sanct Ylem" flag="Neutral" timeout="1000" reagents="0xF7B,0xF84" />
+	<spell id="25" circle="4" name="Arch Cure" words="Vas An Nox" flag="Beneficial" timeout="1250" reagents="0xF84,0xF85,0xF86" />
+	<spell id="26" circle="4" name="Arch Protection" words="Vas Uus Sanct" flag="Beneficial" timeout="1250" reagents="0xF84,0xF85,0xF86,0xF8C" />
+	<spell id="27" circle="4" name="Curse" words="Des Sanct" flag="Harmful" timeout="1250" reagents="0xF88,0xF84,0xF8C" />
+	<spell id="28" circle="4" name="Fire Field" words="In Flam Grav" flag="Neutral" timeout="1250" reagents="0xF7A,0xF8D,0xF8C" />
+	<spell id="29" circle="4" name="Greater Heal" words="In Vas Mani" flag="Beneficial" timeout="1250" reagents="0xF84,0xF85,0xF86,0xF8D" />
+	<spell id="30" circle="4" name="Lightning" words="Por Ort Grav" flag="Harmful" timeout="1250" reagents="0xF86,0xF8C" />
+	<spell id="31" circle="4" name="Mana Drain" words="Ort Rel" flag="Harmful" timeout="1250" reagents="0xF7A,0xF86,0xF8D" />
+	<spell id="32" circle="4" name="Recall" words="Kal Ort Por" flag="Neutral" timeout="1250" reagents="0xF7A,0xF7B,0xF86" />
+	<spell id="33" circle="5" name="Blade Spirits" words="In Jux Hur Ylem" flag="Neutral" timeout="1500" reagents="0xF7A,0xF86,0xF88" />
+	<spell id="34" circle="5" name="Dispel Field" words="An Grav" flag="Neutral" timeout="1500" reagents="0xF7A,0xF8D,0xF8C,0xF84" />
+	<spell id="35" circle="5" name="Incognito" words="Kal In Ex" flag="Neutral" timeout="1500" reagents="0xF7B,0xF84,0xF88" />
+	<spell id="36" circle="5" name="Magic Reflection" words="In Jux Sanct" flag="Beneficial" timeout="1500" reagents="0xF84,0xF86,0xF8D" />
+	<spell id="37" circle="5" name="Mind Blast" words="Por Corp Wis" flag="Harmful" timeout="1500" reagents="0xF7A,0xF86,0xF88,0xF8C" />
+	<spell id="38" circle="5" name="Paralyze" words="An Ex Por" flag="Harmful" timeout="1500" reagents="0xF84,0xF86,0xF8D" />
+	<spell id="39" circle="5" name="Poison Field" words="In Nox Grav" flag="Neutral" timeout="1500" reagents="0xF7A,0xF88,0xF8D" />
+	<spell id="40" circle="5" name="Summon Creature" words="Kal Xen" flag="Neutral" timeout="1500" reagents="0xF7B,0xF86,0xF8D" />
+	<spell id="41" circle="6" name="Dispel" words="An Ort" flag="Neutral" timeout="1750" reagents="0xF84,0xF86,0xF8C" />
+	<spell id="42" circle="6" name="Energy Bolt" words="Corp Por" flag="Harmful" timeout="1750" reagents="0xF7A,0xF88" />
+	<spell id="43" circle="6" name="Explosion" words="Vas Ort Flam" flag="Harmful" timeout="1750" reagents="0xF7B,0xF86" />
+	<spell id="44" circle="6" name="Invisibility" words="An Lor Xen" flag="Beneficial" timeout="1750" reagents="0xF7B,0xF88" />
+	<spell id="45" circle="6" name="Mark" words="Kal Por Ylem" flag="Neutral" timeout="1750" reagents="0xF7A,0xF7B,0xF86" />
+	<spell id="46" circle="6" name="Mass Curse" words="Vas Des Sanct" flag="Harmful" timeout="1750" reagents="0xF84,0xF88,0xF86,0xF8C" />
+	<spell id="47" circle="6" name="Paralyze Field" words="In Ex Grav" flag="Neutral" timeout="1750" reagents="0xF7A,0xF85,0xF8D" />
+	<spell id="48" circle="6" name="Reveal" words="Wis Quas" flag="Neutral" timeout="1750" reagents="0xF7B,0xF8C" />
+	<spell id="49" circle="7" name="Chain Lightning" words="Vas Ort Grav" flag="Harmful" timeout="2000" reagents="0xF7A,0xF7B,0xF86,0xF8C" />
+	<spell id="50" circle="7" name="Energy Field" words="In Sanct Grav" flag="Neutral" timeout="2000" reagents="0xF7A,0xF86,0xF8D,0xF8C" />
+	<spell id="51" circle="7" name="Flame Strike" words="Kal Vas Flam" flag="Harmful" timeout="2000" reagents="0xF8D,0xF8C" />
+	<spell id="52" circle="7" name="Gate Travel" words="Vas Rel Por" flag="Neutral" timeout="2000" reagents="0xF7A,0xF86,0xF8C" />
+	<spell id="53" circle="7" name="Mana Vampire" words="Ort Sanct" flag="Harmful" timeout="2000" reagents="0xF7A,0xF7B,0xF86,0xF8D" />
+	<spell id="54" circle="7" name="Mass Dispel" words="Vas An Ort" flag="Neutral" timeout="2000" reagents="0xF84,0xF86,0xF7A,0xF8C" />
+	<spell id="55" circle="7" name="Meteor Swarm" words="Flam Kal Des Ylem" flag="Harmful" timeout="2000" reagents="0xF7B,0xF86,0xF8C,0xF8D" />
+	<spell id="56" circle="7" name="Polymorph" words="Vas Ylem Rel" flag="Neutral" timeout="2000" reagents="0xF7B,0xF8D,0xF86" />
+	<spell id="57" circle="8" name="Earthquake" words="In Vas Por" flag="Harmful" timeout="2250" reagents="0xF7B,0xF85,0xF86,0xF8C" />
+	<spell id="58" circle="8" name="Energy Vortex" words="Vas Corp Por" flag="Neutral" timeout="2250" reagents="0xF7B,0xF7A,0xF86,0xF88" />
+	<spell id="59" circle="8" name="Resurrection" words="An Corp" flag="Beneficial" timeout="2250" reagents="0xF7B,0xF84,0xF85" />
+	<spell id="60" circle="8" name="Summon Air Elemental" words="Kal Vas Xen Hur" flag="Neutral" timeout="2250" reagents="0xF7B,0xF86,0xF8D" />
+	<spell id="61" circle="8" name="Summon Daemon" words="Kal Vas Xen Corp" flag="Neutral" timeout="2250" reagents="0xF7B,0xF86,0xF8D,0xF8C" />
+	<spell id="62" circle="8" name="Summon Earth Elemental" words="Kal Vas Xen Ylem" flag="Neutral" timeout="2250" reagents="0xF7B,0xF86,0xF8D" />
+	<spell id="63" circle="8" name="Summon Fire Elemental" words="Kal Vas Xen Flam" flag="Neutral" timeout="2250" reagents="0xF7B,0xF86,0xF8D,0xF8C" />
+	<spell id="64" circle="8" name="Summon Water Elemental" words="Kal Vas Xen An Flam" flag="Neutral" timeout="2250" reagents="0xF7B,0xF86,0xF8D" />
+	<spell id="101" circle="10" name="Animate Dead" words="Uus Corp" flag="Neutral" timeout="1500" reagents="0xF8F,0xF7D" />
+	<spell id="102" circle="10" name="Blood Oath" words="In Jux Mani Xen" flag="Harmful" timeout="1500" reagents="0xF7D" />
+	<spell id="103" circle="10" name="Corpse Skin" words="In Agle Corp Ylem" flag="Harmful" timeout="1500" reagents="0xF78,0xF8F" />
+	<spell id="104" circle="10" name="Curse Weapon" words="An Sanct Gra Char" flag="Neutral" timeout="750" reagents="0xF8A" />
+	<spell id="105" circle="10" name="Evil Omen" words="Pas Tym An Sanct" flag="Harmful" timeout="750" reagents="0xF78,0xF8E" />
+	<spell id="106" circle="10" name="Horrific Beast" words="Rel Xen Vas Bal" flag="Neutral" timeout="2000" reagents="0xF78,0xF7D" />
+	<spell id="107" circle="10" name="Lich Form" words="Rel Xen Corp Ort" flag="Neutral" timeout="2000" reagents="0xF8F,0xF7D,0xF8E" />
+	<spell id="108" circle="10" name="Mind Rot" words="Wis An Ben" flag="Harmful" timeout="1500" reagents="0xF78,0xF8A,0xF7D" />
+	<spell id="109" circle="10" name="Pain Spike" words="In Sar" flag="Harmful" timeout="1000" reagents="0xF8F,0xF8A" />
+	<spell id="110" circle="10" name="Poison Strike" words="In Vas Nox" flag="Harmful" timeout="1500" reagents="0xF8E" />
+	<spell id="111" circle="10" name="Strangle" words="In Bal Nox" flag="Harmful" timeout="2000" reagents="0xF7D,0xF8E" />
+	<spell id="112" circle="10" name="Summon Familiar" words="Kal Xen Bal" flag="Neutral" timeout="2000" reagents="0xF78,0xF8F,0xF7D" />
+	<spell id="113" circle="10" name="Vampiric Embrace" words="Rel Xen An Sanct" flag="Neutral" timeout="2000" reagents="0xF78,0xF8E,0xF8A" />
+	<spell id="114" circle="10" name="Vengeful Spirit" words="Kal Xen Bal Beh" flag="Harmful" timeout="2000" reagents="0xF78,0xF8F,0xF8A" />
+	<spell id="115" circle="10" name="Wither" words="Kal Vas An Flam" flag="Harmful" timeout="1500" reagents="0xF8E,0xF8F,0xF8A" />
+	<spell id="116" circle="10" name="Wraith Form" words="Rel Xen Um" flag="Neutral" timeout="2000" reagents="0xF8E,0xF8A" />
+	<spell id="117" circle="10" name="Exorcism" words="Ort Corp Grav" flag="Neutral" timeout="2000" reagents="0xF8E,0xF8F" />
+	<spell id="201" circle="20" name="Cleanse by Fire" words="Expor Flamus" flag="Beneficial" timeout="1000" />
+	<spell id="202" circle="20" name="Close Wounds" words="Obsu Vulni" flag="Beneficial" timeout="1500" />
+	<spell id="203" circle="20" name="Consecrate Weapon" words="Consecrus Arma" flag="Neutral" timeout="500" />
+	<spell id="204" circle="20" name="Dispel Evil" words="Dispiro Malas" flag="Neutral" timeout="250" />
+	<spell id="205" circle="20" name="Divine Fury" words="Divinum Furis" flag="Neutral" timeout="1000" />
+	<spell id="206" circle="20" name="Enemy of One" words="Forul Solum" flag="Neutral" timeout="500" />
+	<spell id="207" circle="20" name="Holy Light" words="Augus Luminos" flag="Harmful" timeout="1750" />
+	<spell id="208" circle="20" name="Noble Sacrifice" words="Dium Prostra" flag="Beneficial" timeout="1500" />
+	<spell id="209" circle="20" name="Remove Curse" words="Extermo Vomica" flag="Beneficial" timeout="1500" />
+	<spell id="210" circle="20" name="Sacred Journey" words="Sanctum Viatas" flag="Neutral" timeout="1500" />
+	<spell id="401" circle="30" name="Honorable Execution" words="" flag="Harmful" />
+	<spell id="402" circle="30" name="Confidence" words="" flag="Beneficial" timeout="250" />
+	<spell id="403" circle="30" name="Evasion" words="" flag="Beneficial" timeout="250" />
+	<spell id="404" circle="30" name="Counter Attack" words="" flag="Harmful" timeout="250" />
+	<spell id="405" circle="30" name="Lightning Strike" words="" flag="Harmful" />
+	<spell id="406" circle="30" name="Momentum Strike" words="" flag="Harmful" />
+	<spell id="501" circle="40" name="Focus Attack" words="" flag="Harmful" />
+	<spell id="502" circle="40" name="Death Strike" words="" flag="Harmful"  />
+	<spell id="503" circle="40" name="Animal Form" words="" flag="Beneficial" timeout="1000" />
+	<spell id="504" circle="40" name="Ki Attack" words="" flag="Harmful" />
+	<spell id="505" circle="40" name="Surprise Attack" words="" flag="Harmful" />
+	<spell id="506" circle="40" name="Backstab" words="" flag="Harmful" />
+	<spell id="507" circle="40" name="Shadowjump" words="" flag="Neutral" timeout="1000" />
+	<spell id="508" circle="40" name="Mirror Image" words="" flag="Neutral" timeout="1500" />
+	<spell id="601" circle="50" name="Arcane Circle" words="Myrshalee" flag="Neutral" timeout="500" />
+	<spell id="602" circle="50" name="Gift of Renewal" words="Olorisstra" flag="Beneficial" timeout="3000" />
+	<spell id="603" circle="50" name="Immolating Weapon" words="Thalshara" flag="Neutral" timeout="1000" />
+	<spell id="604" circle="50" name="Attunement" words="Haeldril" flag="Harmful" timeout="1000" />
+	<spell id="605" circle="50" name="Thunderstorm" words="Erelonia" flag="Harmful" timeout="1500" />
+	<spell id="606" circle="50" name="Nature's Fury" words="Rauvvrae" flag="Neutral" timeout="1500" />
+	<spell id="607" circle="50" name="Summon Fey" words="Alalithra" flag="Neutral" timeout="1500" />
+	<spell id="608" circle="50" name="Summon Fiend" words="Nylisstra" flag="Neutral" timeout="2000" />
+	<spell id="609" circle="50" name="Reaper Form" words="Tarisstree" flag="Neutral" timeout="2500" />
+	<spell id="610" circle="50" name="Wildfire" words="Haelyn" flag="Harmful" timeout="2500" />
+	<spell id="611" circle="50" name="Essence of Wind" words="Anathrae" flag="Harmful" timeout="3000" />
+	<spell id="612" circle="50" name="Dryad Allure" words="Rathril" flag="Neutral" timeout="3000" />
+	<spell id="613" circle="50" name="Ethereal Voyage" words="Orlavdra" flag="Neutral" timeout="3500" />
+	<spell id="614" circle="50" name="Word of Death" words="Nyraxle" flag="Harmful" timeout="3500" />
+	<spell id="615" circle="50" name="Gift of Life" words="Illorae" flag="Beneficial" timeout="4000" />
+	<spell id="616" circle="50" name="Arcane Empowerment" words="Aslavdra" flag="Beneficial" timeout="3000" />
+	<spell id="678" circle="60" name="Nether Bolt" words="In Corp Ylem" flag="Harmful" timeout="1000" reagents="0xF7A,0xF8C" />
+	<spell id="679" circle="60" name="Healing Stone" words="Kal In Mani" flag="Neutral" timeout="5500" reagents="0xF7E,0xF84,0xF85,0xF8D" />
+	<spell id="680" circle="60" name="Purge Magic" words="An Ort Sanct" flag="Beneficial" timeout="1500" reagents="0xF84,0xF86,0xF8C,0xF81" />
+	<spell id="681" circle="60" name="Enchant" words="In Ort Ylem" flag="Neutral" timeout="750" reagents="0xF8D,0xF86,0xF8C" />
+	<spell id="682" circle="60" name="Sleep" words="In Zu" flag="Harmful" timeout="1750" reagents="0xF7B,0xF84,0xF8C,0x4077" />
+	<spell id="683" circle="60" name="Eagle Strike" words="Kal Por Xen" flag="Harmful" timeout="1750" reagents="0xF7B,0xF7E,0xF86,0xF8D" />
+	<spell id="684" circle="60" name="Animated Weapon" words="In Jux Por Ylem" flag="Neutral" timeout="2000" reagents="0xF7A,0xF86,0xF88,0xF7E" />
+	<spell id="685" circle="60" name="Stone Form" words="In Rel Ylem" flag="Neutral" timeout="2000" reagents="0xF7B,0xF81,0xF84" />
+	<spell id="686" circle="60" name="Spell Trigger" words="In Vas Ort Ex" flag="Neutral" timeout="5500" reagents="0xF84,0xF86,0xF8D,0x4077" />
+	<spell id="687" circle="60" name="Mass Sleep" words="Vas Zu" flag="Harmful" timeout="2000" reagents="0xF86,0xF88,0xF8C,0xF7B" />
+	<spell id="688" circle="60" name="Cleansing Winds" words="In Vas Mani Hur" flag="Beneficial" timeout="2000" reagents="0xF84,0xF85,0xF86,0x4077" />
+	<spell id="689" circle="60" name="Bombard" words="Corp Por Ylem" flag="Harmful" timeout="2750" reagents="0xF7B,0xF84,0xF8C,0x4077" />
+	<spell id="690" circle="60" name="Spell Plague" words="Vas Rel Jux Ort" flag="Harmful" timeout="2500" reagents="0xF80,0x4077,0xF88,0xF8C" />
+	<spell id="691" circle="60" name="Hail Storm" words="Kal Des Ylem" flag="Harmful" timeout="2500" reagents="0xF7A,0xF7B,0xF86,0x4077" />
+	<spell id="692" circle="60" name="Nether Cyclone" words="Grav Hur" flag="Harmful" timeout="2750" reagents="0xF7A,0xF8C" />
+	<spell id="693" circle="60" name="Rising Colossus" words="Kal Vas Xen Corp Ylem" flag="Neutral" timeout="2750" reagents="0xF80,0x4077,0xF81,0xF88" />
+	<spell id="701" circle="70" name="Inspire" words="Uus Por" flag="Beneficial" />
+	<spell id="702" circle="70" name="Invigorate" words="An Zu" flag="Beneficial" />
+	<spell id="703" circle="70" name="Resilience" words="Kal Mani Tym" flag="Beneficial" />
+	<spell id="704" circle="70" name="Perseverance" words="Uus Jux Sanct" flag="Beneficial" />
+	<spell id="705" circle="70" name="Tribulation" words="In Jux Hur Rel" flag="Harmful" />
+	<spell id="706" circle="70" name="Despair" words="Kal Des Mani Tym" flag="Harmful" />
+</spells>

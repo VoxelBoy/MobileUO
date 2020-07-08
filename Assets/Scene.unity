@@ -10756,7 +10756,6 @@ MonoBehaviour:
   clientRunner: {fileID: 204360075}
   errorPresenter: {fileID: 525914056}
   inGameDebugConsoleCanvas: {fileID: 168659848}
-  hideInGameDebugConsoleOnAwake: 1
   supportedServerConfigurations: {fileID: 11400000, guid: aa0315c2d8be18643b393647553a79e1,
     type: 2}
 --- !u!4 &2045117325

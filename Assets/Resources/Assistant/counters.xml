@@ -1,0 +1,11 @@
+<counters>
+    <counter name="band" graphic="0xe21" color="-1" text="Bandages" />
+    <counter name="bp" graphic="0xf7a" color="0" text="Black Pearl" />
+    <counter name="gl" graphic="0xf84" color="0" text="Garlic" />
+    <counter name="gs" graphic="0xf85" color="0" text="Ginseng" />
+    <counter name="mr" graphic="0xf86" color="0" text="Mandrake Root" />
+    <counter name="ns" graphic="0xf88" color="0" text="Nightshade" />
+    <counter name="sa" graphic="0xf8c" color="0" text="Sulfurous Ash" />
+    <counter name="ss" graphic="0xf8d" color="0" text="Spider&apos;s Silk" />
+    <counter name="bm" graphic="0xf7b" color="0" text="Blood Moss" />
+</counters>

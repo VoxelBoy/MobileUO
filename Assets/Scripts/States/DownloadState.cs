@@ -130,15 +130,12 @@ public class DownloadState : IState
         FilesToDownload = filesList;
         ResourcePathForFilesToDownload = resourcePathForFilesToDownload;
 
-        var hasAnimationFiles = FilesToDownload.Any(x =>
-        {
-            var fileNameLowerCase = x.ToLowerInvariant();
-            return fileNameLowerCase.Contains("anim.mul") || fileNameLowerCase.Contains("animationframe1.uop");
-        });
+        //Check that some of the essential UO files exist
+        var hasAnimationFiles = UtilityMethods.EssentialUoFilesExist(FilesToDownload);
                     
         if (FilesToDownload.Count == 0 || hasAnimationFiles == false)
         {
-            var error = "Download directory does not contain UO files such as anim.mul or AnimationFrame1.uop";
+            var error = "Download directory does not contain UO files such as anim.mul or animationFrame1.uop";
             StopAndShowError(error);
             return;
         }

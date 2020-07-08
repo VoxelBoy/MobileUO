@@ -1,0 +1,30 @@
+<bodies>
+  <humanoid>
+    <body name="Human Male" graphic="0x190" />
+    <body name="Human Female" graphic="0x191" />
+    <body name="Elf Male" graphic="0x25d" />
+    <body name="Elf Female" graphic="0x25e" />
+    <body name="Gargoly Male" graphic="0x29a" />
+    <body name="Gargoly Female" graphic="0x29b" />
+  </humanoid>
+  <transformation>
+    <!-- Necromancy -->
+    <body name="Horrific Beast" graphic="0x2ea" />
+    <body name="Wraith Male" graphic="0x2ec" />
+    <body name="Wraith Female" graphic="0x2eb" />
+    <body name="Lich" graphic="0x2ed" />
+    <body name="Vampire Male" graphic="0x2e8" />
+    <body name="Vampire Female" graphic="0x2e9" />
+    <!-- Ninjitsu -->
+    <body name="Llama" graphic="0xdc" />
+    <body name="Wolf" graphic="0x19" />
+    <!-- Spellweaving -->
+    <body name="Ethereal Voyage" graphic="0x302" />
+    <body name="Reaper Form" graphic="0x11d" />
+    <!-- Mysticism -->
+    <body name="Stone Form" graphic="0x2c1" />
+    <!-- Others -->
+    <body name="Tribal Male" graphic="0xb7" />
+    <body name="Tribal Female" graphic="0xb8" />
+  </transformation>
+</bodies>

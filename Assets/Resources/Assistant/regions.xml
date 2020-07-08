@@ -1,0 +1,889 @@
+<regions>
+   <Trammel>
+       <Towns>
+           <region name="Heartwood">
+               <rectangle x="6911" y="255" z="0" width="257" height="257" />
+           </region>
+           <region name="Cove">
+               <rectangle x="2200" y="1110" z="0" width="50" height="50" />
+               <rectangle x="2200" y="1160" z="0" width="86" height="86" />
+           </region>
+           <region name="Britain">
+               <rectangle x="1416" y="1498" z="-10" width="324" height="279" />
+               <rectangle x="1500" y="1408" z="0" width="46" height="90" />
+               <rectangle x="1385" y="1538" z="-10" width="31" height="239" />
+               <rectangle x="1416" y="1777" z="0" width="324" height="60" />
+               <rectangle x="1385" y="1777" z="0" width="31" height="130" />
+               <rectangle x="1093" y="1538" z="0" width="292" height="369" />
+               <rectangle x="1492" y="1602" z="0" width="8" height="19" />
+               <rectangle x="1500" y="1610" z="0" width="8" height="16" />
+               <rectangle x="1576" y="1584" z="0" width="24" height="16" />
+               <rectangle x="1456" y="1512" z="0" width="16" height="16" />
+               <rectangle x="1472" y="1512" z="0" width="8" height="8" />
+               <rectangle x="1424" y="1712" z="0" width="8" height="24" />
+               <rectangle x="1432" y="1712" z="0" width="8" height="12" />
+               <rectangle x="1486" y="1684" z="0" width="8" height="8" />
+               <rectangle x="1494" y="1676" z="0" width="8" height="24" />
+               <rectangle x="1608" y="1584" z="0" width="24" height="8" />
+               <rectangle x="1616" y="1576" z="0" width="8" height="8" />
+               <rectangle x="1544" y="1760" z="0" width="16" height="16" />
+               <rectangle x="1560" y="1760" z="0" width="8" height="8" />
+           </region>
+           <region name="A Wheatfield in Britain 1">
+               <rectangle x="1120" y="1776" z="0" width="32" height="32" />
+           </region>
+           <region name="A Wheatfield in Britain 2">
+               <rectangle x="1184" y="1808" z="0" width="32" height="32" />
+           </region>
+           <region name="A Wheatfield in Britain 3">
+               <rectangle x="1216" y="1872" z="0" width="32" height="32" />
+           </region>
+           <region name="A Carrot Field in Britain 1">
+               <rectangle x="1208" y="1712" z="0" width="16" height="24" />
+           </region>
+           <region name="An Onion Field in Britain 1">
+               <rectangle x="1224" y="1712" z="0" width="16" height="24" />
+           </region>
+           <region name="A Cabbage Field in Britain 1">
+               <rectangle x="1176" y="1672" z="0" width="16" height="23" />
+           </region>
+           <region name="A Turnip Field in Britain 1">
+               <rectangle x="1192" y="1672" z="0" width="16" height="24" />
+           </region>
+           <region name="A Wheatfield in Britain 4">
+               <rectangle x="1104" y="1608" z="0" width="32" height="32" />
+           </region>
+           <region name="A Wheatfield in Britain 5">
+               <rectangle x="1136" y="1560" z="0" width="32" height="32" />
+           </region>
+           <region name="A Turnip Field in Britain 2">
+               <rectangle x="1208" y="1592" z="0" width="16" height="24" />
+           </region>
+           <region name="A Carrot Field in Britain 2">
+               <rectangle x="1224" y="1592" z="0" width="16" height="24" />
+           </region>
+           <region name="Jhelom">
+               <rectangle x="1303" y="3670" z="0" width="189" height="225" />
+               <rectangle x="1338" y="3895" z="0" width="74" height="28" />
+               <rectangle x="1383" y="3951" z="0" width="109" height="94" />
+               <rectangle x="1352" y="3800" z="0" width="16" height="32" />
+               <rectangle x="1368" y="3808" z="0" width="8" height="16" />
+               <rectangle x="1432" y="3768" z="0" width="32" height="8" />
+               <rectangle x="1440" y="3776" z="0" width="24" height="8" />
+           </region>
+           <region name="Minoc">
+               <rectangle x="2411" y="366" z="0" width="135" height="241" />
+               <rectangle x="2548" y="495" z="0" width="72" height="55" />
+               <rectangle x="2564" y="585" z="0" width="3" height="42" />
+               <rectangle x="2567" y="585" z="0" width="61" height="61" />
+               <rectangle x="2499" y="627" z="0" width="68" height="63" />
+               <rectangle x="2457" y="397" z="0" width="40" height="8" />
+               <rectangle x="2465" y="405" z="0" width="8" height="8" />
+               <rectangle x="2481" y="405" z="0" width="8" height="8" />
+           </region>
+           <region name="New Haven">
+               <rectangle x="3423" y="2480" z="0" width="111" height="143" />
+           </region>
+           <region name="Gentle Rest Inn">
+               <rectangle x="3493" y="2513" z="0" width="10" height="10" />
+               <rectangle x="3503" y="2513" z="0" width="7" height="17" />
+           </region>
+           <region name="Trinsic">
+               <rectangle x="1856" y="2636" z="0" width="75" height="28" />
+               <rectangle x="1816" y="2664" z="0" width="283" height="231" />
+               <rectangle x="2099" y="2782" z="0" width="18" height="25" />
+               <rectangle x="1970" y="2895" z="0" width="47" height="32" />
+               <rectangle x="1796" y="2696" z="0" width="20" height="67" />
+               <rectangle x="1800" y="2796" z="0" width="16" height="52" />
+               <rectangle x="1834" y="2728" z="0" width="22" height="16" />
+               <rectangle x="2024" y="2784" z="0" width="16" height="20" />
+               <rectangle x="2026" y="2804" z="0" width="14" height="2" />
+               <rectangle x="2024" y="2806" z="0" width="16" height="7" />
+               <rectangle x="1923" y="2786" z="0" width="12" height="22" />
+               <rectangle x="1935" y="2786" z="0" width="7" height="14" />
+           </region>
+           <region name="Vesper">
+               <rectangle x="2893" y="598" z="0" width="121" height="50" />
+               <rectangle x="2816" y="648" z="0" width="249" height="365" />
+               <rectangle x="2734" y="944" z="0" width="82" height="4" />
+               <rectangle x="2728" y="948" z="0" width="88" height="53" />
+               <rectangle x="2952" y="864" z="0" width="16" height="32" />
+               <rectangle x="2968" y="872" z="0" width="8" height="16" />
+               <rectangle x="2776" y="952" z="0" width="16" height="32" />
+               <rectangle x="2768" y="960" z="0" width="8" height="16" />
+               <rectangle x="2892" y="901" z="0" width="16" height="19" />
+               <rectangle x="2908" y="904" z="0" width="8" height="8" />
+           </region>
+           <region name="Yew">
+               <rectangle x="92" y="656" z="0" width="349" height="225" />
+               <rectangle x="441" y="746" z="0" width="216" height="135" />
+               <rectangle x="258" y="881" z="0" width="399" height="380" />
+               <rectangle x="657" y="922" z="0" width="42" height="307" />
+               <rectangle x="657" y="806" z="0" width="17" height="28" />
+               <rectangle x="718" y="874" z="0" width="38" height="22" />
+               <rectangle x="600" y="808" z="0" width="24" height="24" />
+           </region>
+           <region name="A Field of Sheep in Yew 1">
+               <rectangle x="664" y="928" z="0" width="22" height="22" />
+           </region>
+           <region name="A Field of Sheep in Yew 2">
+               <rectangle x="664" y="1168" z="0" width="22" height="22" />
+           </region>
+           <region name="A Farm in Yew">
+               <rectangle x="560" y="1088" z="0" width="22" height="22" />
+           </region>
+           <region name="A Wheatfield in Yew 1">
+               <rectangle x="560" y="1232" z="0" width="16" height="16" />
+           </region>
+           <region name="A Wheatfield in Yew 2">
+               <rectangle x="368" y="1176" z="0" width="14" height="32" />
+           </region>
+           <region name="Wind">
+               <rectangle x="5294" y="19" z="0" width="72" height="120" />
+               <rectangle x="5132" y="58" z="0" width="81" height="68" />
+               <rectangle x="5197" y="126" z="0" width="55" height="78" />
+               <rectangle x="5132" y="3" z="0" width="70" height="55" />
+               <rectangle x="5252" y="112" z="0" width="42" height="58" />
+               <rectangle x="5213" y="98" z="0" width="39" height="28" />
+               <rectangle x="5279" y="57" z="0" width="15" height="55" />
+               <rectangle x="5252" y="170" z="0" width="32" height="8" />
+               <rectangle x="5286" y="25" z="0" width="8" height="32" />
+               <rectangle x="5252" y="178" z="0" width="20" height="5" />
+               <rectangle x="5252" y="183" z="0" width="10" height="10" />
+               <rectangle x="5159" y="15" z="0" width="25" height="9" />
+               <rectangle x="5159" y="24" z="0" width="9" height="16" />
+               <rectangle x="5175" y="24" z="0" width="9" height="8" />
+               <rectangle x="5212" y="159" z="0" width="9" height="24" />
+               <rectangle x="5221" y="171" z="0" width="7" height="12" />
+               <rectangle x="5206" y="164" z="0" width="6" height="15" />
+               <rectangle x="5303" y="28" z="0" width="16" height="14" />
+           </region>
+           <region name="Serpent's Hold">
+               <rectangle x="2868" y="3324" z="0" width="205" height="195" />
+               <rectangle x="2960" y="3400" z="0" width="16" height="16" />
+               <rectangle x="2968" y="3416" z="0" width="8" height="16" />
+               <rectangle x="3008" y="3450" z="0" width="14" height="14" />
+           </region>
+           <region name="Skara Brae">
+               <rectangle x="538" y="2107" z="0" width="150" height="190" />
+               <rectangle x="600" y="2232" z="0" width="16" height="24" />
+               <rectangle x="592" y="2240" z="0" width="8" height="16" />
+               <rectangle x="616" y="2240" z="0" width="8" height="16" />
+               <rectangle x="552" y="2168" z="0" width="16" height="24" />
+               <rectangle x="568" y="2168" z="0" width="8" height="8" />
+           </region>
+           <region name="Nujel'm">
+               <rectangle x="3475" y="1000" z="0" width="360" height="435" />
+               <rectangle x="3736" y="1184" z="0" width="16" height="23" />
+               <rectangle x="3728" y="1192" z="0" width="8" height="15" />
+               <rectangle x="3728" y="1288" z="0" width="23" height="15" />
+               <rectangle x="3728" y="1303" z="0" width="16" height="9" />
+               <rectangle x="3728" y="1312" z="0" width="12" height="8" />
+               <rectangle x="3728" y="1320" z="0" width="16" height="23" />
+               <rectangle x="3744" y="1328" z="0" width="7" height="15" />
+               <rectangle x="3760" y="1216" z="0" width="12" height="24" />
+               <rectangle x="3772" y="1220" z="0" width="4" height="16" />
+               <rectangle x="3776" y="1224" z="0" width="8" height="8" />
+               <rectangle x="3728" y="1248" z="0" width="16" height="24" />
+               <rectangle x="3744" y="1248" z="0" width="8" height="8" />
+               <rectangle x="3744" y="1264" z="0" width="8" height="8" />
+           </region>
+           <region name="Moonglow">
+               <rectangle x="4535" y="844" z="0" width="20" height="3" />
+               <rectangle x="4530" y="847" z="0" width="31" height="61" />
+               <rectangle x="4521" y="914" z="0" width="56" height="49" />
+               <rectangle x="4278" y="915" z="0" width="54" height="19" />
+               <rectangle x="4283" y="944" z="0" width="53" height="73" />
+               <rectangle x="4377" y="1015" z="-10" width="59" height="37" />
+               <rectangle x="4367" y="1050" z="0" width="142" height="145" />
+               <rectangle x="4539" y="1036" z="0" width="27" height="18" />
+               <rectangle x="4517" y="1053" z="0" width="23" height="22" />
+               <rectangle x="4389" y="1198" z="0" width="47" height="39" />
+               <rectangle x="4466" y="1211" z="0" width="32" height="25" />
+               <rectangle x="4700" y="1108" z="0" width="17" height="18" />
+               <rectangle x="4656" y="1127" z="0" width="26" height="13" />
+               <rectangle x="4678" y="1162" z="0" width="25" height="25" />
+               <rectangle x="4613" y="1196" z="0" width="23" height="22" />
+               <rectangle x="4646" y="1212" z="0" width="14" height="17" />
+               <rectangle x="4677" y="1214" z="0" width="26" height="22" />
+               <rectangle x="4622" y="1316" z="0" width="22" height="24" />
+               <rectangle x="4487" y="1353" z="0" width="59" height="21" />
+               <rectangle x="4477" y="1374" z="0" width="69" height="35" />
+               <rectangle x="4659" y="1387" z="0" width="40" height="40" />
+               <rectangle x="4549" y="1482" z="0" width="29" height="27" />
+               <rectangle x="4405" y="1451" z="0" width="23" height="23" />
+               <rectangle x="4483" y="1468" z="0" width="21" height="13" />
+           </region>
+           <region name="The Scholar's Inn">
+               <rectangle x="4384" y="1152" z="0" width="8" height="24" />
+               <rectangle x="4392" y="1160" z="0" width="16" height="8" />
+               <rectangle x="4400" y="1152" z="0" width="8" height="8" />
+               <rectangle x="4480" y="1056" z="0" width="8" height="16" />
+               <rectangle x="4488" y="1060" z="0" width="4" height="8" />
+               <rectangle x="4476" y="1060" z="0" width="4" height="8" />
+           </region>
+           <region name="Magincia">
+               <rectangle x="3653" y="2046" z="0" width="27" height="48" />
+               <rectangle x="3752" y="2046" z="0" width="52" height="48" />
+               <rectangle x="3680" y="2045" z="0" width="72" height="49" />
+               <rectangle x="3652" y="2094" z="0" width="160" height="180" />
+               <rectangle x="3649" y="2256" z="0" width="54" height="47" />
+               <rectangle x="3680" y="2152" z="0" width="24" height="8" />
+               <rectangle x="3720" y="2216" z="0" width="16" height="16" />
+           </region>
+           <region name="Buccaneer's Den" guarded="false">
+               <rectangle x="2612" y="2057" z="0" width="164" height="210" />
+               <rectangle x="2604" y="2065" z="0" width="8" height="189" />
+               <rectangle x="2712" y="2080" z="0" width="16" height="16" />
+               <rectangle x="2712" y="2096" z="0" width="8" height="8" />
+               <rectangle x="2664" y="2232" z="0" width="24" height="8" />
+               <rectangle x="2672" y="2240" z="0" width="16" height="8" />
+           </region>
+           <region name="Delucia">
+               <rectangle x="5123" y="3942" z="0" width="192" height="122" />
+               <rectangle x="5147" y="4064" z="0" width="125" height="20" />
+               <rectangle x="5235" y="3930" z="0" width="80" height="12" />
+               <rectangle x="5194" y="4053" z="0" width="10" height="20" />
+           </region>
+           <region name="Papua">
+               <rectangle x="5639" y="3095" z="0" width="192" height="223" />
+               <rectangle x="5831" y="3237" z="0" width="20" height="30" />
+               <rectangle x="5757" y="3150" z="0" width="24" height="24" />
+           </region>
+       </Towns>
+       <Dungeons>
+           <region name="Sanctuary">
+               <rectangle x="6144" y="0" z="0" width="255" height="255" />
+           </region>
+           <region name="Painted Caves">
+               <rectangle x="6240" y="850" z="0" width="75" height="70" />
+           </region>
+           <region name="Prism of Light">
+               <rectangle x="6400" y="0" z="0" width="221" height="255" />
+           </region>
+           <region name="Blighted Grove">
+               <rectangle x="6440" y="820" z="0" width="160" height="150" />
+           </region>
+           <region name="Palace of Paroxysmus">
+               <rectangle x="6191" y="311" z="0" width="370" height="360" />
+           </region>
+           <region name="Covetous">
+               <rectangle x="5376" y="1793" z="0" width="201" height="255" />
+               <rectangle x="5576" y="1791" z="0" width="57" height="257" />
+           </region>
+           <region name="Deceit">
+               <rectangle x="5122" y="518" z="0" width="248" height="252" />
+           </region>
+           <region name="Despise">
+               <rectangle x="5377" y="516" z="0" width="254" height="506" />
+           </region>
+           <region name="Destard">
+               <rectangle x="5120" y="770" z="0" width="251" height="258" />
+           </region>
+           <region name="Hythloth">
+               <rectangle x="5898" y="2" z="0" width="238" height="244" />
+           </region>
+           <region name="Shame">
+               <rectangle x="5377" y="2" z="0" width="257" height="260" />
+               <rectangle x="5635" y="2" z="0" width="260" height="124" />
+           </region>
+           <region name="Wrong">
+               <rectangle x="5633" y="511" z="0" width="253" height="510" />
+           </region>
+           <region name="Terathan Keep">
+               <rectangle x="5404" y="3099" z="0" width="77" height="68" />
+               <rectangle x="5120" y="1530" z="0" width="254" height="258" />
+           </region>
+           <region name="Fire">
+               <rectangle x="5635" y="1285" z="0" width="245" height="235" />
+           </region>
+           <region name="Ice">
+               <rectangle x="5668" y="130" z="0" width="220" height="138" />
+               <rectangle x="5800" y="319" z="0" width="63" height="65" />
+               <rectangle x="5654" y="300" z="0" width="54" height="40" />
+           </region>
+           <region name="Misc Dungeons">
+               <rectangle x="5886" y="1281" z="0" width="257" height="254" />
+           </region>
+           <region name="Orc Cave">
+               <rectangle x="0" y="0" z="0" width="0" height="0" />
+               <rectangle x="0" y="0" z="0" width="0" height="0" />
+               <rectangle x="0" y="0" z="0" width="0" height="0" />
+           </region>
+       </Dungeons>
+       <Guarded>
+           <region name="Moongates">
+               <rectangle x="1330" y="1991" z="0" width="13" height="13" />
+               <rectangle x="1494" y="3767" z="0" width="12" height="11" />
+               <rectangle x="2694" y="685" z="0" width="15" height="16" />
+               <rectangle x="1823" y="2943" z="0" width="11" height="11" />
+               <rectangle x="761" y="741" z="0" width="19" height="21" />
+               <rectangle x="638" y="2062" z="0" width="12" height="11" />
+               <rectangle x="4459" y="1276" z="0" width="16" height="16" />
+               <rectangle x="3554" y="2132" z="0" width="18" height="18" />
+           </region>
+           <region name="New Haven Moongate">
+               <rectangle x="3446" y="2674" z="0" width="10" height="10" />
+           </region>
+       </Guarded>
+       <Forest>
+           <region name="Britain Graveyard">
+               <rectangle x="1333" y="1441" z="0" width="84" height="82" />
+           </region>
+           <region name="Jhelom Islands">
+               <rectangle x="1111" y="3567" z="0" width="33" height="21" />
+               <rectangle x="1078" y="3588" z="0" width="124" height="121" />
+               <rectangle x="1224" y="3592" z="0" width="309" height="473" />
+           </region>
+           <region name="Haven Island">
+               <rectangle x="3314" y="2345" z="0" width="500" height="750" />
+           </region>
+           <region name="Wrong Entrance">
+               <rectangle x="1939" y="215" z="0" width="134" height="137" />
+           </region>
+           <region name="Covetous Entrance">
+               <rectangle x="2433" y="846" z="0" width="128" height="128" />
+           </region>
+           <region name="Despise Entrance">
+               <rectangle x="1289" y="1064" z="0" width="32" height="37" />
+           </region>
+           <region name="Despise Passage">
+               <rectangle x="1338" y="1060" z="0" width="51" height="62" />
+               <rectangle x="1354" y="1122" z="0" width="42" height="121" />
+               <rectangle x="1349" y="1122" z="0" width="5" height="102" />
+           </region>
+       </Forest>
+   </Trammel>
+   <Felucca>
+       <Towns>
+           <region name="Heartwood">
+               <rectangle x="6911" y="255" z="0" width="257" height="257" />
+           </region>
+           <region name="Cove">
+               <rectangle x="2200" y="1110" z="0" width="50" height="50" />
+               <rectangle x="2200" y="1160" z="0" width="86" height="86" />
+           </region>
+           <region name="Britain">
+               <rectangle x="1416" y="1498" z="-10" width="324" height="279" />
+               <rectangle x="1500" y="1408" z="0" width="46" height="90" />
+               <rectangle x="1385" y="1538" z="-10" width="31" height="239" />
+               <rectangle x="1416" y="1777" z="0" width="324" height="60" />
+               <rectangle x="1385" y="1777" z="0" width="31" height="130" />
+               <rectangle x="1093" y="1538" z="0" width="292" height="369" />
+               <rectangle x="1492" y="1602" z="0" width="8" height="19" />
+               <rectangle x="1500" y="1610" z="0" width="8" height="16" />
+               <rectangle x="1576" y="1584" z="0" width="24" height="16" />
+               <rectangle x="1456" y="1512" z="0" width="16" height="16" />
+               <rectangle x="1472" y="1512" z="0" width="8" height="8" />
+               <rectangle x="1486" y="1684" z="0" width="8" height="8" />
+               <rectangle x="1494" y="1676" z="0" width="8" height="24" />
+               <rectangle x="1424" y="1712" z="0" width="8" height="24" />
+               <rectangle x="1432" y="1712" z="0" width="8" height="12" />
+               <rectangle x="1608" y="1584" z="0" width="24" height="8" />
+               <rectangle x="1616" y="1576" z="0" width="8" height="8" />
+               <rectangle x="1544" y="1760" z="0" width="16" height="16" />
+               <rectangle x="1560" y="1760" z="0" width="8" height="8" />
+           </region>
+           <region name="A Wheatfield in Britain 1">
+               <rectangle x="1120" y="1776" z="0" width="32" height="32" />
+           </region>
+           <region name="A Wheatfield in Britain 2">
+               <rectangle x="1184" y="1808" z="0" width="32" height="32" />
+           </region>
+           <region name="A Wheatfield in Britain 3">
+               <rectangle x="1216" y="1872" z="0" width="32" height="32" />
+           </region>
+           <region name="A Carrot Field in Britain 1">
+               <rectangle x="1208" y="1712" z="0" width="16" height="24" />
+           </region>
+           <region name="An Onion Field in Britain 1">
+               <rectangle x="1224" y="1712" z="0" width="16" height="24" />
+           </region>
+           <region name="A Cabbage Field in Britain 1">
+               <rectangle x="1176" y="1672" z="0" width="16" height="23" />
+           </region>
+           <region name="A Turnip Field in Britain 1">
+               <rectangle x="1192" y="1672" z="0" width="16" height="24" />
+           </region>
+           <region name="A Wheatfield in Britain 4">
+               <rectangle x="1104" y="1608" z="0" width="32" height="32" />
+           </region>
+           <region name="A Wheatfield in Britain 5">
+               <rectangle x="1136" y="1560" z="0" width="32" height="32" />
+           </region>
+           <region name="A Turnip Field in Britain 2">
+               <rectangle x="1208" y="1592" z="0" width="16" height="24" />
+           </region>
+           <region name="A Carrot Field in Britain 2">
+               <rectangle x="1224" y="1592" z="0" width="16" height="24" />
+           </region>
+           <region name="Jhelom">
+               <rectangle x="1303" y="3670" z="0" width="189" height="225" />
+               <rectangle x="1338" y="3895" z="0" width="74" height="28" />
+               <rectangle x="1383" y="3951" z="0" width="109" height="94" />
+               <rectangle x="1352" y="3800" z="0" width="16" height="32" />
+               <rectangle x="1368" y="3808" z="0" width="8" height="16" />
+               <rectangle x="1432" y="3768" z="0" width="32" height="8" />
+               <rectangle x="1440" y="3776" z="0" width="24" height="8" />
+           </region>
+           <region name="Minoc">
+               <rectangle x="2411" y="366" z="0" width="135" height="241" />
+               <rectangle x="2548" y="495" z="0" width="72" height="55" />
+               <rectangle x="2564" y="585" z="0" width="3" height="42" />
+               <rectangle x="2567" y="585" z="0" width="61" height="61" />
+               <rectangle x="2499" y="627" z="0" width="68" height="63" />
+               <rectangle x="2457" y="397" z="0" width="40" height="8" />
+               <rectangle x="2465" y="405" z="0" width="8" height="8" />
+               <rectangle x="2481" y="405" z="0" width="8" height="8" />
+           </region>
+           <region name="Ocllo">
+               <rectangle x="3587" y="2456" z="0" width="119" height="99" />
+               <rectangle x="3706" y="2460" z="0" width="2" height="95" />
+               <rectangle x="3587" y="2555" z="0" width="106" height="73" />
+               <rectangle x="3590" y="2628" z="0" width="103" height="58" />
+               <rectangle x="3693" y="2555" z="0" width="61" height="144" />
+               <rectangle x="3754" y="2558" z="0" width="7" height="141" />
+               <rectangle x="3761" y="2555" z="0" width="7" height="144" />
+               <rectangle x="3695" y="2699" z="0" width="66" height="13" />
+           </region>
+           <region name="Ocllo">
+               <rectangle x="3664" y="2608" z="0" width="16" height="16" />
+               <rectangle x="3664" y="2640" z="0" width="8" height="16" />
+               <rectangle x="3672" y="2648" z="0" width="8" height="8" />
+           </region>
+           <region name="Trinsic">
+               <rectangle x="1856" y="2636" z="0" width="75" height="28" />
+               <rectangle x="1816" y="2664" z="0" width="283" height="231" />
+               <rectangle x="2099" y="2782" z="0" width="18" height="25" />
+               <rectangle x="1970" y="2895" z="0" width="47" height="32" />
+               <rectangle x="1796" y="2696" z="0" width="20" height="67" />
+               <rectangle x="1800" y="2796" z="0" width="16" height="52" />
+               <rectangle x="1834" y="2728" z="0" width="22" height="16" />
+               <rectangle x="2024" y="2784" z="0" width="16" height="20" />
+               <rectangle x="2026" y="2804" z="0" width="14" height="2" />
+               <rectangle x="2024" y="2806" z="0" width="16" height="7" />
+               <rectangle x="1923" y="2786" z="0" width="12" height="22" />
+               <rectangle x="1935" y="2786" z="0" width="7" height="14" />
+           </region>
+           <region name="Vesper">
+               <rectangle x="2893" y="598" z="0" width="121" height="50" />
+               <rectangle x="2816" y="648" z="0" width="249" height="365" />
+               <rectangle x="2734" y="944" z="0" width="82" height="4" />
+               <rectangle x="2728" y="948" z="0" width="88" height="53" />
+               <rectangle x="2952" y="864" z="0" width="16" height="32" />
+               <rectangle x="2968" y="872" z="0" width="8" height="16" />
+               <rectangle x="2776" y="952" z="0" width="16" height="32" />
+               <rectangle x="2768" y="960" z="0" width="8" height="16" />
+               <rectangle x="2892" y="901" z="0" width="16" height="19" />
+               <rectangle x="2908" y="904" z="0" width="8" height="8" />
+           </region>
+           <region name="Yew">
+               <rectangle x="92" y="656" z="0" width="349" height="225" />
+               <rectangle x="441" y="746" z="0" width="216" height="135" />
+               <rectangle x="258" y="881" z="0" width="399" height="380" />
+               <rectangle x="657" y="922" z="0" width="42" height="307" />
+               <rectangle x="657" y="806" z="0" width="17" height="28" />
+               <rectangle x="718" y="874" z="0" width="38" height="22" />
+               <rectangle x="600" y="808" z="0" width="24" height="24" />
+           </region>
+           <region name="A Field of Sheep in Yew 1">
+               <rectangle x="664" y="928" z="0" width="22" height="22" />
+           </region>
+           <region name="A Field of Sheep in Yew 2">
+               <rectangle x="664" y="1168" z="0" width="22" height="22" />
+           </region>
+           <region name="A Farm in Yew">
+               <rectangle x="560" y="1088" z="0" width="22" height="22" />
+           </region>
+           <region name="A Wheatfield in Yew 1">
+               <rectangle x="560" y="1232" z="0" width="16" height="16" />
+           </region>
+           <region name="A Wheatfield in Yew 2">
+               <rectangle x="368" y="1176" z="0" width="14" height="32" />
+           </region>
+           <region name="Wind">
+               <rectangle x="5294" y="19" z="0" width="72" height="120" />
+               <rectangle x="5132" y="58" z="0" width="81" height="68" />
+               <rectangle x="5197" y="126" z="0" width="55" height="78" />
+               <rectangle x="5132" y="3" z="0" width="70" height="55" />
+               <rectangle x="5252" y="112" z="0" width="42" height="58" />
+               <rectangle x="5213" y="98" z="0" width="39" height="28" />
+               <rectangle x="5279" y="57" z="0" width="15" height="55" />
+               <rectangle x="5252" y="170" z="0" width="32" height="8" />
+               <rectangle x="5286" y="25" z="0" width="8" height="32" />
+               <rectangle x="5252" y="178" z="0" width="20" height="5" />
+               <rectangle x="5252" y="183" z="0" width="10" height="10" />
+               <rectangle x="5159" y="15" z="0" width="25" height="9" />
+               <rectangle x="5159" y="24" z="0" width="9" height="16" />
+               <rectangle x="5175" y="24" z="0" width="9" height="8" />
+               <rectangle x="5212" y="159" z="0" width="9" height="24" />
+               <rectangle x="5221" y="171" z="0" width="7" height="12" />
+               <rectangle x="5206" y="164" z="0" width="6" height="15" />
+               <rectangle x="5303" y="28" z="0" width="16" height="14" />
+           </region>
+           <region name="Serpent's Hold">
+               <rectangle x="2868" y="3324" z="0" width="205" height="195" />
+               <rectangle x="2960" y="3400" z="0" width="16" height="16" />
+               <rectangle x="2968" y="3416" z="0" width="8" height="16" />
+               <rectangle x="3008" y="3450" z="0" width="14" height="14" />
+           </region>
+           <region name="Skara Brae">
+               <rectangle x="538" y="2107" z="0" width="150" height="190" />
+               <rectangle x="600" y="2232" z="0" width="16" height="24" />
+               <rectangle x="592" y="2240" z="0" width="8" height="16" />
+               <rectangle x="616" y="2240" z="0" width="8" height="16" />
+               <rectangle x="552" y="2168" z="0" width="16" height="24" />
+               <rectangle x="568" y="2168" z="0" width="8" height="8" />
+           </region>
+           <region name="Nujel'm">
+               <rectangle x="3475" y="1000" z="0" width="360" height="435" />
+               <rectangle x="3736" y="1184" z="0" width="16" height="23" />
+               <rectangle x="3728" y="1192" z="0" width="8" height="15" />
+               <rectangle x="3728" y="1288" z="0" width="23" height="15" />
+               <rectangle x="3728" y="1303" z="0" width="16" height="9" />
+               <rectangle x="3728" y="1312" z="0" width="12" height="8" />
+               <rectangle x="3728" y="1320" z="0" width="16" height="23" />
+               <rectangle x="3744" y="1328" z="0" width="7" height="15" />
+               <rectangle x="3760" y="1216" z="0" width="12" height="24" />
+               <rectangle x="3772" y="1220" z="0" width="4" height="16" />
+               <rectangle x="3776" y="1224" z="0" width="8" height="8" />
+               <rectangle x="3728" y="1248" z="0" width="16" height="24" />
+               <rectangle x="3744" y="1264" z="0" width="8" height="8" />
+               <rectangle x="3744" y="1248" z="0" width="8" height="8" />
+           </region>
+           <region name="Moonglow">
+               <rectangle x="4535" y="844" z="0" width="20" height="3" />
+               <rectangle x="4530" y="847" z="0" width="31" height="61" />
+               <rectangle x="4521" y="914" z="0" width="56" height="49" />
+               <rectangle x="4278" y="915" z="0" width="54" height="19" />
+               <rectangle x="4283" y="944" z="0" width="53" height="73" />
+               <rectangle x="4377" y="1015" z="-10" width="59" height="37" />
+               <rectangle x="4367" y="1050" z="0" width="142" height="145" />
+               <rectangle x="4539" y="1036" z="0" width="27" height="18" />
+               <rectangle x="4517" y="1053" z="0" width="23" height="22" />
+               <rectangle x="4389" y="1198" z="0" width="47" height="39" />
+               <rectangle x="4466" y="1211" z="0" width="32" height="25" />
+               <rectangle x="4700" y="1108" z="0" width="17" height="18" />
+               <rectangle x="4656" y="1127" z="0" width="26" height="13" />
+               <rectangle x="4678" y="1162" z="0" width="25" height="25" />
+               <rectangle x="4613" y="1196" z="0" width="23" height="22" />
+               <rectangle x="4646" y="1212" z="0" width="14" height="17" />
+               <rectangle x="4677" y="1214" z="0" width="26" height="22" />
+               <rectangle x="4622" y="1316" z="0" width="22" height="24" />
+               <rectangle x="4487" y="1353" z="0" width="59" height="21" />
+               <rectangle x="4477" y="1374" z="0" width="69" height="35" />
+               <rectangle x="4659" y="1387" z="0" width="40" height="40" />
+               <rectangle x="4549" y="1482" z="0" width="29" height="27" />
+               <rectangle x="4405" y="1451" z="0" width="23" height="23" />
+               <rectangle x="4483" y="1468" z="0" width="21" height="13" />
+               <rectangle x="4384" y="1152" z="0" width="8" height="24" />
+               <rectangle x="4392" y="1160" z="0" width="16" height="8" />
+               <rectangle x="4400" y="1152" z="0" width="8" height="8" />
+               <rectangle x="4480" y="1056" z="0" width="8" height="16" />
+               <rectangle x="4488" y="1060" z="0" width="4" height="8" />
+               <rectangle x="4476" y="1060" z="0" width="4" height="8" />
+           </region>
+           <region name="Magincia">
+               <rectangle x="3653" y="2046" z="0" width="27" height="48" />
+               <rectangle x="3752" y="2046" z="0" width="52" height="48" />
+               <rectangle x="3680" y="2045" z="0" width="72" height="49" />
+               <rectangle x="3652" y="2094" z="0" width="160" height="180" />
+               <rectangle x="3649" y="2256" z="0" width="54" height="47" />
+               <rectangle x="3680" y="2152" z="0" width="24" height="8" />
+               <rectangle x="3720" y="2216" z="0" width="16" height="16" />
+           </region>
+           <region name="Buccaneer's Den" guarded="false">
+               <rectangle x="2612" y="2057" z="0" width="164" height="210" />
+               <rectangle x="2604" y="2065" z="0" width="8" height="189" />
+               <rectangle x="2712" y="2080" z="0" width="16" height="16" />
+               <rectangle x="2712" y="2096" z="0" width="8" height="8" />
+               <rectangle x="2664" y="2232" z="0" width="24" height="8" />
+               <rectangle x="2672" y="2240" z="0" width="16" height="8" />
+           </region>
+           <region name="Delucia">
+               <rectangle x="5123" y="3942" z="0" width="192" height="122" />
+               <rectangle x="5147" y="4064" z="0" width="125" height="20" />
+               <rectangle x="5235" y="3930" z="0" width="80" height="12" />
+               <rectangle x="5194" y="4053" z="0" width="10" height="20" />
+           </region>
+           <region name="Papua">
+               <rectangle x="5639" y="3095" z="0" width="192" height="223" />
+               <rectangle x="5831" y="3237" z="0" width="20" height="30" />
+               <rectangle x="5757" y="3150" z="0" width="24" height="24" />
+           </region>
+       </Towns>
+       <Dungeons>
+           <region name="Sanctuary">
+               <rectangle x="6144" y="0" z="0" width="255" height="255" />
+           </region>
+           <region name="Painted Caves">
+               <rectangle x="6240" y="850" z="0" width="75" height="70" />
+           </region>
+           <region name="Prism of Light">
+               <rectangle x="6400" y="0" z="0" width="221" height="255" />
+           </region>
+           <region name="Blighted Grove">
+               <rectangle x="6440" y="820" z="0" width="160" height="150" />
+           </region>
+           <region name="Palace of Paroxysmus">
+               <rectangle x="6191" y="311" z="0" width="370" height="360" />
+           </region>
+           <region name="Covetous">
+               <rectangle x="5376" y="1793" z="0" width="201" height="255" />
+               <rectangle x="5576" y="1791" z="0" width="57" height="257" />
+           </region>
+           <region name="Deceit">
+               <rectangle x="5122" y="518" z="0" width="248" height="252" />
+           </region>
+           <region name="Despise">
+               <rectangle x="5377" y="516" z="0" width="254" height="506" />
+           </region>
+           <region name="Destard">
+               <rectangle x="5120" y="770" z="0" width="251" height="258" />
+           </region>
+           <region name="Hythloth">
+               <rectangle x="5898" y="2" z="0" width="238" height="244" />
+           </region>
+           <region name="Khaldun">
+               <rectangle x="5381" y="1284" z="0" width="247" height="225" />
+           </region>
+           <region name="Shame">
+               <rectangle x="5377" y="2" z="0" width="257" height="260" />
+               <rectangle x="5635" y="2" z="0" width="260" height="124" />
+           </region>
+           <region name="Wrong">
+               <rectangle x="5633" y="511" z="0" width="253" height="510" />
+           </region>
+           <region name="Terathan Keep">
+               <rectangle x="5404" y="3099" z="0" width="77" height="68" />
+               <rectangle x="5120" y="1530" z="0" width="254" height="258" />
+           </region>
+           <region name="Fire">
+               <rectangle x="5635" y="1285" z="0" width="245" height="235" />
+           </region>
+           <region name="Ice">
+               <rectangle x="5668" y="130" z="0" width="220" height="138" />
+               <rectangle x="5800" y="319" z="0" width="63" height="65" />
+               <rectangle x="5654" y="300" z="0" width="54" height="40" />
+           </region>
+           <region name="Misc Dungeons">
+               <rectangle x="5886" y="1281" z="0" width="257" height="254" />
+           </region>
+           <region name="Orc Cave">
+               <rectangle x="0" y="0" z="0" width="0" height="0" />
+               <rectangle x="0" y="0" z="0" width="0" height="0" />
+               <rectangle x="0" y="0" z="0" width="0" height="0" />
+           </region>
+       </Dungeons>
+       <Guarded>
+           <region name="Moongates">
+               <rectangle x="1330" y="1991" z="0" width="13" height="13" />
+               <rectangle x="1494" y="3767" z="0" width="12" height="11" />
+               <rectangle x="2694" y="685" z="0" width="15" height="16" />
+               <rectangle x="1823" y="2943" z="0" width="11" height="11" />
+               <rectangle x="761" y="741" z="0" width="19" height="21" />
+               <rectangle x="638" y="2062" z="0" width="12" height="11" />
+               <rectangle x="4459" y="1276" z="0" width="16" height="16" />
+               <rectangle x="3554" y="2132" z="0" width="18" height="18" />
+           </region>
+       </Guarded>
+       <Forest>
+           <region name="Britain Graveyard">
+               <rectangle x="1333" y="1441" z="0" width="84" height="82" />
+           </region>
+           <region name="Jhelom Islands">
+               <rectangle x="1111" y="3567" z="0" width="33" height="21" />
+               <rectangle x="1078" y="3588" z="0" width="124" height="121" />
+               <rectangle x="1224" y="3592" z="0" width="309" height="473" />
+           </region>
+           <region name="Wrong Entrance">
+               <rectangle x="1939" y="215" z="0" width="134" height="137" />
+           </region>
+           <region name="Covetous Entrance">
+               <rectangle x="2433" y="846" z="0" width="128" height="128" />
+           </region>
+           <region name="Despise Entrance">
+               <rectangle x="1289" y="1064" z="0" width="32" height="37" />
+           </region>
+           <region name="Despise Passage">
+               <rectangle x="1338" y="1060" z="0" width="51" height="62" />
+               <rectangle x="1354" y="1122" z="0" width="42" height="121" />
+               <rectangle x="1349" y="1122" z="0" width="5" height="102" />
+           </region>
+       </Forest>
+   </Felucca>
+   <Ilshenar>
+       <Towns>
+           <region name="Gargoyle City">
+               <rectangle x="824" y="552" z="0" width="32" height="176" />
+               <rectangle x="752" y="576" z="0" width="72" height="128" />
+               <rectangle x="856" y="576" z="0" width="48" height="128" />
+               <rectangle x="904" y="624" z="0" width="24" height="32" />
+               <rectangle x="827" y="694" z="0" width="26" height="33" />
+           </region>
+           <region name="Montor" guarded="false">
+               <rectangle x="1576" y="272" z="0" width="144" height="96" />
+               <rectangle x="1616" y="200" z="0" width="80" height="72" />
+               <rectangle x="1696" y="144" z="0" width="40" height="128" />
+               <rectangle x="1736" y="144" z="0" width="32" height="64" />
+           </region>
+           <region name="Ancient Citadel" guarded="false">
+               <rectangle x="1448" y="496" z="0" width="104" height="104" />
+           </region>
+           <region name="Alexandretta's Bowl" guarded="false">
+               <rectangle x="1272" y="352" z="0" width="168" height="240" />
+           </region>
+           <region name="Lenmir Anfinmotas" guarded="false">
+               <rectangle x="1560" y="792" z="0" width="232" height="120" />
+           </region>
+           <region name="Reg Volon" guarded="false">
+               <rectangle x="1328" y="1008" z="0" width="80" height="112" />
+           </region>
+           <region name="Lake Shire" guarded="false">
+               <rectangle x="1144" y="1072" z="0" width="120" height="128" />
+           </region>
+           <region name="Bet-Lem Reg" guarded="false">
+               <rectangle x="1232" y="936" z="0" width="40" height="48" />
+           </region>
+           <region name="Mistas" guarded="false">
+               <rectangle x="744" y="984" z="0" width="168" height="168" />
+               <rectangle x="744" y="1152" z="0" width="48" height="24" />
+               <rectangle x="752" y="1131" z="0" width="16" height="21" />
+           </region>
+       </Towns>
+       <Dungeons>
+           <region name="Twisted Weald">
+               <rectangle x="2107" y="1145" z="0" width="147" height="135" />
+           </region>
+           <region name="Rock Dungeon">
+               <rectangle x="2176" y="288" z="0" width="24" height="40" />
+               <rectangle x="2088" y="8" z="0" width="160" height="176" />
+           </region>
+           <region name="Spider Cave">
+               <rectangle x="1752" y="952" z="0" width="112" height="48" />
+               <rectangle x="1480" y="864" z="0" width="48" height="32" />
+           </region>
+           <region name="Spectre Dungeon">
+               <rectangle x="1936" y="1000" z="0" width="96" height="120" />
+           </region>
+           <region name="Blood Dungeon">
+               <rectangle x="2032" y="808" z="0" width="168" height="256" />
+           </region>
+           <region name="Ankh Dungeon">
+               <rectangle x="0" y="1248" z="0" width="176" height="344" />
+               <rectangle x="568" y="1152" z="0" width="16" height="8" />
+           </region>
+           <region name="Wisp Dungeon">
+               <rectangle x="616" y="1480" z="0" width="88" height="96" />
+               <rectangle x="704" y="1544" z="0" width="24" height="32" />
+               <rectangle x="704" y="1480" z="0" width="40" height="40" />
+               <rectangle x="816" y="1448" z="0" width="96" height="136" />
+               <rectangle x="944" y="1416" z="0" width="56" height="40" />
+               <rectangle x="912" y="1456" z="0" width="112" height="128" />
+               <rectangle x="832" y="1424" z="0" width="48" height="24" />
+               <rectangle x="744" y="1504" z="0" width="72" height="80" />
+               <rectangle x="744" y="1456" z="0" width="56" height="48" />
+           </region>
+           <region name="Exodus Dungeon">
+               <rectangle x="1832" y="16" z="0" width="248" height="200" />
+           </region>
+           <region name="Sorcerer's Dungeon">
+               <rectangle x="368" y="0" z="0" width="120" height="120" />
+               <rectangle x="200" y="0" z="0" width="168" height="112" />
+               <rectangle x="256" y="120" z="0" width="32" height="32" />
+               <rectangle x="48" y="0" z="0" width="136" height="136" />
+               <rectangle x="224" y="112" z="0" width="24" height="32" />
+           </region>
+           <region name="Ancient Lair">
+               <rectangle x="24" y="664" z="0" width="112" height="96" />
+           </region>
+       </Dungeons>
+       <Guarded>
+       </Guarded>
+       <Forest>
+       </Forest>
+   </Ilshenar>
+   <Malas>
+       <Towns>
+           <region name="Luna">
+               <rectangle x="945" y="490" z="0" width="91" height="61" />
+               <rectangle x="986" y="509" z="0" width="18" height="21" />
+           </region>
+           <region name="Umbra">
+               <rectangle x="2042" y="1265" z="0" width="48" height="13" />
+               <rectangle x="1960" y="1278" z="0" width="146" height="135" />
+               <rectangle x="2004" y="1413" z="0" width="36" height="6" />
+               <rectangle x="2031" y="1311" z="0" width="15" height="14" />
+           </region>
+       </Towns>
+       <Dungeons>
+           <region name="Bedlam">
+               <rectangle x="75" y="1590" z="0" width="135" height="170" />
+           </region>
+           <region name="Citadel">
+               <rectangle x="60" y="1855" z="0" width="135" height="135" />
+           </region>
+           <region name="Labyrinth">
+               <rectangle x="256" y="1795" z="0" width="243" height="230" />
+           </region>
+           <region name="Doom">
+               <rectangle x="256" y="0" z="0" width="256" height="304" />
+           </region>
+           <region name="Doom Gauntlet">
+               <rectangle x="256" y="304" z="0" width="256" height="256" />
+           </region>
+           <region name="Yomotsu Mines">
+               <rectangle x="0" y="0" z="0" width="129" height="129" />
+           </region>
+           <region name="Fan Dancer's Dojo">
+               <rectangle x="40" y="320" z="0" width="170" height="400" />
+           </region>
+       </Dungeons>
+       <Guarded>
+       </Guarded>
+       <Forest>
+           <region name="Ilse of the Divide">
+               <rectangle x="1532" y="857" z="0" width="300" height="200" />
+           </region>
+           <region name="Crystal Cave Entrance">
+               <rectangle x="1176" y="509" z="0" width="43" height="13" />
+           </region>
+           <region name="Protected Island">
+               <rectangle x="1976" y="101" z="0" width="472" height="244" />
+               <rectangle x="2051" y="345" z="0" width="305" height="37" />
+               <rectangle x="2026" y="345" z="0" width="25" height="25" />
+               <rectangle x="2069" y="382" z="0" width="75" height="14" />
+               <rectangle x="2254" y="382" z="0" width="98" height="38" />
+               <rectangle x="2222" y="382" z="0" width="32" height="20" />
+           </region>
+           <region name="Grand Arena">
+               <rectangle x="919" y="622" z="0" width="43" height="30" />
+           </region>
+       </Forest>
+   </Malas>
+   <Tokuno>
+       <Towns>
+           <region name="Zento">
+               <rectangle x="656" y="1192" z="0" width="160" height="128" />
+               <rectangle x="674" y="1203" z="0" width="25" height="16" />
+           </region>
+       </Towns>
+       <Dungeons>
+       </Dungeons>
+       <Guarded>
+           <region name="Moongates">
+               <rectangle x="1167" y="996" z="0" width="4" height="4" />
+               <rectangle x="799" y="1201" z="0" width="6" height="6" />
+               <rectangle x="267" y="625" z="0" width="7" height="7" />
+           </region>
+       </Guarded>
+       <Forest>
+           <region name="Fan Dancer's Dojo">
+               <rectangle x="969" y="194" z="0" width="23" height="30" />
+           </region>
+           <region name="Bushido Dojo">
+               <rectangle x="283" y="361" z="0" width="68" height="102" />
+           </region>
+       </Forest>
+   </Tokuno>
+</regions>

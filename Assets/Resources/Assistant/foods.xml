@@ -1,0 +1,48 @@
+<foods>
+	<group name="Fish">
+		<food name="Fish Steak" graphic="0x97B" />
+		<food name="Raw Fish Steak" graphic="0x097A" />
+	</group>
+	<group name="Fruits and Vegetables">
+		<food name="Honeydew Melon" graphic="0xC74" />
+		<food name="Yellow Gourd" graphic="0xC64" />
+		<food name="Green Gourd" graphic="0xC66" />
+		<food name="Banana" graphic="0x171f" />
+		<food name="Lemon" graphic="0x1728" />
+		<food name="Lime" graphic="0x172a" />
+		<food name="Grape" graphic="0x9D1" />
+		<food name="Peach" graphic="0x9D2" />
+		<food name="Pear" graphic="0x994" />
+		<food name="Apple" graphic="0x9D0" />
+		<food name="Watermelon" graphic="0xC5C" />
+		<food name="Squash" graphic="0xc72" />
+		<food name="Cantaloupe" graphic="0xc79" />
+		<food name="Carrot" graphic="0xc78" />
+		<food name="Cabbage" graphic="0xc7b" />
+		<food name="Onion" graphic="0xc6d" />
+		<food name="Lettuce" graphic="0xc70" />
+		<food name="Pumpkin" graphic="0xC6A" />
+	</group>
+	<group name="Meat">
+		<!-- Cooked -->
+		<food name="Bacon" graphic="0x979" />
+		<food name="Cooked Bird" graphic="0x9B7" />
+		<food name="Sausage" graphic="0x9C0" />
+		<food name="Ham" graphic="0x9C9" />
+		<food name="Ribs" graphic="0x9F2" />
+		<food name="Lamb Leg" graphic="0x160a" />
+		<food name="Chicken Leg" graphic="0x1608" />
+		<!-- Uncooked -->
+		<food name="Raw Bird" graphic="0x9B9" />
+		<food name="Raw Ribs" graphic="0x9F1" />
+		<food name="Raw Lamb Leg" graphic="0x1609" />
+		<food name="Raw Chicken Leg" graphic="0x1607" />
+		<!-- Body Parts -->
+		<food name="Head" graphic="0x1DA0" />
+		<food name="Left Arm" graphic="0x1DA1" />
+		<food name="Left Leg" graphic="0x1DA3" />
+		<food name="Torso" graphic="0x1D9F" />
+		<food name="Right Arm" graphic="0x1DA2" />
+		<food name="Right Leg" graphic="0x1DA4" />
+	</group>
+</foods>

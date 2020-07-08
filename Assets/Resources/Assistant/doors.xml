@@ -1,0 +1,321 @@
+<!DOCTYPE doors>
+<doors>
+ <group name="Metal Door">
+  <door opened="1658" closed="1657"/>
+  <door opened="1660" closed="1659"/>
+  <door opened="1654" closed="1653"/>
+  <door opened="1656" closed="1655"/>
+  <door opened="1662" closed="1661"/>
+  <door opened="1664" closed="1663"/>
+  <door opened="1666" closed="1665"/>
+  <door opened="1668" closed="1667"/>
+ </group>
+ <group name="Metal Gate">
+  <door opened="8178" closed="8177"/>
+  <door opened="8180" closed="8179"/>
+  <door opened="8174" closed="8173"/>
+  <door opened="8176" closed="8175"/>
+  <door opened="8182" closed="8181"/>
+  <door opened="8184" closed="8183"/>
+  <door opened="8186" closed="8185"/>
+  <door opened="8188" closed="8187"/>
+ </group>
+ <group name="Rattan Door">
+  <door opened="1690" closed="1689"/>
+  <door opened="1692" closed="1691"/>
+  <door opened="1686" closed="1685"/>
+  <door opened="1688" closed="1687"/>
+  <door opened="1694" closed="1693"/>
+  <door opened="1696" closed="1695"/>
+  <door opened="1698" closed="1697"/>
+  <door opened="1700" closed="1699"/>
+ </group>
+ <group name="Dark Wood Door">
+  <door opened="1706" closed="1705"/>
+  <door opened="1708" closed="1707"/>
+  <door opened="1702" closed="1701"/>
+  <door opened="1704" closed="1703"/>
+  <door opened="1710" closed="1709"/>
+  <door opened="1712" closed="1711"/>
+  <door opened="1714" closed="1713"/>
+  <door opened="1716" closed="1715"/>
+ </group>
+ <group name="Wood Door">
+  <door opened="1722" closed="1721"/>
+  <door opened="1724" closed="1723"/>
+  <door opened="1718" closed="1717"/>
+  <door opened="1720" closed="1719"/>
+  <door opened="1726" closed="1725"/>
+  <door opened="1728" closed="1727"/>
+  <door opened="1730" closed="1729"/>
+  <door opened="1732" closed="1731"/>
+ </group>
+ <group name="Light Wood Door">
+  <door opened="1754" closed="1753"/>
+  <door opened="1756" closed="1755"/>
+  <door opened="1750" closed="1749"/>
+  <door opened="1752" closed="1751"/>
+  <door opened="1758" closed="1757"/>
+  <door opened="1760" closed="1759"/>
+  <door opened="1762" closed="1761"/>
+  <door opened="1764" closed="1763"/>
+ </group>
+ <group name="Wood and Metal Door">
+  <door opened="1770" closed="1769"/>
+  <door opened="1772" closed="1771"/>
+  <door opened="1766" closed="1765"/>
+  <door opened="1768" closed="1767"/>
+  <door opened="1774" closed="1773"/>
+  <door opened="1776" closed="1775"/>
+  <door opened="1778" closed="1777"/>
+  <door opened="1780" closed="1779"/>
+ </group>
+ <group name="Tall Wrought Iron Gate">
+  <door opened="2089" closed="2088"/>
+  <door opened="2091" closed="2090"/>
+  <door opened="2085" closed="2084"/>
+  <door opened="2087" closed="2086"/>
+  <door opened="2093" closed="2092"/>
+  <door opened="2095" closed="2094"/>
+  <door opened="2097" closed="2096"/>
+  <door opened="2099" closed="2098"/>
+ </group>
+ <group name="Light Wood Gate">
+  <door opened="2110" closed="2109"/>
+  <door opened="2112" closed="2111"/>
+  <door opened="2106" closed="2105"/>
+  <door opened="2108" closed="2107"/>
+  <door opened="2114" closed="2113"/>
+  <door opened="2116" closed="2115"/>
+  <door opened="2118" closed="2117"/>
+  <door opened="2120" closed="2119"/>
+ </group>
+ <group name="Short Wrought Iron Gate">
+  <door opened="2129" closed="2128"/>
+  <door opened="2131" closed="2130"/>
+  <door opened="2125" closed="2124"/>
+  <door opened="2127" closed="2126"/>
+  <door opened="2133" closed="2132"/>
+  <door opened="2135" closed="2134"/>
+  <door opened="2137" closed="2136"/>
+  <door opened="2139" closed="2138"/>
+ </group>
+ <group name="Dark Wood Gate">
+  <door opened="2155" closed="2154"/>
+  <door opened="2157" closed="2156"/>
+  <door opened="2151" closed="2150"/>
+  <door opened="2153" closed="2152"/>
+  <door opened="2159" closed="2158"/>
+  <door opened="2161" closed="2160"/>
+  <door opened="2163" closed="2162"/>
+  <door opened="2165" closed="2164"/>
+ </group>
+ <group name="Weathered Stone Secret Door">
+  <door opened="809" closed="808"/>
+  <door opened="811" closed="810"/>
+  <door opened="805" closed="804"/>
+  <door opened="807" closed="806"/>
+  <door opened="813" closed="812"/>
+  <door opened="815" closed="814"/>
+  <door opened="817" closed="816"/>
+  <door opened="819" closed="818"/>
+ </group>
+ <group name="Dark Wood Secret Door">
+  <door opened="825" closed="824"/>
+  <door opened="827" closed="826"/>
+  <door opened="821" closed="820"/>
+  <door opened="823" closed="822"/>
+  <door opened="829" closed="828"/>
+  <door opened="831" closed="830"/>
+  <door opened="833" closed="832"/>
+  <door opened="835" closed="834"/>
+ </group>
+ <group name="Light Wood Secret Door">
+  <door opened="841" closed="840"/>
+  <door opened="843" closed="842"/>
+  <door opened="837" closed="836"/>
+  <door opened="839" closed="838"/>
+  <door opened="845" closed="844"/>
+  <door opened="847" closed="846"/>
+  <door opened="849" closed="848"/>
+  <door opened="851" closed="850"/>
+ </group>
+ <group name="Grey Stone Secret Door">
+  <door opened="857" closed="856"/>
+  <door opened="859" closed="858"/>
+  <door opened="853" closed="852"/>
+  <door opened="855" closed="854"/>
+  <door opened="861" closed="860"/>
+  <door opened="863" closed="862"/>
+  <door opened="865" closed="864"/>
+  <door opened="867" closed="866"/>
+ </group>
+ <group name="Japanese Doors">
+  <door opened="9252" closed="9251"/>
+  <door opened="9248" closed="9247"/>
+ </group>
+ <group name="Sliding Doors 1">
+  <door opened="10768" closed="10767"/>
+  <door opened="10766" closed="10765"/>
+  <door opened="10772" closed="10771"/>
+  <door opened="10770" closed="10769"/>
+ </group>
+ <group name="Sliding Doors 2">
+  <door opened="10760" closed="10759"/>
+  <door opened="10758" closed="10757"/>
+  <door opened="10764" closed="10763"/>
+  <door opened="10762" closed="10761"/>
+ </group>
+ <group name="Sliding Doors 3">
+  <door opened="10776" closed="10775"/>
+  <door opened="10774" closed="10773"/>
+  <door opened="10780" closed="10779"/>
+  <door opened="10778" closed="10777"/>
+ </group>
+ <group name="Elvan Wood Door">
+  <door opened="12719" closed="12718"/>
+  <door opened="12717" closed="12716"/>
+  <door opened="11593" closed="11592"/>
+  <door opened="11591" closed="11590"/>
+ </group>
+ <group name="Elvan White Wooden Door 1">
+  <door opened="11622" closed="11621"/>
+  <door opened="12705" closed="12704"/>
+  <door opened="11620" closed="11619"/>
+  <door opened="12707" closed="12706"/>
+ </group>
+ <group name="Elvan Ornate Door">
+  <door opened="11626" closed="11625"/>
+  <door opened="12709" closed="12708"/>
+  <door opened="11624" closed="11623"/>
+  <door opened="12711" closed="12710"/>
+ </group>
+ <group name="Elvan Kia Wood Door 2">
+  <door opened="11630" closed="11629"/>
+  <door opened="12715" closed="12714"/>
+  <door opened="11628" closed="11627"/>
+  <door opened="12713" closed="12712"/>
+ </group>
+ <group name="Elvan Moon Door">
+  <door opened="12261" closed="12260"/>
+  <door opened="12701" closed="12700"/>
+  <door opened="12259" closed="12258"/>
+  <door opened="12703" closed="12702"/>
+ </group>
+ <group name="Crystal Door">
+  <door opened="13952" closed="13951"/>
+  <door opened="13954" closed="13953"/>
+  <door opened="13948" closed="13947"/>
+  <door opened="13950" closed="13949"/>
+  <door opened="13956" closed="13955"/>
+  <door opened="13958" closed="13957"/>
+  <door opened="13960" closed="13959"/>
+  <door opened="13962" closed="13961"/>
+ </group>
+ <group name="Shadow Door">
+  <door opened="13968" closed="13967"/>
+  <door opened="13970" closed="13969"/>
+  <door opened="13964" closed="13963"/>
+  <door opened="13966" closed="13965"/>
+  <door opened="13972" closed="13971"/>
+  <door opened="13974" closed="13973"/>
+  <door opened="13976" closed="13975"/>
+  <door opened="13978" closed="13977"/>
+ </group>
+ <group name="Gargish Carved Green Door">
+  <door opened="16540" closed="16539"/>
+  <door opened="16542" closed="16541"/>
+  <door opened="16544" closed="16543"/>
+  <door opened="16546" closed="16545"/>
+ </group>
+ <group name="Gargish Brown Door">
+  <door opened="16653" closed="16652"/>
+  <door opened="16655" closed="16654"/>
+  <door opened="16657" closed="16656"/>
+  <door opened="16659" closed="16658"/>
+ </group>
+ <group name="Sun Door">
+  <door opened="16835" closed="16834"/>
+  <door opened="16837" closed="16836"/>
+  <door opened="16839" closed="16838"/>
+  <door opened="16841" closed="16840"/>
+ </group>
+ <group name="Gargish Grey Door">
+  <door opened="16848" closed="16847"/>
+  <door opened="16850" closed="16849"/>
+  <door opened="16852" closed="16851"/>
+  <door opened="16854" closed="16853"/>
+ </group>
+ <group name="Gargish Set Door">
+  <door opened="17263" closed="17262"/>
+  <door opened="17265" closed="17264"/>
+  <door opened="17267" closed="17266"/>
+  <door opened="17269" closed="17268"/>
+  <door opened="17271" closed="17270"/>
+  <door opened="17273" closed="17272"/>
+  <door opened="17275" closed="17274"/>
+  <door opened="17277" closed="17276"/>
+ </group>
+ <group name="Ruined Door">
+  <door opened="18142" closed="18141"/>
+  <door opened="18144" closed="18143"/>
+  <door opened="18146" closed="18145"/>
+  <door opened="18148" closed="18147"/>
+ </group>
+ <group name="Gargish Blue Door">
+  <door opened="19747" closed="19746"/>
+  <door opened="19749" closed="19748"/>
+  <door opened="19751" closed="19750"/>
+  <door opened="19753" closed="19752"/>
+ </group>
+ <group name="Gargish Red Doors">
+  <door opened="20681" closed="20680"/>
+  <door opened="20683" closed="20682"/>
+  <door opened="20689" closed="20688"/>
+  <door opened="20691" closed="20690"/>
+  <door opened="20685" closed="20684"/>
+  <door opened="20687" closed="20686"/>
+  <door opened="20693" closed="20692"/>
+  <door opened="20695" closed="20694"/>
+ </group>
+ <group name="Gargish Prison Door">
+  <door opened="20803" closed="20802"/>
+  <door opened="20805" closed="20804"/>
+  <door opened="20807" closed="20806"/>
+  <door opened="20809" closed="20808"/>
+ </group>
+ <group name="Metal Doors (Dungeon)">
+  <door opened="1738" closed="1737"/>
+  <door opened="1740" closed="1739"/>
+  <door opened="1734" closed="1733"/>
+  <door opened="1736" closed="1735"/>
+  <door opened="1742" closed="1741"/>
+  <door opened="1744" closed="1743"/>
+  <door opened="1746" closed="1745"/>
+  <door opened="1748" closed="1747"/>
+ </group>
+ <group name="Hidden Door (brick)">
+  <door opened="793" closed="792"/>
+  <door opened="795" closed="794"/>
+  <door opened="789" closed="788"/>
+  <door opened="791" closed="790"/>
+  <door opened="797" closed="796"/>
+  <door opened="799" closed="798"/>
+  <door opened="801" closed="800"/>
+  <door opened="803" closed="802"/>
+ </group>
+ <group name="Barred Metal Gate">
+  <door opened="1674" closed="1673"/>
+  <door opened="1676" closed="1675"/>
+  <door opened="1670" closed="1669"/>
+  <door opened="1672" closed="1671"/>
+  <door opened="1678" closed="1677"/>
+  <door opened="1680" closed="1679"/>
+  <door opened="1682" closed="1681"/>
+  <door opened="1684" closed="1683"/>
+ </group>
+ <group name="Portcullis">
+  <door opened="1782" closed="1781"/>
+  <door opened="1783" closed="1782"/>
+ </group>
+</doors>

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class UtilityMethods
@@ -14,11 +16,12 @@ public static class UtilityMethods
         return totalHeight;
     }
 
-    public static void SetHeightBasedOnChildren(RectTransform rectTransform)
+    public static bool EssentialUoFilesExist(List<string> files)
     {
-        var totalHeight = GetTotalHeightOfChildren(rectTransform);
-        var size = rectTransform.sizeDelta;
-        size.y = totalHeight;
-        rectTransform.sizeDelta = size;
+        return files.Any(x =>
+        {
+            var fileNameLowerCase = x.ToLowerInvariant();
+            return fileNameLowerCase.Contains("anim.mul") || fileNameLowerCase.Contains("animationframe1.uop");
+        });
     }
 }

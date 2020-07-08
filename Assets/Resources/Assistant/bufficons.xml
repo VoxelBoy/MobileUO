@@ -1,0 +1,49 @@
+<bufficons>
+	<icon id="1001" name="Dismount"/>
+	<icon id="1002" name="Disarm"/>
+	<icon id="1005" name="Night Sight"/>
+	<icon id="1006" name="Death Strike"/> 
+	<icon id="1007" name="Evil Omen"/> 
+	<icon id="1009" name="Regeneration"/>
+	<icon id="1010" name="Divine Fury"/> 
+	<icon id="1011" name="Enemy Of One"/> 
+	<icon id="1012" name="Hiding"/>
+	<icon id="1013" name="Meditation"/>
+	<icon id="1014" name="Blood Oath Caster"/> 
+	<icon id="1015" name="Blood Oath"/> 
+	<icon id="1016" name="Corpse Skin"/> 
+	<icon id="1017" name="Mind rot"/> 
+	<icon id="1018" name="Pain Spike"/> 
+	<icon id="1019" name="Strangle"/> 
+	<icon id="1020" name="Gift of Renewal"/> 
+	<icon id="1021" name="Attune Weapon"/> 
+	<icon id="1022" name="Thunderstorm"/> 
+	<icon id="1023" name="Essence of Wind"/> 
+	<icon id="1024" name="Ethereal Voyage"/> 
+	<icon id="1025" name="Gift Of Life"/> 
+	<icon id="1026" name="Arcane Empowerment"/> 
+	<icon id="1027" name="Mortal Strike"/> 
+	<icon id="1028" name="Reactive Armor"/>
+	<icon id="1029" name="Protection"/>
+	<icon id="1030" name="Arch Protection"/>
+	<icon id="1031" name="Magic Reflection"/>
+	<icon id="1032" name="Incognito"/>
+	<icon id="1033" name="Disguised"/> 
+	<icon id="1034" name="Animal Form"/> 
+	<icon id="1035" name="Polymorph"/>
+	<icon id="1036" name="Invisibility"/>
+	<icon id="1037" name="Paralyze"/>
+	<icon id="1038" name="Poison"/>
+	<icon id="1039" name="Bleed"/>
+	<icon id="1040" name="Clumsy"/>
+	<icon id="1041" name="Feeblemind"/>
+	<icon id="1042" name="Weaken"/>
+	<icon id="1043" name="Curse"/>
+	<icon id="1044" name="Mass Curse"/>
+	<icon id="1045" name="Agility"/>
+	<icon id="1046" name="Cunning"/>
+	<icon id="1047" name="Strength"/>
+	<icon id="1048" name="Bless"/>
+	<icon id="1049" name="Sleep"/>
+	<icon id="1051" name="Spell Plague"/>
+</bufficons>

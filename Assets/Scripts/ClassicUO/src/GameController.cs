@@ -823,7 +823,6 @@ namespace ClassicUO
         }
 
         private readonly UnityEngine.KeyCode[] _keyCodeEnumValues = (UnityEngine.KeyCode[]) Enum.GetValues(typeof(UnityEngine.KeyCode));
-        private readonly Control[] controlsUnderFingers = new Control[5];
         private UnityEngine.Vector3 lastMousePosition;
         public SDL_Keymod KeymodOverride;
 
@@ -889,39 +888,25 @@ namespace ClassicUO
             if (UnityEngine.Application.isMobilePlatform && UserPreferences.UseMouseOnMobile.CurrentValue == 0)
             {
                 var fingers = Lean.Touch.LeanTouch.GetFingers(true, false);
-                
-                //Detect two finger tap gesture for closing gumps
-                for (int i = 0; i < fingers.Count && i < 5; i++)
+
+                //Detect two finger tap gesture for closing gumps, only when one of the fingers' state is Down
+                if (fingers.Count == 2 && (fingers[0].Down || fingers[1].Down))
                 {
-                    var finger = fingers[i];
-                    if (finger.Age < 0.1f)
+                    var firstMousePositionPoint = ConvertUnityMousePosition(fingers[0].ScreenPosition, oneOverScale);
+                    var secondMousePositionPoint = ConvertUnityMousePosition(fingers[1].ScreenPosition, oneOverScale);
+                    var firstControlUnderFinger = UIManager.GetMouseOverControl(firstMousePositionPoint)?.RootParent;
+                    var secondControlUnderFinger = UIManager.GetMouseOverControl(secondMousePositionPoint)?.RootParent;
+                    if (firstControlUnderFinger != null && firstControlUnderFinger == secondControlUnderFinger)
                     {
-                        var mousePositionPoint = ConvertUnityMousePosition(finger.ScreenPosition, oneOverScale);
-                        controlsUnderFingers[i] = UIManager.GetMouseOverControl(mousePositionPoint)?.RootParent;
-                        if (controlsUnderFingers[i] != null)
-                        {
-                            for (int k = 0; k < i; k++)
-                            {
-                                if (controlsUnderFingers[k] == controlsUnderFingers[i])
-                                {
-                                    //Simulate right mouse down and up
-                                    SimulateMouse(false, false, true, false, false, true);
-                                    SimulateMouse(false, false, false, true, false, true);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        controlsUnderFingers[i] = null;
+                        //Simulate right mouse down and up
+                        SimulateMouse(false, false, true, false, false, true);
+                        SimulateMouse(false, false, false, true, false, true);
                     }
                 }
-                
                 //Only process one finger that has not started over gui because using multiple fingers with UIManager
-                //causes issues due to the assumption that there's only one pointer, such as on finger "stealing"
-                //a dragged gump from another
-                if (fingers.Count > 0)
+                //causes issues due to the assumption that there's only one pointer, such as one finger "stealing" a
+                //dragged gump from another
+                else if (fingers.Count > 0)
                 {
                     var finger = fingers[0];
                     var mouseMotion = finger.ScreenPosition != finger.LastScreenPosition;

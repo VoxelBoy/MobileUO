@@ -1,0 +1,33 @@
+<abilities>
+<ability name="Armor Ignore" id="1" />
+<ability name="Bleed Attack" id="2" />
+<ability name="Concussion Blow" id="3" />
+<ability name="Crushing Blow" id="4" />
+<ability name="Disarm" id="5" />
+<ability name="Dismount" id="6" />
+<ability name="Double Strike" id="7" />
+<ability name="Infectious Strike" id="8" />
+<ability name="Mortal Strike" id="9" />
+<ability name="Moving Shot" id="10" />
+<ability name="Paralyzing Blow" id="11" />
+<ability name="Shadow Strike" id="12" />
+<ability name="Whirlwind Attack" id="13" />
+<ability name="Riding Swipe" id="14" />
+<ability name="Frenzied Whirlwind" id="15" />
+<ability name="Block" id="16" />
+<ability name="Defense Mastery" id="17" />
+<ability name="Nerve Strike" id="18" />
+<ability name="Talon Strike" id="19" />
+<ability name="Feint" id="20" />
+<ability name="Dual Wield" id="21" />
+<ability name="Double Shot" id="22" />
+<ability name="Armor Pierce" id="23" />
+<ability name="Bladeweave" id="24" />
+<ability name="Force Arrow" id="25" />
+<ability name="Lightning Arrow" id="26" />
+<ability name="Psychic Attack" id="27" />
+<ability name="Serpent Arrow" id="28" />
+<ability name="Force Of Nature" id="29" />
+<ability name="Infused Throw" id="30" />
+<ability name="Mystic Arc" id="31" />
+</abilities>

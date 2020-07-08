@@ -139,7 +139,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
 
         saveButtonOriginalLocalPosition = saveButtonTransform.localPosition;
     }
-    
+
     private async void SearchForDevices()
     {
         serverDiscoveryButtonPresenter.Toggle(true);
@@ -311,38 +311,42 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
             return false;
         }
 
-        //File Download Server Url validation
-        var fileDownloadServerUrl = fileDownloadServerUrlInputField.text;
-        if (string.IsNullOrWhiteSpace(fileDownloadServerUrl))
+        //Skip file download server url and port validation if AllFilesDownloaded is set to true
+        if (serverConfigurationToEdit.AllFilesDownloaded == false)
         {
-            validationError = "File Download Server Address cannot be empty.";
-            return false;
+            //File Download Server Url validation
+            var fileDownloadServerUrl = fileDownloadServerUrlInputField.text;
+            if (string.IsNullOrWhiteSpace(fileDownloadServerUrl))
+            {
+                validationError = "File Download Server Address cannot be empty.";
+                return false;
+            }
+
+            try
+            {
+                var unused = new UriBuilder("http", fileDownloadServerUrl, -1, null).Uri;
+            }
+            catch (Exception e)
+            {
+                validationError = "File Download Server Address is not valid";
+                return false;
+            }
+
+            //File Server Port validation
+            var fileServerPort = fileDownloadServerPortInputField.text;
+            if (int.TryParse(fileServerPort, out var fileServerPortResult) == false)
+            {
+                validationError = "File Download Server port is not valid.";
+                return false;
+            }
+
+            if (fileServerPortResult < 0 || fileServerPortResult > 65535)
+            {
+                validationError = "File Download Server port needs to be between 0 and 65535";
+                return false;
+            }
         }
 
-        try
-        {
-            var uri = new UriBuilder("http", fileDownloadServerUrl, -1, null).Uri;
-        }
-        catch (Exception e)
-        {
-            validationError = "File Download Server Address is not valid";
-            return false;
-        }
-        
-        //File Server Port validation
-        var fileServerPort = fileDownloadServerPortInputField.text;
-        if (int.TryParse(fileServerPort, out var fileServerPortResult) == false)
-        {
-            validationError = "File Download Server port is not valid.";
-            return false;
-        }
-        
-        if (fileServerPortResult < 0 || fileServerPortResult > 65535)
-        {
-            validationError = "File Download Server port needs to be between 0 and 65535";
-            return false;
-        }
-        
         //Client version validation
         var clientVersion = clientVersionInputField.text;
         if (ClientVersionHelper.IsClientVersionValid(clientVersion, out _) == false)
