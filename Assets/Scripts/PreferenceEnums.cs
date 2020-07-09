@@ -107,4 +107,10 @@ namespace PreferenceEnums
         On = 1
     }
     
+    public enum AssistantMinimized
+    {
+        Off = 0,
+        On = 1
+    }
+    
 }

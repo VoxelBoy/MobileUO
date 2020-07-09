@@ -170,6 +170,20 @@ namespace ClassicUO.Network
                 return false;
             }
             
+            //NOTE: Temporary fix for empty xml files created with initial version of Assistant
+            var dataPath = Path.Combine(Profile.DataPath, "Data");
+            var spellsXmlPath = Path.Combine(dataPath, "spells.xml");
+            if (File.Exists(spellsXmlPath) && File.ReadAllText(Path.Combine(Profile.DataPath, "Data", "spells.xml")).Trim().Length == 0)
+            {
+                File.Delete(spellsXmlPath);
+                File.Delete(Path.Combine(dataPath, "skills.xml"));
+                File.Delete(Path.Combine(dataPath, "bodies.xml"));
+                File.Delete(Path.Combine(dataPath, "bufficons.xml"));
+                File.Delete(Path.Combine(dataPath, "foods.xml"));
+                File.Delete(Path.Combine(dataPath, "assistant.xml"));
+                File.Delete(Path.Combine(Profile.ProfilePath, "Default.xml"));
+            }
+            
             var plugin = new Plugin(hardcodedInternalAssistantPath);
             plugin.Load();
             
