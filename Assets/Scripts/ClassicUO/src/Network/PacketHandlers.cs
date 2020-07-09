@@ -1673,22 +1673,9 @@ namespace ClassicUO.Network
             ushort audio = p.ReadUShort();
             ushort x = p.ReadUShort();
             ushort y = p.ReadUShort();
-            ushort z = p.ReadUShort();
+            short z = (short) p.ReadUShort();
 
-            int distX = Math.Abs(x - World.Player.X);
-            int distY = Math.Abs(y - World.Player.Y);
-            int distance = Math.Max(distX, distY);
-
-            float volume = ProfileManager.Current.SoundVolume / Constants.SOUND_DELTA;
-            float distanceFactor = 0.0f;
-
-            if (distance <= World.ClientViewRange && distance >= 1)
-            {
-                float volumeByDist = volume / World.ClientViewRange;
-                distanceFactor = volumeByDist * distance;
-            }
-
-            Client.Game.Scene.Audio.PlaySoundWithDistance(index, volume, distanceFactor);
+            Client.Game.Scene.Audio.PlaySoundWithDistance(index, x, y);
         }
 
         private static void PlayMusic(Packet p)
@@ -2951,7 +2938,11 @@ namespace ClassicUO.Network
 
             TEXT_TYPE text_type = TEXT_TYPE.SYSTEM;
 
-            if (type == MessageType.System || serial == 0xFFFF_FFFF || serial == 0 || (name.ToLower() == "system" && entity == null))
+            if (type == MessageType.Alliance || type == MessageType.Guild)
+            {
+                text_type = TEXT_TYPE.GUILD_ALLY;
+            }
+            else if ( type == MessageType.System || serial == 0xFFFF_FFFF || serial == 0 || (name.ToLower() == "system" && entity == null))
             {
                 // do nothing
             }
@@ -5499,7 +5490,7 @@ namespace ClassicUO.Network
                     var cc = gump.Children[i];
 
                     if (cc is CheckerTrans)
-                    {
+                    {                    
                         trans = applyTrans(i + 1, cc.Page);
                         alpha = trans ? 0.5f : 0;
                     }

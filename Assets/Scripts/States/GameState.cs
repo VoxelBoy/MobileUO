@@ -19,22 +19,26 @@ public class GameState : IState
         errorPresenter.BackButtonClicked += GoBackToServerConfigurationState;
         clientRunner.OnExiting += GoBackToServerConfigurationState;
         clientRunner.OnError += OnError;
+
+        var config = ServerConfigurationModel.ActiveConfiguration;
         
         //Check that some of the essential UO files exist
-        var configPath = ServerConfigurationModel.ActiveConfiguration.GetPathToSaveFiles();
-        var configurationDirectory = new DirectoryInfo(configPath);
-        var files = configurationDirectory.GetFiles().Select(x => x.Name).ToList();
-        var hasAnimationFiles = UtilityMethods.EssentialUoFilesExist(files);
-
-        if (hasAnimationFiles == false)
+        if (Application.isMobilePlatform || string.IsNullOrEmpty(config.ClientPathForUnityEditor))
         {
-            var error = $"Server configuration directory does not contain UO files such as anim.mul or animationFrame1.uop. Make sure that the UO files have been downloaded or transferred properly.\nPath: {configPath}";
-            OnError(error);
-            return;
+            var configPath = config.GetPathToSaveFiles();
+            var configurationDirectory = new DirectoryInfo(configPath);
+            var files = configurationDirectory.GetFiles().Select(x => x.Name).ToList();
+            var hasAnimationFiles = UtilityMethods.EssentialUoFilesExist(files);
+            if (hasAnimationFiles == false)
+            {
+                var error = $"Server configuration directory does not contain UO files such as anim.mul or animationFrame1.uop. Make sure that the UO files have been downloaded or transferred properly.\nPath: {configPath}";
+                OnError(error);
+                return;
+            }
         }
-        
+
         clientRunner.enabled = true;
-        clientRunner.StartGame(ServerConfigurationModel.ActiveConfiguration);
+        clientRunner.StartGame(config);
     }
 
     private void GoBackToServerConfigurationState()
