@@ -13,15 +13,6 @@ MonoBehaviour:
   m_Name: SupportedServerConfigurations
   m_EditorClassIdentifier: 
   ServerConfigurations:
-  - Name: Outlands (supported)
-    UoServerUrl: play.uooutlands.com
-    UoServerPort: 2593
-    FileDownloadServerUrl: patch.uooutlands.com
-    FileDownloadServerPort: 4594
-    ClientVersion: 7.0.15.1
-    UseEncryption: 0
-    ClientPathForUnityEditor: 
-    AllFilesDownloaded: 0
   - Name: Renaissance (supported)
     UoServerUrl: login.uorenaissance.com
     UoServerPort: 2593
