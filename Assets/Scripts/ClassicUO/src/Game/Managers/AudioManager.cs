@@ -59,14 +59,14 @@ namespace ClassicUO.Game.Managers
         {
             if (ProfileManager.Current == null || ProfileManager.Current.ReproduceSoundsInBackground) return;
 
-            //SoundEffect.MasterVolume = 0;
+            SoundEffect.MasterVolume = 0;
         }
 
         private void OnWindowActivated(object sender, System.EventArgs e)
         {
             if (ProfileManager.Current == null || ProfileManager.Current.ReproduceSoundsInBackground) return;
 
-            //SoundEffect.MasterVolume = 1;
+            SoundEffect.MasterVolume = 1;
         }
 
         public void PlaySound(int index)
@@ -248,6 +248,19 @@ namespace ClassicUO.Game.Managers
                     _currentMusic[i] = null;
                 }
             }
+
+            //NOTE: Also discard sounds
+            foreach (var sound in _current_sounds)
+            {
+                if (sound != null)
+                {
+                    sound.Stop();
+                    sound.Dispose();
+                }
+            }
+            _current_sounds.Clear();
+
+            DynamicSoundEffectInstance.DisposePool();
         }
 
         public void StopWarMusic()

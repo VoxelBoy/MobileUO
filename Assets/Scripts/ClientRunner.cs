@@ -16,7 +16,6 @@ using ClassicUO.Game.UI.Gumps.Login;
 using Newtonsoft.Json;
 using ClassicUO.Network;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Media;
 using SDL2;
 using GameObject = UnityEngine.GameObject;
 using Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
@@ -322,7 +321,6 @@ public class ClientRunner : MonoBehaviour
 	    ProfileManager.ProfileLoaded += OnProfileLoaded;
 
 	    // Add an audio source and tell the media player to use it for playing sounds
-	    MediaPlayer.AudioSourceOneShot = gameObject.AddComponent<AudioSource>();
 	    Log.Start( LogTypes.All );
 
 	    try

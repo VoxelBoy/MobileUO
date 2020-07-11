@@ -18,10 +18,9 @@ public class DownloadState : IState
     
     private ServerConfiguration serverConfiguration;
     private DownloaderBase downloader;
-    private readonly bool forceDownloadsInEditor;
     private const string H_REF_PATTERN = @"<a\shref=[^>]*>([^<]*)<\/a>";
 
-    public DownloadState(DownloadPresenter downloadPresenter, bool forceDownloadsInEditor, Canvas inGameDebugConsoleCanvas)
+    public DownloadState(DownloadPresenter downloadPresenter, Canvas inGameDebugConsoleCanvas)
     {
         this.downloadPresenter = downloadPresenter;
         this.inGameDebugConsoleCanvas = inGameDebugConsoleCanvas;
@@ -29,7 +28,6 @@ public class DownloadState : IState
         downloadPresenter.BackButtonPressed += OnBackButtonPressed;
         downloadPresenter.CellularWarningYesButtonPressed += OnCellularWarningYesButtonPressed;
         downloadPresenter.CellularWarningNoButtonPressed += OnCellularWarningNoButtonPressed;
-        this.forceDownloadsInEditor = forceDownloadsInEditor;
     }
 
     private void OnCellularWarningYesButtonPressed()
@@ -57,7 +55,7 @@ public class DownloadState : IState
         Debug.Log($"Downloading files to {serverConfiguration.GetPathToSaveFiles()}");
         var port = int.Parse(serverConfiguration.FileDownloadServerPort);
         
-        if (serverConfiguration.AllFilesDownloaded || (Application.isEditor && forceDownloadsInEditor == false))
+        if (serverConfiguration.AllFilesDownloaded || Application.isEditor && string.IsNullOrEmpty(serverConfiguration.ClientPathForUnityEditor) == false)
         {
             StateManager.GoToState<GameState>();
         }

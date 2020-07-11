@@ -9,9 +9,6 @@ public class Init : MonoBehaviour
     private DownloadPresenter downloadPresenter;
 
     [SerializeField]
-    private bool forceDownloadsInEditor;
-    
-    [SerializeField]
     private ClientRunner clientRunner;
 
     [SerializeField]
@@ -33,7 +30,7 @@ public class Init : MonoBehaviour
 
         StateManager.AddState(new BootState());
         StateManager.AddState(new ServerConfigurationState(serverConfigurationUiParent));
-        StateManager.AddState(new DownloadState(downloadPresenter, forceDownloadsInEditor, inGameDebugConsoleCanvas));
+        StateManager.AddState(new DownloadState(downloadPresenter, inGameDebugConsoleCanvas));
         StateManager.AddState(new GameState(clientRunner, errorPresenter, inGameDebugConsoleCanvas));
 
         Input.simulateMouseWithTouches = false;

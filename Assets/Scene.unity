@@ -10752,7 +10752,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverConfigurationUiParent: {fileID: 627388592}
   downloadPresenter: {fileID: 644890276}
-  forceDownloadsInEditor: 0
   clientRunner: {fileID: 204360075}
   errorPresenter: {fileID: 525914056}
   inGameDebugConsoleCanvas: {fileID: 168659848}

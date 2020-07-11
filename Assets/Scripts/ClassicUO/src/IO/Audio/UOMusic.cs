@@ -102,14 +102,14 @@ namespace ClassicUO.IO.Audio
                     return;
                 }
 
-                // while (_sound_instance.PendingBufferCount < 3)
+                //while (_sound_instance.PendingBufferCount < 3)
                 {
                     byte[] buffer = GetBuffer();
 
                     if (_sound_instance.IsDisposed || buffer == null)
                         return;
 
-                    _sound_instance.SubmitBuffer(buffer, true);
+                    _sound_instance.SubmitBuffer(buffer);
                 }
             }
         }

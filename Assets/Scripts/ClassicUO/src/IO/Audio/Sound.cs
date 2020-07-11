@@ -94,7 +94,7 @@ namespace ClassicUO.IO.Audio
             }
         }
 
-        public bool IsPlaying => _sound_instance != null && (_sound_instance.State == DynamicSoundEffectInstance.SoundState.Playing && DurationTime > Time.Ticks);
+        public bool IsPlaying => _sound_instance != null && (_sound_instance.State == SoundState.Playing && DurationTime > Time.Ticks);
 
         public int CompareTo(Sound other)
         {
@@ -156,7 +156,7 @@ namespace ClassicUO.IO.Audio
                 _lastPlayedTime = Time.Ticks + Delay;
 
                 _sound_instance.BufferNeeded += OnBufferNeeded;
-                _sound_instance.SubmitBuffer(buffer, this is UOMusic, this.Frequency);
+                _sound_instance.SubmitBuffer(buffer, this is UOMusic, buffer.Length);
                 VolumeFactor = volumeFactor;
                 Volume = volume;
                 DurationTime = Time.Ticks + _sound_instance.GetSampleDuration(buffer.Length).TotalMilliseconds;
