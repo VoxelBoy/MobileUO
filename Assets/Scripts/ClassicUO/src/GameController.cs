@@ -894,8 +894,11 @@ namespace ClassicUO
                 {
                     var firstMousePositionPoint = ConvertUnityMousePosition(fingers[0].ScreenPosition, oneOverScale);
                     var secondMousePositionPoint = ConvertUnityMousePosition(fingers[1].ScreenPosition, oneOverScale);
-                    var firstControlUnderFinger = UIManager.GetMouseOverControl(firstMousePositionPoint)?.RootParent;
-                    var secondControlUnderFinger = UIManager.GetMouseOverControl(secondMousePositionPoint)?.RootParent;
+                    var firstControlUnderFinger = UIManager.GetMouseOverControl(firstMousePositionPoint);
+                    var secondControlUnderFinger = UIManager.GetMouseOverControl(secondMousePositionPoint);
+                    //We prefer to get the root parent but sometimes it can be null (like with GridLootGump), in which case we revert to the initially found control
+                    firstControlUnderFinger = firstControlUnderFinger?.RootParent ?? firstControlUnderFinger;
+                    secondControlUnderFinger = secondControlUnderFinger?.RootParent ?? secondControlUnderFinger;
                     if (firstControlUnderFinger != null && firstControlUnderFinger == secondControlUnderFinger)
                     {
                         //Simulate right mouse down and up
