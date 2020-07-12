@@ -18,8 +18,10 @@ public class OptionEnumView : MonoBehaviour
     private List<int> enumValues;
     private bool useValuesInsteadOfNames;
     private bool usePercentage;
+    
+    public bool HiddenByDefault { get; private set; }
 
-    public void Initialize(Type enumType, UserPreferences.IntPreference intPreference, string labelText, bool useValuesInsteadOfNames, bool usePercentage)
+    public void Initialize(Type enumType, UserPreferences.IntPreference intPreference, string labelText, bool useValuesInsteadOfNames, bool usePercentage, bool hiddenByDefault = false)
     {
         this.intPreference = intPreference;
         this.useValuesInsteadOfNames = useValuesInsteadOfNames;
@@ -35,6 +37,12 @@ public class OptionEnumView : MonoBehaviour
 
         leftButton.onClick.AddListener(OnLeftButtonClicked);
         rightButton.onClick.AddListener(OnRightButtonClicked);
+
+        HiddenByDefault = hiddenByDefault;
+        if (hiddenByDefault)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnValueChanged(int value)

@@ -82,6 +82,7 @@ public static class UserPreferences
     public static IntPreference EnableAssistant;
     public static IntPreference AssistantMinimized;
     public static IntPreference ShowDebugConsole;
+    public static IntPreference UsePointerChecks;
 
     public static void Initialize()
     {
@@ -103,5 +104,6 @@ public static class UserPreferences
         EnableAssistant = new IntPreference(nameof(EnableAssistant), (int) PreferenceEnums.EnableAssistant.Off);
         ShowDebugConsole = new IntPreference(nameof(ShowDebugConsole), (int) PreferenceEnums.ShowDebugConsole.Off);
         AssistantMinimized = new IntPreference(nameof(AssistantMinimized), (int) PreferenceEnums.AssistantMinimized.Off);
+        UsePointerChecks = new IntPreference(nameof(UsePointerChecks), (int) PreferenceEnums.UsePointerChecks.Off);
     }
 }

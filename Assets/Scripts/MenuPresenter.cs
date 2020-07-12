@@ -1,31 +1,25 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using DG.Tweening;
 using PreferenceEnums;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuPresenter : MonoBehaviour
 {
-    [SerializeField]
-    private Button menuButton;
-
-    [SerializeField]
-    private RectTransform listTransform;
-    
-    [SerializeField]
-    private Vector3 listOpenPosition;
-    
-    [SerializeField]
-    private Vector3 listClosedPosition;
-
-    [SerializeField]
-    private float listTweenDuration;
-
-    private bool menuOpened;
-    
+    [SerializeField] private Button menuButton;
+    [SerializeField] private RectTransform listTransform;
+    [SerializeField] private Vector3 listOpenPosition;
+    [SerializeField] private Vector3 listClosedPosition;
+    [SerializeField] private float listTweenDuration;
     [SerializeField] private OptionEnumView optionEnumViewInstance;
     [SerializeField] private GameObject customizeJoystickButtonGameObject;
     [SerializeField] private GameObject loginButtonGameObject;
     [SerializeField] private ClientRunner clientRunner;
+    [SerializeField] private Button ShowAdvancedPreferencesButton;
+    
+    private readonly List<OptionEnumView> optionEnumViews = new List<OptionEnumView>();
+    
+    private bool menuOpened;
 
     void Awake()
     {
@@ -44,11 +38,14 @@ public class MenuPresenter : MonoBehaviour
         GetOptionEnumViewInstance().Initialize(typeof(JoystickDeadZone), UserPreferences.JoystickDeadZone, "Joystick DeadZone", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(JoystickRunThreshold), UserPreferences.JoystickRunThreshold, "Joystick Run Threshold", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(ShowModifierKeyButtons), UserPreferences.ShowModifierKeyButtons, "Show Modifier Key Buttons", false, false);
-        GetOptionEnumViewInstance().Initialize(typeof(VisualizeFingerInput), UserPreferences.VisualizeFingerInput, "Visualize Finger Input", false, false);
 #if ENABLE_INTERNAL_ASSISTANT
         GetOptionEnumViewInstance().Initialize(typeof(EnableAssistant), UserPreferences.EnableAssistant, "Enable Assistant", false, false);
 #endif
-        GetOptionEnumViewInstance().Initialize(typeof(ShowDebugConsole), UserPreferences.ShowDebugConsole, "Show Debug Console", false, false);
+        
+        //Options that are hidden by default
+        GetOptionEnumViewInstance().Initialize(typeof(UsePointerChecks), UserPreferences.UsePointerChecks, "Use Pointer Checks", false, false, true);
+        GetOptionEnumViewInstance().Initialize(typeof(ShowDebugConsole), UserPreferences.ShowDebugConsole, "Show Debug Console", false, false, true);
+        GetOptionEnumViewInstance().Initialize(typeof(VisualizeFingerInput), UserPreferences.VisualizeFingerInput, "Visualize Finger Input", false, false, true);
         
         //Only show customize joystick button when UO client is running and we're in the game scene
         customizeJoystickButtonGameObject.transform.SetAsLastSibling();
@@ -57,10 +54,24 @@ public class MenuPresenter : MonoBehaviour
         //Only show login button when UO client is running and we're in the login scene
         loginButtonGameObject.transform.SetAsFirstSibling();
         loginButtonGameObject.SetActive(false);
+
+        ShowAdvancedPreferencesButton.onClick.AddListener(OnShowAdvancedPreferencesButtonClicked);
+        ShowAdvancedPreferencesButton.transform.SetAsLastSibling();
         
         clientRunner.SceneChanged += OnUoSceneChanged;
         
         optionEnumViewInstance.gameObject.SetActive(false);
+    }
+
+    private void OnShowAdvancedPreferencesButtonClicked()
+    {
+        optionEnumViews.ForEach(x =>
+        {
+            if (x.HiddenByDefault)
+            {
+                x.gameObject.SetActive(x.gameObject.activeSelf == false);
+            }
+        });
     }
 
     private void OnUoSceneChanged(bool isGameScene)
@@ -71,7 +82,9 @@ public class MenuPresenter : MonoBehaviour
 
     private OptionEnumView GetOptionEnumViewInstance()
     {
-        return Instantiate(optionEnumViewInstance.gameObject, optionEnumViewInstance.transform.parent).GetComponent<OptionEnumView>();
+        var instance = Instantiate(optionEnumViewInstance.gameObject, optionEnumViewInstance.transform.parent).GetComponent<OptionEnumView>();
+        optionEnumViews.Add(instance);
+        return instance;
     }
 
     private void OnMenuButtonClicked()
