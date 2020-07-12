@@ -48,6 +48,35 @@ namespace ClassicUO.Game.UI.Controls
 
         private bool _entered;
 
+        //NOTE: Added for enlarging small buttons in MobileUO
+        private bool enlarged;
+        private const int smallButtonThreshold = 12;
+
+        public void ToggleSize(bool enlarge)
+        {
+            if (enlarged == false && Width > smallButtonThreshold && Height > smallButtonThreshold)
+            {
+                return;
+            }
+            
+            if (enlarged && enlarge == false)
+            {
+                Width /= 2;
+                Height /= 2;
+                X += Width / 2;
+                Y += Height / 2;
+                enlarged = false;
+            }
+            else if (enlarged == false && enlarge)
+            {
+                Width *= 2;
+                Height *= 2;
+                X -= Width / 4;
+                Y -= Height / 4;
+                enlarged = true;
+            }
+        }
+
         public Button(int buttonID, ushort normal, ushort pressed, ushort over = 0, string caption = "", byte font = 0, bool isunicode = true, ushort normalHue = ushort.MaxValue, ushort hoverHue = ushort.MaxValue)
         {
             ButtonID = buttonID;
@@ -179,6 +208,9 @@ namespace ClassicUO.Game.UI.Controls
                 if (t != null)
                     t.Ticks = Time.Ticks;
             }
+            
+            //NOTE: Added for enlarging small buttons in MobileUO
+            ToggleSize(UserPreferences.EnlargeSmallButtons.CurrentValue == (int) PreferenceEnums.EnlargeSmallButtons.On);
         }
 
         protected override void OnMouseEnter(int x, int y)

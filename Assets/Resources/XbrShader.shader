@@ -92,7 +92,7 @@ Shader "Unlit/XbrShader"
                 float4 H5 = tex2D(_MainTex, IN.TexCoord + 2.0 * dy);
                 float4 F4 = tex2D(_MainTex, IN.TexCoord + 2.0 * dx);
             
-                //YLMZ: Changed these matrices to be 4x4, previously they were 4x3 but non-square matrices don't work on GLES2 apparently
+                //NOTE: Changed these matrices to be 4x4, previously they were 4x3 but non-square matrices don't work on GLES2 apparently
                 float4 b = mul(float4x4(B, D, H, F), yuv_weighted);
                 float4 c = mul(float4x4(C, A, G, I), yuv_weighted);
                 float4 e = mul(float4x4(E, E, E, E), yuv_weighted);

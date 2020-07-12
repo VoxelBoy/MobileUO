@@ -67,6 +67,7 @@ public class ClientRunner : MonoBehaviour
 		UserPreferences.ContainerItemSelection.ValueChanged += OnContainerItemSelectionChanged;
 		UserPreferences.ShowModifierKeyButtons.ValueChanged += OnShowModifierKeyButtonsChanged;
 		UserPreferences.EnableAssistant.ValueChanged += OnEnableAssistantChanged;
+		UserPreferences.EnlargeSmallButtons.ValueChanged += OnEnlargeSmallButtonsChanged;
 		OnCustomScaleSizeChanged(UserPreferences.ScaleSize.CurrentValue);
 		OnForceUseXbrChanged(UserPreferences.ForceUseXbr.CurrentValue);
 		OnShowCloseButtonsChanged(UserPreferences.ShowCloseButtons.CurrentValue);
@@ -78,6 +79,32 @@ public class ClientRunner : MonoBehaviour
 		OnContainerItemSelectionChanged(UserPreferences.ContainerItemSelection.CurrentValue);
 		OnShowModifierKeyButtonsChanged(UserPreferences.ShowModifierKeyButtons.CurrentValue);
 		OnEnableAssistantChanged(UserPreferences.EnableAssistant.CurrentValue);
+		OnEnlargeSmallButtonsChanged(UserPreferences.EnlargeSmallButtons.CurrentValue);
+	}
+
+	private void OnEnlargeSmallButtonsChanged(int currentValue)
+	{
+		var enlarge = currentValue == (int) PreferenceEnums.EnlargeSmallButtons.On;
+		if (UIManager.Gumps == null)
+		{
+			return;
+		}
+		foreach (var control in UIManager.Gumps)
+		{
+			ToggleSmallButtonsSize(control, enlarge);
+		}
+	}
+
+	private void ToggleSmallButtonsSize(Control control, bool enlarge)
+	{
+		if (control is Button button)
+		{
+			button.ToggleSize(enlarge);
+		}
+		foreach (var child in control.Children)
+		{
+			ToggleSmallButtonsSize(child, enlarge);
+		}
 	}
 
 	private void OnEnableAssistantChanged(int enableAssistantCurrentValue)
