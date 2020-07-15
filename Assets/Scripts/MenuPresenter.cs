@@ -16,6 +16,10 @@ public class MenuPresenter : MonoBehaviour
     [SerializeField] private GameObject loginButtonGameObject;
     [SerializeField] private ClientRunner clientRunner;
     [SerializeField] private Button ShowAdvancedPreferencesButton;
+    [SerializeField] private Button ShowDebugInspectorPanelButton;
+    
+    [SerializeField] private GameObject DebugInspectorPanelParent;
+    [SerializeField] private GameObject DebugHierarchyPanelParent;
     
     private readonly List<OptionEnumView> optionEnumViews = new List<OptionEnumView>();
     
@@ -58,10 +62,20 @@ public class MenuPresenter : MonoBehaviour
 
         ShowAdvancedPreferencesButton.onClick.AddListener(OnShowAdvancedPreferencesButtonClicked);
         ShowAdvancedPreferencesButton.transform.SetAsLastSibling();
+
+        ShowDebugInspectorPanelButton.onClick.AddListener(OnShowDebugInspectorPanelButtonClicked);
+        ShowDebugInspectorPanelButton.transform.SetAsLastSibling();
         
         clientRunner.SceneChanged += OnUoSceneChanged;
         
         optionEnumViewInstance.gameObject.SetActive(false);
+    }
+
+    private void OnShowDebugInspectorPanelButtonClicked()
+    {
+        var active = DebugInspectorPanelParent.activeSelf == false;
+        DebugInspectorPanelParent.SetActive(active);
+        DebugHierarchyPanelParent.SetActive(active);
     }
 
     private void OnShowAdvancedPreferencesButtonClicked()

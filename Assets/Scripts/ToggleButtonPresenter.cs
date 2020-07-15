@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ShowAdvancedPreferencesButtonPresenter : MonoBehaviour
+public class ToggleButtonPresenter : MonoBehaviour
 {
     [SerializeField] private Button button;
     [SerializeField] private Image image;
