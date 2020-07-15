@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -41,7 +42,7 @@ using ClassicUO.Network;
 using ClassicUO.Renderer;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
-
+using Lean.Touch;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -61,7 +62,12 @@ namespace ClassicUO
         private double _statisticsTimer;
         private double _totalElapsed, _currentFpsTime;
         private uint _totalFrames;
-        
+
+        //PinchScale vars
+        private bool IsMouseOverViewport => UIManager.MouseOverControl is WorldViewport;
+        private uint _zoominCounter;
+        private uint _zoomoutCounter;
+
         public UltimaBatcher2D Batcher => _uoSpriteBatch;
         public static UnityEngine.TouchScreenKeyboard TouchScreenKeyboard;
 
@@ -927,6 +933,37 @@ namespace ClassicUO
                     var mouseMotion = finger.ScreenPosition != finger.LastScreenPosition;
                     SimulateMouse(finger.Down, finger.Up, false, false, mouseMotion, false);
                 }
+
+                //var fingerss = Lean.Touch.LeanTouch.GetFingers(true, false);
+                if (fingers.Count == 2 && ProfileManager.Current.EnableMousewheelScaleZoom && IsMouseOverViewport)
+                {                    
+                    var scale = LeanGesture.GetPinchScale(fingers, 0.0f);                  
+                    if(scale<1)
+                    {
+                        _zoomoutCounter++;
+                        //Client.Game.GetScene<GameScene>().ZoomOut();
+                        
+                    }
+                    else if(scale>1)
+                    {
+                        _zoominCounter++;
+                        //Client.Game.GetScene<GameScene>().ZoomIn();
+                    }
+
+                    if(_zoominCounter>3)
+                    {
+                        _zoominCounter = 0;
+                        _zoomoutCounter = 0;
+                        Client.Game.GetScene<GameScene>().ZoomIn();
+                    }
+                    else if(_zoomoutCounter>3)
+                    {
+                        _zoominCounter = 0;
+                        _zoomoutCounter = 0;
+                        Client.Game.GetScene<GameScene>().ZoomOut();
+                    }
+                }
+
             }
             else
             {
