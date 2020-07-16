@@ -27,8 +27,6 @@ public class ClientRunner : MonoBehaviour
 	[SerializeField]
 	private bool forceEnterWorld;
 	[SerializeField]
-	private bool saveAllTextures;
-	[SerializeField]
 	private bool scaleGameToFitScreen;
 	[SerializeField]
 	private MobileJoystick movementJoystick;
@@ -267,26 +265,6 @@ public class ClientRunner : MonoBehaviour
         Client.Game.DrawUnity(UnityEngine.Time.deltaTime);
 
         forceEnterWorld = false;
-
-        if (saveAllTextures)
-        {
-	        /*
-	        var texturesPath = Path.Combine(Application.persistentDataPath, "Textures");
-	        Directory.CreateDirectory(texturesPath);
-	        Client.Game.Batcher.SeenTextures.ToList().ForEach(texture =>
-		        {
-			        if (texture.UnityTexture is Texture2D unityTexture)
-			        {
-				        File.WriteAllBytes(Path.Combine(texturesPath, texture.Hash + ".png"), unityTexture.EncodeToPNG());
-			        }
-		        });
-	        Debug.Log($"Saved {Client.Game.Batcher.SeenTextures.Count} textures to {texturesPath}");
-
-	        Client.Game.Batcher.smallTexturesAtlas.Save();
-	        */
-        }
-
-        saveAllTextures = false;
     }
 
     public void StartGame(ServerConfiguration config)

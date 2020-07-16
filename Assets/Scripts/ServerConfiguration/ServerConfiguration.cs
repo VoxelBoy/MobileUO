@@ -14,10 +14,18 @@ public class ServerConfiguration
     public bool UseEncryption;
     public string ClientPathForUnityEditor;
     public bool AllFilesDownloaded;
+    public bool PreferExternalStorage;
 
     public string GetPathToSaveFiles()
     {
-        return Path.Combine(Application.persistentDataPath, Name);
+        var dataPath = Application.persistentDataPath;
+        
+        if (PreferExternalStorage && string.IsNullOrEmpty(Init.ExternalStoragePath) == false)
+        {
+            dataPath = Init.ExternalStoragePath;
+        }
+        
+        return Path.Combine(dataPath, Name);
     }
 
     public void CreateDirectoryToSaveFiles()
@@ -37,7 +45,8 @@ public class ServerConfiguration
             ClientVersion = this.ClientVersion,
             UseEncryption = this.UseEncryption,
             ClientPathForUnityEditor = this.ClientPathForUnityEditor,
-            AllFilesDownloaded = this.AllFilesDownloaded
+            AllFilesDownloaded = this.AllFilesDownloaded,
+            PreferExternalStorage = this.PreferExternalStorage
         };
     }
 }

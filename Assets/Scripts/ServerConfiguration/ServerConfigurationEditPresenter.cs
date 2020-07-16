@@ -43,6 +43,12 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
     private Toggle useEncryptionToggle;
     
     [SerializeField]
+    private Toggle useExternalStorageToggle;
+    
+    [SerializeField]
+    private GameObject useExternalStorageParent;
+    
+    [SerializeField]
     private InputField clientPathForUnityEditorInputField;
     
     [SerializeField]
@@ -115,11 +121,14 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         fileDownloadServerPortInputField.text = serverConfigurationToEdit?.FileDownloadServerPort ?? DownloadState.DefaultFileDownloadPort;
         clientVersionInputField.text = serverConfigurationToEdit?.ClientVersion ?? "";
         useEncryptionToggle.isOn = serverConfigurationToEdit?.UseEncryption ?? false;
+        useExternalStorageToggle.isOn = serverConfigurationToEdit?.PreferExternalStorage ?? false;
         clientPathForUnityEditorInputField.text = serverConfigurationToEdit?.ClientPathForUnityEditor ?? "";
         clientPathForUnityEditorParent.SetActive(Application.isMobilePlatform == false);
         
         documentationButtonParent.SetActive(true);
         validationErrorTextParent.SetActive(false);
+        
+        useExternalStorageParent.SetActive(Application.platform == RuntimePlatform.Android);
         
         deleteServerConfigurationButtonOriginalText = deleteServerConfigurationButtonText.text;
         deleteServerFilesButtonOriginalText = deleteServerFilesButtonText.text;
@@ -216,7 +225,10 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
             //Rename directory where client files are saved, if it exists
             var currentDirectoryPath = serverConfigurationToEdit.GetPathToSaveFiles();
             var directoryInfo = new DirectoryInfo(currentDirectoryPath);
-            var newDirectoryPath = Path.Combine(Application.persistentDataPath, serverNameInputField.text);
+            
+            ServerConfigurationToEdit.Name = serverNameInputField.text;
+            var newDirectoryPath = serverConfigurationToEdit.GetPathToSaveFiles();
+            
             if (directoryInfo.Exists)
             {
                 Directory.Move(currentDirectoryPath, newDirectoryPath);
@@ -225,7 +237,6 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
             {
                 Directory.CreateDirectory(newDirectoryPath);
             }
-            ServerConfigurationToEdit.Name = serverNameInputField.text;
         }
         ServerConfigurationToEdit.UoServerUrl = uoServerUrlInputField.text;
         ServerConfigurationToEdit.UoServerPort = uoServerPortInputField.text;
@@ -233,6 +244,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         ServerConfigurationToEdit.FileDownloadServerPort = fileDownloadServerPortInputField.text;
         ServerConfigurationToEdit.ClientVersion = clientVersionInputField.text;
         ServerConfigurationToEdit.UseEncryption = useEncryptionToggle.isOn;
+        ServerConfigurationToEdit.PreferExternalStorage = useExternalStorageToggle.isOn;
         ServerConfigurationToEdit.ClientPathForUnityEditor = clientPathForUnityEditorInputField.text;
         
         OnConfigurationEditSaved?.Invoke();

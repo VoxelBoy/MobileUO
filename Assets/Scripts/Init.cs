@@ -20,8 +20,12 @@ public class Init : MonoBehaviour
     [SerializeField]
     private SupportedServerConfigurations supportedServerConfigurations;
 
+    public static string ExternalStoragePath { get; private set; }
+
     private void Awake()
     {
+        ExternalStoragePath = GetAndroidExternalFilesDir();
+        
         ConsoleRedirect.Redirect();
         
         UserPreferences.Initialize();
@@ -38,9 +42,6 @@ public class Init : MonoBehaviour
         ServerConfigurationModel.Initialize(supportedServerConfigurations);
         
         StateManager.GoToState<BootState>();
-
-        //Commented out for now, will be used later once I have an SD card to test with
-        //GetAndroidExternalFilesDir();
     }
 
     private void OnShowDebugConsoleChanged(int currentValue)
@@ -70,21 +71,16 @@ public class Init : MonoBehaviour
                         bool isEmulated = environment.CallStatic<bool> ("isExternalStorageEmulated", directory);
                         if (isEmulated)
                             emulated = directory;
-                        else if (isRemovable && isEmulated == false)
+                        else if (isRemovable)
                             sdCard = directory;
                     }
                 }
-                
-                // Return the sdCard if available
-                if (sdCard != null)
-                {
-                    return sdCard.Call<string>("getAbsolutePath");
-                }
 
-                return emulated.Call<string>("getAbsolutePath");
+                // Return the sdCard if available
+                return sdCard?.Call<string>("getAbsolutePath");
             }
         }
         #endif
-        return string.Empty;
+        return null;
     }
 }
