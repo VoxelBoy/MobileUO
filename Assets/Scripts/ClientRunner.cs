@@ -44,6 +44,8 @@ public class ClientRunner : MonoBehaviour
 	private ModifierKeyButtonPresenter altKeyButtonPresenter;
 	[SerializeField]
 	private ModifierKeyButtonPresenter shiftKeyButtonPresenter;
+	[SerializeField]
+	private UnityEngine.UI.Button escButton;
 
 	private int lastScreenWidth;
 	private int lastScreenHeight;
@@ -78,6 +80,16 @@ public class ClientRunner : MonoBehaviour
 		OnShowModifierKeyButtonsChanged(UserPreferences.ShowModifierKeyButtons.CurrentValue);
 		OnEnableAssistantChanged(UserPreferences.EnableAssistant.CurrentValue);
 		OnEnlargeSmallButtonsChanged(UserPreferences.EnlargeSmallButtons.CurrentValue);
+		
+		escButton.onClick.AddListener(OnEscButtonClicked);
+	}
+
+	private void OnEscButtonClicked()
+	{
+		if (Client.Game != null)
+		{
+			Client.Game.EscOverride = true;
+		}
 	}
 
 	private void OnEnlargeSmallButtonsChanged(int currentValue)

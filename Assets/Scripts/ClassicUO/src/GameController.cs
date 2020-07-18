@@ -825,6 +825,7 @@ namespace ClassicUO
         private readonly UnityEngine.KeyCode[] _keyCodeEnumValues = (UnityEngine.KeyCode[]) Enum.GetValues(typeof(UnityEngine.KeyCode));
         private UnityEngine.Vector3 lastMousePosition;
         public SDL_Keymod KeymodOverride;
+        public bool EscOverride;
         private int zoomCounter;
 
         private void MouseUpdate()
@@ -992,7 +993,6 @@ namespace ClassicUO
                 keymod |= SDL_Keymod.KMOD_RCTRL;
             }
             
-            //Potential fix for hold alt to move gumps not working on mobile?
             Keyboard.Shift = (keymod & SDL_Keymod.KMOD_SHIFT) != SDL_Keymod.KMOD_NONE;
             Keyboard.Alt = (keymod & SDL_Keymod.KMOD_ALT) != SDL_Keymod.KMOD_NONE;
             Keyboard.Ctrl = (keymod & SDL_Keymod.KMOD_CTRL) != SDL_Keymod.KMOD_NONE;
@@ -1014,6 +1014,32 @@ namespace ClassicUO
                         _ignoreNextTextInput = true;
                 }
                 if (UnityEngine.Input.GetKeyUp(keyCode))
+                {
+                    Keyboard.OnKeyUp(key);
+                    UIManager.KeyboardFocusControl?.InvokeKeyUp(key.keysym.sym, key.keysym.mod);
+                    _scene.OnKeyUp(key);
+                    Plugin.ProcessHotkeys(0, 0, false);
+                }
+            }
+
+            if (EscOverride)
+            {
+                EscOverride = false;
+                var key = new SDL_KeyboardEvent {keysym = new SDL_Keysym {sym = (SDL_Keycode) UnityEngine.KeyCode.Escape, mod = keymod}};
+                // if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+                {
+                    Keyboard.OnKeyDown(key);
+
+                    if (Plugin.ProcessHotkeys((int) key.keysym.sym, (int) key.keysym.mod, true))
+                    {
+                        _ignoreNextTextInput = false;
+                        UIManager.KeyboardFocusControl?.InvokeKeyDown(key.keysym.sym, key.keysym.mod);
+                        _scene.OnKeyDown(key);
+                    }
+                    else
+                        _ignoreNextTextInput = true;
+                }
+                // if (UnityEngine.Input.GetKeyUp(KeyCode.Escape))
                 {
                     Keyboard.OnKeyUp(key);
                     UIManager.KeyboardFocusControl?.InvokeKeyUp(key.keysym.sym, key.keysym.mod);
