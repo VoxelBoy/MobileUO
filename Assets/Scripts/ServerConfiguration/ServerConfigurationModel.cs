@@ -94,19 +94,20 @@ public static class ServerConfigurationModel
     public static void DeleteConfiguration(ServerConfiguration config)
     {
         ServerConfigurations.Remove(config);
-        DeleteConfigurationFiles(config, false);
-    }
-
-    public static void DeleteConfigurationFiles(ServerConfiguration config, bool createEmptyDirectory = true)
-    {
         var directoryInfo = new DirectoryInfo(config.GetPathToSaveFiles());
         if (directoryInfo.Exists)
         {
             directoryInfo.Delete(true);
         }
-        if (createEmptyDirectory)
+    }
+
+    public static void DeleteConfigurationFiles(ServerConfiguration config)
+    {
+        var directoryInfo = new DirectoryInfo(config.GetPathToSaveFiles());
+        if (directoryInfo.Exists)
         {
-            config.CreateDirectoryToSaveFiles();
+            //Delete all files that have an extension contained in DownloadState.NeededUoFileExtensions
+            directoryInfo.GetFiles().Where(f => DownloadState.NeededUoFileExtensions.Contains(f.Extension)).ToList().ForEach(f1 => f1.Delete());
         }
         config.AllFilesDownloaded = false;
         SaveServerConfigurations();

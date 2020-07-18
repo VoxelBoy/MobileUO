@@ -27,7 +27,7 @@ public class RenaissanceDownloader : DownloaderBase
             var files = payloadDictionary["Files"].Select(x => x["Name"].Value<string>());
             
             //Find the files with the right extension
-            var filesToDownload = files.Where(x => downloadState.NeededUoFileExtensions.Any(x.Contains)).ToList();
+            var filesToDownload = files.Where(x => DownloadState.NeededUoFileExtensions.Any(x.Contains)).ToList();
             
             //Get rid of paths with backslash in them now to prevent downloading files from subdirectories
             filesToDownload.RemoveAll(x => x.Contains("\\"));

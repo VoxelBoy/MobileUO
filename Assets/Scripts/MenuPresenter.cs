@@ -29,6 +29,10 @@ public class MenuPresenter : MonoBehaviour
     {
         menuButton.onClick.AddListener(OnMenuButtonClicked);
         
+        //Only show login button when UO client is running and we're in the login scene
+        loginButtonGameObject.transform.SetAsFirstSibling();
+        loginButtonGameObject.SetActive(false);
+        
         GetOptionEnumViewInstance().Initialize(typeof(ShowCloseButtons), UserPreferences.ShowCloseButtons, "Close Buttons", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(ScaleSizes), UserPreferences.ScaleSize, "View Scale", true, true);
         GetOptionEnumViewInstance().Initialize(typeof(EnlargeSmallButtons), UserPreferences.EnlargeSmallButtons, "Enlarge Small Buttons", false, false);
@@ -42,23 +46,19 @@ public class MenuPresenter : MonoBehaviour
         GetOptionEnumViewInstance().Initialize(typeof(JoystickOpacity), UserPreferences.JoystickOpacity, "Joystick Opacity", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(JoystickDeadZone), UserPreferences.JoystickDeadZone, "Joystick DeadZone", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(JoystickRunThreshold), UserPreferences.JoystickRunThreshold, "Joystick Run Threshold", false, false);
+
+        //Only show customize joystick button when UO client is running and we're in the game scene
+        customizeJoystickButtonGameObject.transform.SetAsLastSibling();
+        customizeJoystickButtonGameObject.SetActive(false);
+        
         GetOptionEnumViewInstance().Initialize(typeof(ShowModifierKeyButtons), UserPreferences.ShowModifierKeyButtons, "Show Modifier Key Buttons", false, false);
 #if ENABLE_INTERNAL_ASSISTANT
         GetOptionEnumViewInstance().Initialize(typeof(EnableAssistant), UserPreferences.EnableAssistant, "Enable Assistant", false, false);
 #endif
         
         //Options that are hidden by default
-        GetOptionEnumViewInstance().Initialize(typeof(UsePointerChecks), UserPreferences.UsePointerChecks, "Use Pointer Checks", false, false, true);
         GetOptionEnumViewInstance().Initialize(typeof(ShowDebugConsole), UserPreferences.ShowDebugConsole, "Show Debug Console", false, false, true);
         GetOptionEnumViewInstance().Initialize(typeof(VisualizeFingerInput), UserPreferences.VisualizeFingerInput, "Visualize Finger Input", false, false, true);
-        
-        //Only show customize joystick button when UO client is running and we're in the game scene
-        customizeJoystickButtonGameObject.transform.SetAsLastSibling();
-        customizeJoystickButtonGameObject.SetActive(false);
-        
-        //Only show login button when UO client is running and we're in the login scene
-        loginButtonGameObject.transform.SetAsFirstSibling();
-        loginButtonGameObject.SetActive(false);
 
         ShowAdvancedPreferencesButton.onClick.AddListener(OnShowAdvancedPreferencesButtonClicked);
         ShowAdvancedPreferencesButton.transform.SetAsLastSibling();

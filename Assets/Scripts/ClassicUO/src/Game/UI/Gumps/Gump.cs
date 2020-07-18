@@ -59,7 +59,8 @@ namespace ClassicUO.Game.UI.Gumps
 
         GT_DEBUG,
         GT_NETSTATS,
-        GT_ASSISTANTMACROBUTTON
+        GT_ASSISTANTMACROBUTTON,
+        GT_ASSISTANTHOTKEYBUTTON
     }
 
     internal class Gump : Control

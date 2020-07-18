@@ -74,7 +74,7 @@ public class OutlandsDownloader : DownloaderBase
             lines.RemoveAll(x => x.StartsWith("\\-"));
 
             //For files with the right extension, remove first character (backslash)
-            var filesToDownload = lines.Where(x => downloadState.NeededUoFileExtensions.Any(x.Contains)).Select(y => y.Substring(1)).ToList();
+            var filesToDownload = lines.Where(x => DownloadState.NeededUoFileExtensions.Any(x.Contains)).Select(y => y.Substring(1)).ToList();
             //For files with a plus at the beginning, remove first character
             filesToDownload = filesToDownload.Select(x => x.StartsWith("+") ? x.Substring(1) : x).ToList();
             

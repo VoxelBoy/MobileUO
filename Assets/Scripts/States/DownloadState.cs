@@ -10,7 +10,7 @@ public class DownloadState : IState
     public List<string> FilesToDownload;
     public string ResourcePathForFilesToDownload;
     
-    public readonly List<string> NeededUoFileExtensions = new List<string>{".def", ".mul", ".idx", ".uop", ".enu", ".rle", ".txt"};
+    public static readonly List<string> NeededUoFileExtensions = new List<string>{".def", ".mul", ".idx", ".uop", ".enu", ".rle", ".txt"};
     public const string DefaultFileDownloadPort = "8080";
     
     private readonly DownloadPresenter downloadPresenter;

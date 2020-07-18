@@ -84,6 +84,14 @@ public class ClientRunner : MonoBehaviour
 		escButton.onClick.AddListener(OnEscButtonClicked);
 	}
 
+	private void OnDisable()
+	{
+		if (modifierKeyButtonsParent != null)
+		{
+			modifierKeyButtonsParent.SetActive(false);
+		}
+	}
+
 	private void OnEscButtonClicked()
 	{
 		if (Client.Game != null)
@@ -137,7 +145,10 @@ public class ClientRunner : MonoBehaviour
 
 	private void OnShowModifierKeyButtonsChanged(int currentValue)
 	{
-		modifierKeyButtonsParent.SetActive(currentValue == (int) PreferenceEnums.ShowModifierKeyButtons.On);
+		if (Client.Game != null)
+		{
+			modifierKeyButtonsParent.SetActive(currentValue == (int) PreferenceEnums.ShowModifierKeyButtons.On);
+		}
 	}
 
 	private void OnForceUseXbrChanged(int currentValue)
@@ -352,6 +363,11 @@ public class ClientRunner : MonoBehaviour
 #endif
 		    Client.Game.Exiting += OnGameExiting;
 		    ApplyScalingFactor();
+
+		    if (UserPreferences.ShowModifierKeyButtons.CurrentValue == (int) PreferenceEnums.ShowModifierKeyButtons.On)
+		    {
+			    modifierKeyButtonsParent.SetActive(true);
+		    }
 	    }
 	    catch (Exception e)
 	    {

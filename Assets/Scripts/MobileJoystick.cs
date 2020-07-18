@@ -54,8 +54,7 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (UserPreferences.UsePointerChecks.CurrentValue == (int) PreferenceEnums.UsePointerChecks.On
-            && eventData.pointerId != pointerId)
+        if (eventData.pointerId != pointerId)
         {
             return;
         }
@@ -65,8 +64,7 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (UserPreferences.UsePointerChecks.CurrentValue == (int) PreferenceEnums.UsePointerChecks.On
-            && eventData.pointerEnter != gameObject)
+        if (eventData.pointerEnter != gameObject)
         {
             return;
         }
@@ -78,8 +76,7 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (UserPreferences.UsePointerChecks.CurrentValue == (int) PreferenceEnums.UsePointerChecks.On
-            && eventData.pointerId != pointerId)
+        if (eventData.pointerId != pointerId)
         {
             return;
         }
