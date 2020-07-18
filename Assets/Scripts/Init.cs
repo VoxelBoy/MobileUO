@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Init : MonoBehaviour
 {
@@ -24,8 +25,6 @@ public class Init : MonoBehaviour
 
     private void Awake()
     {
-        ExternalStoragePath = GetAndroidExternalFilesDir();
-        
         ConsoleRedirect.Redirect();
         
         UserPreferences.Initialize();
@@ -42,6 +41,8 @@ public class Init : MonoBehaviour
         ServerConfigurationModel.Initialize(supportedServerConfigurations);
         
         StateManager.GoToState<BootState>();
+        
+        ExternalStoragePath = GetAndroidExternalFilesDir();
     }
 
     private void OnShowDebugConsoleChanged(int currentValue)
@@ -52,33 +53,42 @@ public class Init : MonoBehaviour
     private static string GetAndroidExternalFilesDir()
     {
         #if UNITY_ANDROID && !UNITY_EDITOR
-        using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        try
         {
-            using (AndroidJavaObject context = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+            using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
             {
-                // Get all available external file directories (emulated and sdCards)
-                AndroidJavaObject[] externalFilesDirectories = context.Call<AndroidJavaObject[], string>("getExternalFilesDirs", null);
-                AndroidJavaObject emulated = null;
-                AndroidJavaObject sdCard = null;
-
-                for (int i = 0; i < externalFilesDirectories.Length; i++)
+                using (AndroidJavaObject context = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
                 {
-                    AndroidJavaObject directory = externalFilesDirectories[i];
-                    using (AndroidJavaClass environment = new AndroidJavaClass("android.os.Environment"))
-                    {
-                        // Check which one is the emulated and which the sdCard.
-                        bool isRemovable = environment.CallStatic<bool> ("isExternalStorageRemovable", directory);
-                        bool isEmulated = environment.CallStatic<bool> ("isExternalStorageEmulated", directory);
-                        if (isEmulated)
-                            emulated = directory;
-                        else if (isRemovable)
-                            sdCard = directory;
-                    }
-                }
+                    // Get all available external file directories (emulated and sdCards)
+                    AndroidJavaObject[] externalFilesDirectories =
+                        context.Call<AndroidJavaObject[], string>("getExternalFilesDirs", null);
+                    AndroidJavaObject emulated = null;
+                    AndroidJavaObject sdCard = null;
 
-                // Return the sdCard if available
-                return sdCard?.Call<string>("getAbsolutePath");
+                    for (int i = 0; i < externalFilesDirectories.Length; i++)
+                    {
+                        AndroidJavaObject directory = externalFilesDirectories[i];
+                        using (AndroidJavaClass environment = new AndroidJavaClass("android.os.Environment"))
+                        {
+                            // Check which one is the emulated and which the sdCard.
+                            bool isRemovable = environment.CallStatic<bool>("isExternalStorageRemovable", directory);
+                            bool isEmulated = environment.CallStatic<bool>("isExternalStorageEmulated", directory);
+                            if (isEmulated)
+                                emulated = directory;
+                            else if (isRemovable)
+                                sdCard = directory;
+                        }
+                    }
+
+                    // Return the sdCard if available
+                    return sdCard?.Call<string>("getAbsolutePath");
+                }
             }
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+            return null;
         }
         #endif
         return null;
