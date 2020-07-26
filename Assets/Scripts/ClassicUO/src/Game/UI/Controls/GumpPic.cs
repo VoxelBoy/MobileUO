@@ -45,18 +45,21 @@ namespace ClassicUO.Game.UI.Controls
             get => _graphic;
             set
             {
-                _graphic = value;
-
-                var texture = GumpsLoader.Instance.GetTexture(_graphic);
-
-                if (texture == null)
+                //if (_graphic != value)
                 {
-                    Dispose();
-                    return;
-                }
+                    _graphic = value;
 
-                Width = texture.Width;
-                Height = texture.Height;
+                    var texture = GumpsLoader.Instance.GetTexture(_graphic);
+
+                    if (texture == null)
+                    {
+                        Dispose();
+                        return;
+                    }
+
+                    Width = texture.Width;
+                    Height = texture.Height;
+                }              
             }
         }
 
@@ -94,6 +97,7 @@ namespace ClassicUO.Game.UI.Controls
             Y = y;
             Graphic = graphic;
             Hue = hue;
+            IsFromServer = true;
         }
 
         public GumpPic(List<string> parts) : this(int.Parse(parts[1]), int.Parse(parts[2]), UInt16Converter.Parse(parts[3]), (ushort) (parts.Count > 4 ? TransformHue((ushort) (UInt16Converter.Parse(parts[4].Substring(parts[4].IndexOf('=') + 1)) + 1)) : 0))

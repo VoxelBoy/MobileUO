@@ -52,7 +52,7 @@ namespace ClassicUO.Game.UI.Controls
             }
 
             // stb_textedit will handle part of these tag
-            style &= ~(FontStyle.Fixed | FontStyle.Cropped | FontStyle.CropTexture);
+            style &= ~(/*FontStyle.Fixed | */FontStyle.Cropped | FontStyle.CropTexture);
 
             _rendererText = RenderedText.Create(string.Empty, hue, font, isunicode, style, align, maxWidth, 30, false, false, false);
             _rendererCaret = RenderedText.Create("_", hue, font, isunicode, (style & FontStyle.BlackBorder) != 0 ? FontStyle.BlackBorder : FontStyle.None, align: align);
@@ -72,6 +72,8 @@ namespace ClassicUO.Game.UI.Controls
             Multiline = false;
             _fromServer = true;
             LocalSerial = SerialHelper.Parse(parts[6]);
+            IsFromServer = true;
+
             int index = int.Parse(parts[7]);
 
             if (index >= 0 && index < lines.Length)
@@ -380,7 +382,7 @@ namespace ClassicUO.Game.UI.Controls
                     int selectStart = Math.Min(_stb.SelectStart, _stb.SelectEnd);
                     int selectEnd = Math.Max(_stb.SelectStart, _stb.SelectEnd);
 
-                    if (selectStart < selectEnd)
+                    if (selectStart < selectEnd && selectStart >= 0 && selectEnd - selectStart < Text.Length)
                     {
                         SDL.SDL_SetClipboardText(Text.Substring(selectStart, selectEnd - selectStart));
                     }
@@ -390,7 +392,7 @@ namespace ClassicUO.Game.UI.Controls
                     selectStart = Math.Min(_stb.SelectStart, _stb.SelectEnd);
                     selectEnd = Math.Max(_stb.SelectStart, _stb.SelectEnd);
 
-                    if (selectStart < selectEnd)
+                    if (selectStart < selectEnd && selectStart >= 0 && selectEnd - selectStart < Text.Length)
                     {
                         SDL.SDL_SetClipboardText(Text.Substring(selectStart, selectEnd - selectStart));
                         if (IsEditable)
@@ -766,7 +768,7 @@ namespace ClassicUO.Game.UI.Controls
 
         protected override void OnMouseDown(int x, int y, MouseButtonType button)
         {
-            if (button == MouseButtonType.Left)
+            if (button == MouseButtonType.Left && IsEditable)
             {
                 if (!NoSelection)
                     _leftWasDown = true;

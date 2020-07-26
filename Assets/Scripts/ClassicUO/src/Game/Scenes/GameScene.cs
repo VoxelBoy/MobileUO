@@ -805,16 +805,16 @@ namespace ClassicUO.Game.Scenes
 
                 int z = World.Player.Z + 5;
 
-                for (int i = 0; i < _renderListCount; i++)
+                for (int i = 0; i < _renderListCount; ++i)
                 {
                     GameObject obj = _renderList[i];
 
                     if (obj.Z <= _maxGroundZ)
                     {
-                        obj.DrawTransparent = usecircle && obj.TransparentTest(z);
+                        GameObject.DrawTransparent = usecircle && obj.TransparentTest(z);
 
                         if (obj.Draw(batcher, obj.RealScreenPosition.X, obj.RealScreenPosition.Y))
-                            RenderedObjectsCount++;
+                            ++RenderedObjectsCount;
                     }
                 }
 

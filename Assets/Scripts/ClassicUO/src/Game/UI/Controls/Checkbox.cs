@@ -36,6 +36,20 @@ namespace ClassicUO.Game.UI.Controls
         private readonly RenderedText _text;
         private readonly UOTexture32[] _textures = new UOTexture32[2];
         private bool _isChecked;
+        
+        //NOTE: Added for Assistant
+        public ushort Hue
+        {
+            get => _text.Hue;
+            set
+            {
+                if (_text.Hue != value)
+                {
+                    _text.Hue = value;
+                    _text.CreateTexture();
+                }
+            }
+        }
 
         public Checkbox(ushort inactive, ushort active, string text = "", byte font = 0, ushort color = 0, bool isunicode = true, int maxWidth = 0)
         {
@@ -66,6 +80,7 @@ namespace ClassicUO.Game.UI.Controls
             Y = int.Parse(parts[2]);
             IsChecked = parts[5] == "1";
             LocalSerial = SerialHelper.Parse(parts[6]);
+            IsFromServer = true;
         }
 
         public bool IsChecked

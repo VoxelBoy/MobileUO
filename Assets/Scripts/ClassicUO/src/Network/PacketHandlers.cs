@@ -1887,12 +1887,12 @@ namespace ClassicUO.Network
             if (mobile == null) return;
 
             ushort action = p.ReadUShort();
-            ushort frameCount = p.ReadUShort();
-            ushort repeatMode = p.ReadUShort();
-            bool frameDirection = !p.ReadBool();
+            ushort frame_count = p.ReadUShort();
+            ushort repeat_count = p.ReadUShort();
+            bool forward = !p.ReadBool();
             bool repeat = p.ReadBool();
             byte delay = p.ReadByte();
-            mobile.SetAnimation(Mobile.GetReplacedObjectAnimation(mobile.Graphic, action), delay, (byte) frameCount, (byte) repeatMode, repeat, frameDirection);
+            mobile.SetAnimation(Mobile.GetReplacedObjectAnimation(mobile.Graphic, action), delay, (byte) frame_count, (byte) repeat_count, repeat, forward);
             mobile.AnimationFromServer = true;
         }
 
@@ -2025,7 +2025,7 @@ namespace ClassicUO.Network
                             string poster = len > 0 ? p.ReadASCII(len) : string.Empty;
 
                             len = p.ReadByte();
-                            string subject = len > 0 ? p.ReadUTF8StringSafe() : string.Empty;
+                            string subject = len > 0 ? p.ReadUTF8StringSafe(len) : string.Empty;
 
                             len = p.ReadByte();
                             string dataTime = len > 0 ? p.ReadASCII(len) : string.Empty;
@@ -2046,7 +2046,7 @@ namespace ClassicUO.Network
 
                                 if (lineLen > 0)
                                 {
-                                    string putta = p.ReadUTF8StringSafe();
+                                    string putta = p.ReadUTF8StringSafe(len);
                                     sb.Append(putta);
                                     sb.Append('\n');
                                 }
@@ -2268,25 +2268,23 @@ namespace ClassicUO.Network
             if (obj == null)
                 return;
 
-            //if (!obj.IsEmpty)
-            //{
-            //    var o = obj.Items;
+            if (!obj.IsEmpty)
+            {
+                var o = obj.Items;
 
-            //    while (o != null)
-            //    {
-            //        var next = o.Next;
-            //        Item it = (Item) o;
+                while (o != null)
+                {
+                    var next = o.Next;
+                    Item it = (Item) o;
 
-            //        if (!it.Opened && it.Layer != Layer.Backpack)
-            //        {
-            //            RemoveItemFromContainer(it);
-            //            World.Items.Remove(it.Serial);
-            //            it.Destroy();
-            //        }
+                    if (!it.Opened && it.Layer != Layer.Backpack)
+                    {
+                        World.RemoveItem(it.Serial, true);
+                    }
 
-            //        o = next;
-            //    }
-            //}
+                    o = next;
+                }
+            }
 
             if (SerialHelper.IsMobile(serial) && obj is Mobile mob)
             {
@@ -2321,41 +2319,14 @@ namespace ClassicUO.Network
                     item_hue = p.ReadUShort();
                 }
 
-                //if (Client.Version >= Data.ClientVersion.CV_70331)
-                //    itemGraphic &= 0xFFFF;
-                //else if (Client.Version >= Data.ClientVersion.CV_7090)
-                //    itemGraphic &= 0x7FFF;
-                //else
-                //    itemGraphic &= 0x3FFF;
-
-                //if (layer > 0x1D)
-                //{
-                //    layer = (byte) ((layer & 0x1D) + 1);
-                //}
 
                 Item item = World.GetOrCreateItem(itemSerial);
-
-                //if (alreadyExists)
-                //{
-                //    if (layer > 0x1D)
-                //    {
-
-                //    }
-                //}
-
                 item.Graphic = itemGraphic;
                 item.FixHue(item_hue);
                 item.Amount = 1;
                 World.RemoveItemFromContainer(item);
                 item.Container = serial;
-
-                //{
-                    item.Layer = (Layer) layer;
-               // }
-                //else
-                //{
-                //    Log.Warn($"Invalid layer in UpdateObject(). Layer: {layer}. Already exists? {alreadyExists}");
-                //}
+                item.Layer = (Layer) layer;
 
                 item.CheckGraphicChange();
 
@@ -3254,10 +3225,7 @@ namespace ClassicUO.Network
         private static void ExtendedCommand(Packet p)
         {
             ushort cmd = p.ReadUShort();
-            if(cmd == 0x11)
-            {
 
-            }
             switch (cmd)
             {
                 case 0:
@@ -3291,7 +3259,7 @@ namespace ClassicUO.Network
                     {
                         var nextGump = first.Next;
 
-                        if (first.Value.ServerSerial == ser && ser != 0)
+                        if (first.Value.ServerSerial == ser && first.Value.IsFromServer)
                         {
                             if (button != 0)
                             {
@@ -3597,10 +3565,11 @@ namespace ClassicUO.Network
                             {
                                 ushort cc = (ushort) ((j * 32) + i + 1);
                                 // FIXME: should i call Item.Create ?
-                                Item spellItem = new Item()
-                                {
-                                   Serial = cc, Graphic = 0x1F2E, Amount = cc, Container = spellbook
-                                };
+                                Item spellItem = Item.Create(cc); // new Item()
+                                spellItem.Serial = cc;
+                                spellItem.Graphic = 0x1F2E;
+                                spellItem.Amount = cc;
+                                spellItem.Container = spellbook;
                                 spellbook.PushToBack(spellItem);
                             }
                         }
@@ -3750,7 +3719,7 @@ namespace ClassicUO.Network
                     //       // byte group = Mobile.GetObjectNewAnimation(m, animID, action, mode);
                     //        m.SetAnimation(animID);
                     //        //m.AnimationRepeatMode = 1;
-                    //        //m.AnimationDirection = true;
+                    //        //m.AnimationForwardDirection = true;
                     //        //if ((type == 1 || type == 2) && mobile.Graphic == 0x0015)
                     //        //    mobile.AnimationRepeat = true;
                     //        //mobile.AnimationFromServer = true;
@@ -4370,7 +4339,7 @@ namespace ClassicUO.Network
             byte group = Mobile.GetObjectNewAnimation(mobile, type, action, mode);
             mobile.SetAnimation(group);
             mobile.AnimationRepeatMode = 1;
-            mobile.AnimationDirection = true;
+            mobile.AnimationForwardDirection = true;
             if ((type == 1 || type == 2) && mobile.Graphic == 0x0015) mobile.AnimationRepeat = true;
             mobile.AnimationFromServer = true;
         }
@@ -4711,13 +4680,8 @@ namespace ClassicUO.Network
             item.Y = y;
             item.Z = 0;
 
-            if (SerialHelper.IsValid(item.Container))
-            {
-                World.RemoveItemFromContainer(item);
-            }
-
+            World.RemoveItemFromContainer(item);
             item.Container = containerSerial;
-
             container.PushToBack(item);
 
             if (SerialHelper.IsMobile(containerSerial))
@@ -4970,14 +4934,10 @@ namespace ClassicUO.Network
             }
             else
             {
-                if (ItemHold.Serial == serial)
+                if (ItemHold.Serial == serial && ItemHold.Dropped)
                 {
-                    Console.WriteLine("ITEM FOUND TO CLEAR");
-                    if (ItemHold.Dropped)
-                    {
-                        Console.WriteLine("....AND IT IS DROPPED!");
-                    }
-
+                    // we want maintain the item data due to the denymoveitem packet
+                    //ItemHold.Clear();
                     ItemHold.Enabled = false;
                     ItemHold.Dropped = false;
                 }
@@ -5133,7 +5093,8 @@ namespace ClassicUO.Network
                     CanMove = true,
                     CanCloseWithRightClick = true,
                     CanCloseWithEsc = true,
-                    InvalidateContents = false
+                    InvalidateContents = false,
+                    IsFromServer = true
                 };
             int group = 0;
             int page = 0;
@@ -5279,7 +5240,7 @@ namespace ClassicUO.Network
                         break;
 
                     case "xmfhtmlgump":
-                        gump.Add(new HtmlControl(int.Parse(gparams[1]), int.Parse(gparams[2]), int.Parse(gparams[3]), int.Parse(gparams[4]), int.Parse(gparams[6]) == 1, int.Parse(gparams[7]) != 0, gparams[6] != "0" && gparams[7] == "2", ClilocLoader.Instance.GetString(int.Parse(gparams[5].Replace("#", ""))), 0, true), page);
+                        gump.Add(new HtmlControl(int.Parse(gparams[1]), int.Parse(gparams[2]), int.Parse(gparams[3]), int.Parse(gparams[4]), int.Parse(gparams[6]) == 1, int.Parse(gparams[7]) != 0, gparams[6] != "0" && gparams[7] == "2", ClilocLoader.Instance.GetString(int.Parse(gparams[5].Replace("#", ""))), 0, true) { IsFromServer = true }, page);
 
                         break;
 
@@ -5288,7 +5249,7 @@ namespace ClassicUO.Network
 
                         if (color == 0x7FFF)
                             color = 0x00FFFFFF;
-                        gump.Add(new HtmlControl(int.Parse(gparams[1]), int.Parse(gparams[2]), int.Parse(gparams[3]), int.Parse(gparams[4]), int.Parse(gparams[6]) == 1, int.Parse(gparams[7]) != 0, gparams[6] != "0" && gparams[7] == "2", ClilocLoader.Instance.GetString(int.Parse(gparams[5].Replace("#", ""))), color, true), page);
+                        gump.Add(new HtmlControl(int.Parse(gparams[1]), int.Parse(gparams[2]), int.Parse(gparams[3]), int.Parse(gparams[4]), int.Parse(gparams[6]) == 1, int.Parse(gparams[7]) != 0, gparams[6] != "0" && gparams[7] == "2", ClilocLoader.Instance.GetString(int.Parse(gparams[5].Replace("#", ""))), color, true) { IsFromServer = true }, page);
 
                         break;
 
@@ -5310,7 +5271,7 @@ namespace ClassicUO.Network
                             }
                         }
 
-                        gump.Add(new HtmlControl(int.Parse(gparams[1]), int.Parse(gparams[2]), int.Parse(gparams[3]), int.Parse(gparams[4]), int.Parse(gparams[5]) == 1, int.Parse(gparams[6]) != 0, gparams[5] != "0" && gparams[6] == "2", sb == null ? ClilocLoader.Instance.GetString(int.Parse(gparams[8].Replace("#", ""))) : ClilocLoader.Instance.Translate(int.Parse(gparams[8].Replace("#", "")), sb.ToString().Trim('@').Replace('@', '\t')), color, true), page);
+                        gump.Add(new HtmlControl(int.Parse(gparams[1]), int.Parse(gparams[2]), int.Parse(gparams[3]), int.Parse(gparams[4]), int.Parse(gparams[5]) == 1, int.Parse(gparams[6]) != 0, gparams[5] != "0" && gparams[6] == "2", sb == null ? ClilocLoader.Instance.GetString(int.Parse(gparams[8].Replace("#", ""))) : ClilocLoader.Instance.Translate(int.Parse(gparams[8].Replace("#", "")), sb.ToString().Trim('@').Replace('@', '\t')), color, true) { IsFromServer = true }, page);
 
                         break;
 

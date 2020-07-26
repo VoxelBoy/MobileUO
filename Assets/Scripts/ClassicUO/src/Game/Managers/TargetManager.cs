@@ -119,7 +119,6 @@ namespace ClassicUO.Game.Managers
     internal static class TargetManager
     {
         private static uint _targetCursorId;
-
         private static byte[] _lastDataBuffer = new byte[19];
 
 
@@ -139,6 +138,8 @@ namespace ClassicUO.Game.Managers
         {
             if (TargetingState == CursorTarget.MultiPlacement)
             {
+                MultiTargetInfo = null;
+                TargetingState = 0;
                 World.HouseManager.Remove(0);
             }
 
@@ -253,7 +254,7 @@ namespace ClassicUO.Game.Managers
                                     showCriminalQuery = true;
                                 }
 
-                                if (showCriminalQuery)
+                                if (showCriminalQuery && UIManager.GetGump<QuestionGump>() == null)
                                 {
                                     QuestionGump messageBox = new QuestionGump("This may flag\nyou criminal!",
                                                                                s =>
