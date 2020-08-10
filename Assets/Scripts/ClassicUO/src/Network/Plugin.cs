@@ -82,11 +82,25 @@ namespace ClassicUO.Network
         private OnGetCliloc _get_cliloc;
 
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] 
         private delegate void OnInstall(void* header);
+
+        [return: MarshalAs(UnmanagedType.I1)] 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate bool OnPacketSendRecv_new(byte[] data, ref int length);
+
+        [return: MarshalAs(UnmanagedType.I1)] 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] 
         private delegate bool OnPacketSendRecv_new_intptr(IntPtr data, ref int length);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] 
         private delegate int OnDrawCmdList([Out] out IntPtr cmdlist, ref int size);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] 
         private delegate int OnWndProc(SDL.SDL_Event* ev);
+
+        [return: MarshalAs(UnmanagedType.I1)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate bool OnGetStaticData(int index, ref ulong flags,
                                               ref byte weight,
                                               ref byte layer,
@@ -95,15 +109,23 @@ namespace ClassicUO.Network
                                               ref ushort lightidx,
                                               ref byte height,
                                               ref string name);
+
+        [return: MarshalAs(UnmanagedType.I1)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate bool OnGetTileData(int index, ref ulong flags,
                                             ref ushort textid,
                                             ref string name);
+
+        [return: MarshalAs(UnmanagedType.I1)] 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] 
         private delegate bool OnGetCliloc(int cliloc, [MarshalAs(UnmanagedType.LPStr)] string args, bool capitalize, [Out] [MarshalAs(UnmanagedType.LPStr)] out string buffer);
 
 
         [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteFile(string name);
+
+
 
         struct PluginHeader
         {
@@ -430,9 +452,9 @@ namespace ClassicUO.Network
         private static void SetWindowTitle(string str)
         {
 #if DEV_BUILD
-            Client.Game.Window.Title = $"ClassicUO [dev] - {CUOEnviroment.Version} - {str}";
+            Client.Game.Window.Title = $"{str} - ClassicUO [dev] - {CUOEnviroment.Version}";
 #else
-            Client.Game.Window.Title = $"ClassicUO - {CUOEnviroment.Version} - {str}";
+            Client.Game.Window.Title = $"{str} - ClassicUO - { CUOEnviroment.Version}";
 #endif
         }
 
@@ -686,18 +708,16 @@ namespace ClassicUO.Network
 
         private static bool OnPluginSend(ref byte[] data, ref int length)
         {
-            if (data != null && data.Length != 0)
-            {
-                // horrible workaround to avoid ghosting item when a plugin sends drop/equip item
-                switch (data[0])
-                {
-                    case 0x08:
-                    case 0x13:
-                        ItemHold.Enabled = false;
-                        ItemHold.Dropped = true;
-                        break;
-                }
-            }
+            //if (data != null && data.Length != 0)
+            //{
+            //    // horrible workaround to avoid ghosting item when a plugin sends drag request item
+            //    switch (data[0])
+            //    {
+            //        case 0x07:
+            //            ItemHold.Clear();
+            //            break;
+            //    }
+            //}
 
 
             if (NetClient.LoginSocket.IsDisposed && NetClient.Socket.IsConnected)

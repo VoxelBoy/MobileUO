@@ -85,6 +85,16 @@ namespace ClassicUO.Game.Managers
 
             switch (type)
             {
+                case MessageType.Command:
+                case MessageType.Encoded:
+                case MessageType.System:
+                case MessageType.Party:
+                case MessageType.Guild:
+                case MessageType.Alliance:
+
+                    break;
+
+
                 case MessageType.Spell:
 
                 {
@@ -114,6 +124,7 @@ namespace ClassicUO.Game.Managers
                     goto case MessageType.Label;
                 }
 
+                default:
                 case MessageType.Focus:
                 case MessageType.Whisper:
                 case MessageType.Yell:
@@ -124,7 +135,7 @@ namespace ClassicUO.Game.Managers
                     if (parent == null)
                         break;
 
-                    TextObject msg = CreateMessage(text, hue, font, unicode, type);
+                    TextObject msg = CreateMessage(text, hue, font, unicode, type, text_type);
                     msg.Owner = parent;
 
                     if (parent is Item it && !it.OnGround)
@@ -169,22 +180,14 @@ namespace ClassicUO.Game.Managers
                     break;
       
 
-                case MessageType.Command:
-                case MessageType.Encoded:
-                case MessageType.System:
-                case MessageType.Party:
-                case MessageType.Guild:
-                case MessageType.Alliance:
+            
+                //default:
+                //    if (parent == null)
+                //        break;
 
-                    break;
+                //    parent.AddMessage(type, text, font, hue, unicode);
 
-                default:
-                    if (parent == null)
-                        break;
-
-                    parent.AddMessage(type, text, font, hue, unicode);
-
-                    break;
+                //    break;
             }
 
             MessageReceived.Raise(new UOMessageEventArgs(parent, text, name, hue, type, font, text_type, unicode, lang), parent);
@@ -196,7 +199,7 @@ namespace ClassicUO.Game.Managers
         }
 
 
-        public static TextObject CreateMessage(string msg, ushort hue, byte font, bool isunicode, MessageType type)
+        public static TextObject CreateMessage(string msg, ushort hue, byte font, bool isunicode, MessageType type, TEXT_TYPE text_type)
         {
             if (ProfileManager.Current != null && ProfileManager.Current.OverrideAllFonts)
             {
@@ -211,14 +214,19 @@ namespace ClassicUO.Game.Managers
             else
                 width = 0;
 
-            RenderedText rtext = RenderedText.Create(msg, hue, font, isunicode, FontStyle.BlackBorder, TEXT_ALIGN_TYPE.TS_LEFT, width, 30, false, false, true);
-
             TextObject text_obj = TextObject.Create();
-            text_obj.RenderedText = rtext;
             text_obj.Alpha = 0xFF;
-            text_obj.Time = CalculateTimeToLive(rtext);
             text_obj.Type = type;
             text_obj.Hue = hue;
+
+            if (!isunicode && text_type == TEXT_TYPE.OBJECT)
+            {
+                hue = 0;
+            }
+
+            text_obj.RenderedText = RenderedText.Create(msg, hue, font, isunicode, FontStyle.BlackBorder, TEXT_ALIGN_TYPE.TS_LEFT, width, 30, false, false, text_type == TEXT_TYPE.OBJECT);
+            text_obj.Time = CalculateTimeToLive(text_obj.RenderedText);
+            text_obj.RenderedText.Hue = text_obj.Hue;
 
             return text_obj;
         }

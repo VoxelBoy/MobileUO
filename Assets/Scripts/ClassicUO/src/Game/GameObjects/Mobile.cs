@@ -443,7 +443,11 @@ namespace ClassicUO.Game.GameObjects
                     }
                 }
 
-                AnimationGroup = _animationIdle[(byte)animGroup - 1, RandomHelper.GetValue(0, 2)];
+                int first_value = RandomHelper.GetValue(0, 2);
+
+                var original_value = AnimationGroup;
+
+                AnimationGroup = _animationIdle[(byte)animGroup - 1, first_value];
 
                 if (isLowExtended && AnimationGroup == 18)
                 {
@@ -454,6 +458,21 @@ namespace ClassicUO.Game.GameObjects
                     else
                     {
                         AnimationGroup = 1;
+                    }
+                }
+
+                if (!AnimationsLoader.Instance.AnimationExists(graphic, AnimationGroup))
+                {
+                    if (first_value == 0)
+                        first_value = 1;
+                    else
+                        first_value = 0;
+
+                    AnimationGroup = _animationIdle[(byte) animGroup - 1, first_value];
+
+                    if (!AnimationsLoader.Instance.AnimationExists(graphic, AnimationGroup))
+                    {
+                        SetAnimation(original_value);
                     }
                 }
             }
@@ -588,10 +607,12 @@ namespace ClassicUO.Game.GameObjects
                             }
                             else
                             {
-                                fc -= AnimationFrameCount;
+                                /*fc -= AnimationFrameCount;
 
                                 if (fc <= 0)
-                                    fc = AnimationFrameCount;
+                                    fc = AnimationFrameCount;*/
+
+                                fc = AnimationFrameCount;
                             }
                                 
                             if (AnimationForwardDirection)
@@ -775,7 +796,7 @@ namespace ClassicUO.Game.GameObjects
                             if (Z - step.Z >= 22)
                             {
                                 // oUCH!!!!
-                                AddMessage(MessageType.Label, "Ouch!");
+                                AddMessage(MessageType.Label, "Ouch!", TEXT_TYPE.CLIENT);
                             }
 
                             if (World.Player.Walker.StepInfos[World.Player.Walker.CurrentWalkSequence].Accepted)

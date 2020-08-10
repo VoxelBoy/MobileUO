@@ -19,7 +19,9 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
@@ -50,6 +52,7 @@ namespace ClassicUO.Game
     {
         private static readonly EffectManager _effectManager = new EffectManager();
         private static readonly List<uint> _toRemove = new List<uint>();
+        private static uint _time_to_delete;
 
         public static Point RangeSize;
 
@@ -190,7 +193,16 @@ namespace ClassicUO.Game
             Client.Game.Scene.Audio.PlayMusic(music, true);
         }
 
-        private static uint _time_to_delete;
+
+        /*[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool CheckToRemove(Entity obj, int distance)
+        {
+            if (Player == null || obj.Serial == Player.Serial)
+                return false;
+
+            return Math.Max(Math.Abs(obj.X - RangeSize.X), Math.Abs(obj.Y - RangeSize.Y)) > distance;
+        }
+        */
 
         public static void Update(double totalMS, double frameMS)
         {
@@ -230,7 +242,7 @@ namespace ClassicUO.Game
                 {
                     mob.Update(totalMS, frameMS);
 
-                    if (do_delete && mob.Distance > ClientViewRange)
+                    if (do_delete && mob.Distance > ClientViewRange /*CheckToRemove(mob, ClientViewRange)*/)
                         RemoveMobile(mob);
 
                     if (mob.IsDestroyed)
@@ -274,7 +286,7 @@ namespace ClassicUO.Game
                 {
                     item.Update(totalMS, frameMS);
 
-                    if (do_delete && item.OnGround && item.Distance > ClientViewRange)
+                    if (do_delete && item.OnGround && item.Distance > ClientViewRange /*CheckToRemove(item, ClientViewRange)*/)
                     {
                         if (item.IsMulti)
                         {
@@ -777,7 +789,6 @@ namespace ClassicUO.Game
 
             ObjectToRemove = 0;
             LastObject = 0;
-            HouseManager?.Clear();
             Items.Clear();
             Mobiles.Clear();
             Player?.Destroy();
@@ -788,7 +799,6 @@ namespace ClassicUO.Game
             Light.Personal = Light.RealPersonal = 0;
             ClientFeatures.SetFlags(0);
             ClientLockedFeatures.SetFlags(0);
-            HouseManager?.Clear();
             Party?.Clear();
             TargetManager.LastAttack = 0;
             MessageManager.PromptData = default;
@@ -797,6 +807,7 @@ namespace ClassicUO.Game
             CorpseManager.Clear();
             OPL.Clear();
             WMapManager.Clear();
+            HouseManager?.Clear();
 
             Season = Seasons.Summer;
             OldSeason = Seasons.Summer;
@@ -826,6 +837,11 @@ namespace ClassicUO.Game
                 {
                     if (item.RootContainer == Player)
                         continue;
+                }
+
+                if (item.OnGround && item.IsMulti)
+                {
+                    HouseManager.Remove(item.Serial);
                 }
 
                 _toRemove.Add(item);

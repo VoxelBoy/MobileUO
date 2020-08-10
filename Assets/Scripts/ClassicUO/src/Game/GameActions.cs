@@ -20,7 +20,7 @@
 #endregion
 
 using System;
-
+using System.Collections.Generic;
 using ClassicUO.Configuration;
 using ClassicUO.Data;
 using ClassicUO.Game.Data;
@@ -269,6 +269,11 @@ namespace ClassicUO.Game
 
         public static void RequestMobileStatus(uint serial)
         {
+            //Mobile mob = World.Mobiles.Get(serial);
+            //if (mob != null)
+            //{
+            //    mob.AddMessage(MessageType.Regular, "[PACKET REQUESTED]");
+            //}
             Socket.Send(new PStatusRequest(serial));
         }
 

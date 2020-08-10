@@ -20,6 +20,8 @@
 #endregion
 
 
+using ClassicUO.Utility;
+
 namespace ClassicUO.Game
 {
     internal static class Constants
@@ -106,10 +108,10 @@ namespace ClassicUO.Game
 
         public const int OUT_RANGE_COLOR = 0x038B;
         public const int DEAD_RANGE_COLOR = 0x038E;
-
         public const int DEATH_SCREEN_TIMER = 1500;
-
         public const float SOUND_DELTA = 250;
+
+        public const ushort HIGHLIGHT_CURRENT_OBJECT_HUE = 0x014;
 
         public const int MAX_JOURNAL_HISTORY_COUNT = 100;
 

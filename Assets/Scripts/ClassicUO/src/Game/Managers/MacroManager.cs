@@ -46,7 +46,7 @@ namespace ClassicUO.Game.Managers
         private readonly byte[] _skillTable =
         {
             1, 2, 35, 4, 6, 12,
-            14, 15, 16, 19, 21, 0xFF /*imbuing*/,
+            14, 15, 16, 19, 21, 56 /*imbuing*/,
             23, 3, 46, 9, 30, 22,
             48, 32, 33, 47, 36, 38
         };
@@ -1020,13 +1020,6 @@ namespace ClassicUO.Game.Managers
 
                     if (SerialHelper.IsValid(sel_obj))
                     {
-                        Entity ent = World.Get(sel_obj);
-
-                        if (ent != null && SerialHelper.IsMobile(sel_obj) && ent.HitsMax == 0)
-                        {
-                            NetClient.Socket.Send(new PStatusRequest(sel_obj));
-                        }
-
                         TargetManager.LastTargetInfo.SetEntity(sel_obj);
                         TargetManager.LastAttack = sel_obj;
                     }

@@ -805,12 +805,12 @@ namespace ClassicUO.Network
                 }
                 // else
                 {
-                    BaseHealthBarGump bar = UIManager.GetGump<BaseHealthBarGump>(serial);
+                    //BaseHealthBarGump bar = UIManager.GetGump<BaseHealthBarGump>(serial);
 
-                    if (bar == null)
-                    {
-                        NetClient.Socket.Send(new PCloseStatusBarGump(serial));
-                    }
+                    //if (bar == null)
+                    //{
+                    //    NetClient.Socket.Send(new PCloseStatusBarGump(serial));
+                    //}
 
                     World.RemoveMobile(serial, true);
                 }
@@ -1072,8 +1072,8 @@ namespace ClassicUO.Network
                 {
                     if (item.IsCorpse && (ProfileManager.Current.GridLootType == 1 || ProfileManager.Current.GridLootType == 2))
                     {
-                        UIManager.GetGump<GridLootGump>(serial)?.Dispose();
-                        UIManager.Add(new GridLootGump(serial));
+                        //UIManager.GetGump<GridLootGump>(serial)?.Dispose();
+                        //UIManager.Add(new GridLootGump(serial));
                         _requestedGridLoot = serial;
 
                         if (ProfileManager.Current.GridLootType == 1)
@@ -1210,65 +1210,72 @@ namespace ClassicUO.Network
                     World.ObjectToRemove = 0;
                 }
 
-                if (!ItemHold.UpdatedInWorld)
+                if (SerialHelper.IsValid(ItemHold.Serial) && ItemHold.Graphic != 0xFFFF)
                 {
-                    if (ItemHold.Layer == Layer.Invalid && SerialHelper.IsValid(ItemHold.Container))
+                    if (!ItemHold.UpdatedInWorld)
                     {
-                        // Server should send an UpdateContainedItem after this packet.
-                        Console.WriteLine("=== DENY === ADD TO CONTAINER");
-                        AddItemToContainer(ItemHold.Serial,
-                                           ItemHold.Graphic,
-                                           ItemHold.TotalAmount,
-                                           ItemHold.X,
-                                           ItemHold.Y,
-                                           ItemHold.Hue,
-                                           ItemHold.Container);
-
-                        UIManager.GetGump<ContainerGump>(ItemHold.Container)?.RequestUpdateContents();
-                    }
-                    else
-                    {
-                        Item item = World.GetOrCreateItem(ItemHold.Serial);
-
-                        item.Graphic = ItemHold.Graphic;
-                        item.Hue = ItemHold.Hue;
-                        item.Amount = ItemHold.TotalAmount;
-                        item.Flags = ItemHold.Flags;
-                        item.Layer = ItemHold.Layer;
-                        item.X = ItemHold.X;
-                        item.Y = ItemHold.Y;
-                        item.Z = ItemHold.Z;
-                        item.CheckGraphicChange();
-
-                        Entity container = World.Get(ItemHold.Container);
-
-                        if (container != null)
+                        if (ItemHold.Layer == Layer.Invalid && SerialHelper.IsValid(ItemHold.Container))
                         {
-                            if (SerialHelper.IsMobile(container.Serial))
-                            {
-                                Console.WriteLine("=== DENY === ADD TO PAPERDOLL");
+                            // Server should send an UpdateContainedItem after this packet.
+                            Console.WriteLine("=== DENY === ADD TO CONTAINER");
+                            AddItemToContainer(ItemHold.Serial,
+                                               ItemHold.Graphic,
+                                               ItemHold.TotalAmount,
+                                               ItemHold.X,
+                                               ItemHold.Y,
+                                               ItemHold.Hue,
+                                               ItemHold.Container);
 
-                                World.RemoveItemFromContainer(item);
-                                container.PushToBack(item);
-                                item.Container = container.Serial;
-                                UIManager.GetGump<PaperDollGump>(item.Container)?.RequestUpdateContents();
-                            }
-                            else
-                            {
-                                Console.WriteLine("=== DENY === SOMETHING WRONG");
-
-                                World.RemoveItem(item, true);
-                            }
+                            UIManager.GetGump<ContainerGump>(ItemHold.Container)?.RequestUpdateContents();
                         }
                         else
                         {
-                            Console.WriteLine("=== DENY === ADD TO TERRAIN");
+                            Item item = World.GetOrCreateItem(ItemHold.Serial);
 
-                            World.RemoveItemFromContainer(item);
-                            item.AddToTile();
-                            item.UpdateScreenPosition();
+                            item.Graphic = ItemHold.Graphic;
+                            item.Hue = ItemHold.Hue;
+                            item.Amount = ItemHold.TotalAmount;
+                            item.Flags = ItemHold.Flags;
+                            item.Layer = ItemHold.Layer;
+                            item.X = ItemHold.X;
+                            item.Y = ItemHold.Y;
+                            item.Z = ItemHold.Z;
+                            item.CheckGraphicChange();
+
+                            Entity container = World.Get(ItemHold.Container);
+
+                            if (container != null)
+                            {
+                                if (SerialHelper.IsMobile(container.Serial))
+                                {
+                                    Console.WriteLine("=== DENY === ADD TO PAPERDOLL");
+
+                                    World.RemoveItemFromContainer(item);
+                                    container.PushToBack(item);
+                                    item.Container = container.Serial;
+                                    UIManager.GetGump<PaperDollGump>(item.Container)?.RequestUpdateContents();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("=== DENY === SOMETHING WRONG");
+
+                                    World.RemoveItem(item, true);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("=== DENY === ADD TO TERRAIN");
+
+                                World.RemoveItemFromContainer(item);
+                                item.AddToTile();
+                                item.UpdateScreenPosition();
+                            }
                         }
                     }
+                }
+                else
+                {
+                    Log.Error($"Wrong data: serial = {ItemHold.Serial:X8}  -  graphic = {ItemHold.Graphic:X4}");
                 }
 
                 UIManager.GetGump<SplitMenuGump>(ItemHold.Serial)?.Dispose();
@@ -1287,7 +1294,7 @@ namespace ClassicUO.Network
             byte code = p.ReadByte();
 
             if (code < 5)
-                MessageManager.HandleMessage(null, ServerErrorMessages.GetError(p.ID, code), string.Empty, 1001, MessageType.System, 3, TEXT_TYPE.SYSTEM);
+                MessageManager.HandleMessage(null, ServerErrorMessages.GetError(p.ID, code), string.Empty, 0x03b2, MessageType.System, 3, TEXT_TYPE.SYSTEM);
         }
 
         private static void EndDraggingItem(Packet p)
@@ -1693,7 +1700,7 @@ namespace ClassicUO.Network
                 Client.Game.SetScene(scene);
 
                 //GameActions.OpenPaperdoll(World.Player);
-                NetClient.Socket.Send(new PStatusRequest(World.Player));
+                GameActions.RequestMobileStatus(World.Player);
                 NetClient.Socket.Send(new POpenChat(""));
 
 
@@ -2235,7 +2242,7 @@ namespace ClassicUO.Network
             Flags flags = (Flags) p.ReadByte();
             NotorietyFlag notoriety = (NotorietyFlag) p.ReadByte();
             bool oldDead = false;
-            bool alreadyExists = World.Get(serial) != null;
+            //bool alreadyExists = World.Get(serial) != null;
 
             if (serial == World.Player)
             {
@@ -2290,9 +2297,6 @@ namespace ClassicUO.Network
             {
                 mob.NotorietyFlag = notoriety;
                 UIManager.GetGump<PaperDollGump>(serial)?.RequestUpdateContents();
-
-                if (!alreadyExists)
-                    GameActions.RequestMobileStatus(serial);
             }
 
             if (p.ID != 0x78)
@@ -2625,15 +2629,21 @@ namespace ClassicUO.Network
             uint serial = p.ReadUInt();
             string name = p.ReadASCII();
 
-            Entity entity = World.Get(serial);
-            if (entity == null)
-                return;
-            entity.Name = name;
+            WMapEntity wme = World.WMapManager.GetEntity(serial);
+        
+            if (wme != null)
+            {
+                wme.Name = name;
+            }
 
-            NameOverheadGump gump = UIManager.GetGump<NameOverheadGump>(serial);
-            if (gump == null)
-                return;
-            gump.SetName();
+
+            Entity entity = World.Get(serial);
+
+            if (entity != null)
+            {
+                entity.Name = name;
+                UIManager.GetGump<NameOverheadGump>(serial)?.SetName();
+            }
         }
 
         private static void MultiPlacement(Packet p)
@@ -2807,14 +2817,12 @@ namespace ClassicUO.Network
 
         private static void AttackCharacter(Packet p)
         {
-            TargetManager.LastAttack = p.ReadUInt();
+            var serial = p.ReadUInt();
 
-            if (TargetManager.LastAttack != 0 && World.InGame)
+            if (TargetManager.LastAttack != serial && World.InGame)
             {
-                Mobile mob = World.Mobiles.Get(TargetManager.LastAttack);
-
-                if (mob != null && mob.HitsMax == 0)
-                    NetClient.Socket.Send(new PStatusRequest(TargetManager.LastAttack));
+                TargetManager.LastAttack = serial;
+                GameActions.RequestMobileStatus(TargetManager.LastAttack);
             }
         }
 
@@ -3526,7 +3534,8 @@ namespace ClassicUO.Network
                                     if (mobile != null)
                                     {
                                         // TODO: animation for statues
-                                        //mobile.SetAnimation();
+                                        //mobile.SetAnimation(Mobile.GetReplacedObjectAnimation(mobile.Graphic, animation), 0, (byte) frame, 0, false, false);
+                                        //mobile.AnimationFromServer = true;
                                     }
                                 }
                             }
@@ -3899,7 +3908,7 @@ namespace ClassicUO.Network
                 int cliloc = (int) p.ReadUInt();
                 if (cliloc == 0)
                     break;
-
+                
                 ushort length = p.ReadUShort();
 
                 string argument = string.Empty;
@@ -3910,6 +3919,15 @@ namespace ClassicUO.Network
                 }
 
                 string str = ClilocLoader.Instance.Translate(cliloc, argument, true);
+
+
+                // horrible fix for (Imbued) hue
+                if (Client.Version >= Data.ClientVersion.CV_60143 && cliloc == 1080418)
+                {
+                    str = str.Insert(0,"<basefont color=#42a5ff>");
+                    str += "</basefont>";
+                }
+
 
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -4723,15 +4741,14 @@ namespace ClassicUO.Network
                         {
                             var grid_gump = UIManager.GetGump<GridLootGump>(containerSerial);
 
-                            if (grid_gump != null)
+                            if (grid_gump == null && SerialHelper.IsValid(_requestedGridLoot) && _requestedGridLoot == containerSerial)
                             {
-                                grid_gump.RequestUpdateContents();
-                            }
-                            else if (SerialHelper.IsValid(_requestedGridLoot) && _requestedGridLoot == containerSerial)
-                            {
-                                UIManager.Add(new GridLootGump(_requestedGridLoot));
+                                grid_gump = new GridLootGump(_requestedGridLoot);
+                                UIManager.Add(grid_gump);
                                 _requestedGridLoot = 0;
                             }
+
+                            grid_gump?.RequestUpdateContents();
                         }
                     }
 
@@ -4929,6 +4946,11 @@ namespace ClassicUO.Network
 
             if (mobile != null)
             {
+                if (created /*|| mobile.HitsMax == 0*/)
+                {
+                    GameActions.RequestMobileStatus(serial);
+                }
+
                 mobile.AddToTile();
                 mobile.UpdateScreenPosition();
             }
