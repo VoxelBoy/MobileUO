@@ -183,7 +183,7 @@
                             }
                         }
                     }
-                    else if (mode == 4 || (mode == 3 && color.r > 0.04f) /*|| (mode == 5 && color.r >= 0.08f)*/)
+                    else if (mode == 4 || (mode == 3 && (color.r > 0.04f || color.g > 0.04f || color.b > 0.04f)) /*|| (mode == 5 && color.r >= 0.08f)*/)
                     {
                         color.rgb = get_rgb(31, hue);
                     }
