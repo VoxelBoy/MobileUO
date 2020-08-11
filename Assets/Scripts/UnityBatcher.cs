@@ -121,7 +121,7 @@ namespace ClassicUO.Renderer
                 if (c == '\n')
                 {
                     curOffset.X = 0.0f;
-                    curOffset.Y += spriteFont.LineSpacing * scale;
+                    curOffset.Y += spriteFont.LineSpacing;
                     firstInLine = true;
 
                     continue;
@@ -156,11 +156,11 @@ namespace ClassicUO.Renderer
 
                 if (firstInLine)
                 {
-                    curOffset.X += Math.Abs(cKern.X) * scale;
+                    curOffset.X += Math.Abs(cKern.X);
                     firstInLine = false;
                 }
                 else
-                    curOffset.X += (spriteFont.Spacing + cKern.X) * scale;
+                    curOffset.X += (spriteFont.Spacing + cKern.X);
 
                 // Calculate the character origin
                 Rectangle cCrop = croppingData[index];
@@ -176,8 +176,8 @@ namespace ClassicUO.Renderer
 
 
                 Draw2D(textureValue,
-                    Mathf.RoundToInt((x + (int) offsetX) * scale), Mathf.RoundToInt((y + (int) offsetY) * scale),
-                    cGlyph.X, cGlyph.Y, cGlyph.Width * scale, cGlyph.Height * scale,
+                    Mathf.RoundToInt((x + (int) offsetX)), Mathf.RoundToInt((y + (int) offsetY)),
+                    cGlyph.X, cGlyph.Y, cGlyph.Width, cGlyph.Height,
                     ref color);
 
                 curOffset.X += cKern.Y + cKern.Z;

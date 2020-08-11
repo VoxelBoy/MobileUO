@@ -79,10 +79,24 @@ namespace Microsoft.Xna.Framework.Graphics
 
         private void SetDataBytes()
         {
-            Console.WriteLine("SetData with bytes is probably not working properly yet, we're not converting the bytes at all.");
+            var dataLength = tempByteData.Length;
             var destText = UnityTexture as UnityEngine.Texture2D;
             var dst = destText.GetRawTextureData<byte>();
-            dst.CopyFrom(tempByteData);
+            var tmp = new byte[dataLength];
+            var textureBytesWidth = Width * 4;
+            var textureBytesHeight = Height;
+
+            for (int i = 0; i < dataLength; i++)
+            {
+                int x = i % textureBytesWidth;
+                int y = i / textureBytesWidth;
+                y = textureBytesHeight - y - 1;
+                var index = y * textureBytesWidth + x;
+                var colorByte = tempByteData[index];
+                tmp[i] = colorByte;
+            }
+            
+            dst.CopyFrom(tmp);
             destText.Apply();
             tempByteData = null;
         }
@@ -107,8 +121,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 int x = i % textureWidth;
                 int y = i / textureWidth;
-                y *= textureWidth;
-                var index = y + (textureWidth - x - 1);
+                var index = y * textureWidth + (textureWidth - x - 1);
                 var color = tempColorData[dataLength - index - 1];
                 tmp[i] = color.PackedValue;
             }
@@ -155,7 +168,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     y = textureHeight - y - 1;
                 }
-                var index = (y * textureWidth) + (textureWidth - x - 1);
+                var index = y * textureWidth + (textureWidth - x - 1);
                 if (index < tempElementCount && i < dstLength)
                 {
                     tmp[i] = tempUIntData[tempElementCount + tempStartOffset - index - 1];
