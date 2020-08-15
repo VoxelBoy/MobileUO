@@ -2821,6 +2821,11 @@ namespace ClassicUO.Network
 
             if (TargetManager.LastAttack != serial && World.InGame)
             {
+                if (SerialHelper.IsValid(TargetManager.LastAttack))
+                {
+                    NetClient.Socket.Send(new PCloseStatusBarGump(TargetManager.LastAttack));
+                }
+
                 TargetManager.LastAttack = serial;
                 GameActions.RequestMobileStatus(TargetManager.LastAttack);
             }
@@ -4662,10 +4667,18 @@ namespace ClassicUO.Network
 
         private static void AddItemToContainer(uint serial, ushort graphic, ushort amount, ushort x, ushort y, ushort hue, uint containerSerial)
         {
-            if (ItemHold.Serial == serial && ItemHold.Dropped)
+            if (ItemHold.Serial == serial)
             {
-                Console.WriteLine("ADD ITEM TO CONTAINER -- CLEAR HOLD");
-                ItemHold.Clear();
+                if (ItemHold.Dropped)
+                {
+                    Console.WriteLine("ADD ITEM TO CONTAINER -- CLEAR HOLD");
+                    ItemHold.Clear();
+                }
+                else if (ItemHold.Graphic == graphic && ItemHold.Amount == amount && ItemHold.Container == containerSerial)
+                {
+                    ItemHold.Enabled = false;
+                    ItemHold.Dropped = false;
+                }
             }
 
             Entity container = World.Get(containerSerial);

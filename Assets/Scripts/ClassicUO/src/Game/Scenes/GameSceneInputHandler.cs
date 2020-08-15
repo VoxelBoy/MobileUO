@@ -283,7 +283,7 @@ namespace ClassicUO.Game.Scenes
             }
             else
             {
-                _dragginObject = SelectedObject.Object as Entity;
+                SelectedObject.LastLeftDownObject = SelectedObject.Object as Entity;
 
                 if (ProfileManager.Current.EnableDragSelect && DragSelectModifierActive())
                 {
@@ -327,13 +327,6 @@ namespace ClassicUO.Game.Scenes
 
             if (!IsMouseOverViewport)
             {
-                if (ItemHold.Enabled)
-                {
-                    UIManager.MouseOverControl?.InvokeMouseUp(Mouse.Position, MouseButtonType.Left);
-
-                    return true;
-                }
-
                 return false;
             }
 
@@ -346,62 +339,80 @@ namespace ClassicUO.Game.Scenes
             if (!ProfileManager.Current.DisableAutoMove && _rightMousePressed)
                 _continueRunning = true;
 
-            if (_dragginObject != null)
-                _dragginObject = null;
+            SelectedObject.LastLeftDownObject = null;
 
             if (UIManager.IsDragging)
                 return false;
 
-            if (ItemHold.Enabled)
+            if (ItemHold.Enabled && !ItemHold.IsFixedPosition)
             {
-                if (SelectedObject.Object is GameObject obj && obj.Distance <= Constants.DRAG_ITEMS_DISTANCE)
+                uint drop_container = 0xFFFF_FFFF;
+                bool can_drop = false; 
+                ushort dropX = 0;
+                ushort dropY = 0;
+                sbyte dropZ = 0;
+
+                GameObject gobj = SelectedObject.LastObject as GameObject;
+
+                if (gobj is Entity obj)
                 {
-                    switch (obj)
+                    can_drop = obj.Distance <= Constants.DRAG_ITEMS_DISTANCE;
+
+                    if (can_drop)
                     {
-                        case Mobile mobile:
-                            MergeHeldItem(mobile);
-
-                            break;
-
-                        case Item item:
-
-                            if (item.IsCorpse)
-                                MergeHeldItem(item);
-                            else
+                        if ((obj is Item it && it.ItemData.IsContainer) || obj is Mobile)
+                        {
+                            dropX = 0xFFFF;
+                            dropY = 0xFFFF;
+                            dropZ = 0;
+                            drop_container = obj.Serial;
+                        }
+                        else if (obj is Item it2 && (it2.ItemData.IsSurface || (it2.ItemData.IsStackable && obj.Graphic == ItemHold.Graphic)))
+                        {
+                            if (!it2.ItemData.IsSurface)
                             {
-                                SelectedObject.Object = item;
-
-                                if (item.Graphic == ItemHold.Graphic && ItemHold.IsStackable)
-                                    MergeHeldItem(item);
-                                else
-                                    DropHeldItemToWorld(obj.X, obj.Y, (sbyte) (obj.Z + item.ItemData.Height));
+                                drop_container = obj.Serial;
                             }
 
-                            break;
-
-                        case Multi multi:
-                            DropHeldItemToWorld(obj.X, obj.Y, (sbyte) (obj.Z + multi.ItemData.Height));
-
-                            break;
-
-                        case Static st:
-                            DropHeldItemToWorld(obj.X, obj.Y, (sbyte) (obj.Z + st.ItemData.Height));
-
-                            break;
-
-                        case Land _:
-                            DropHeldItemToWorld(obj.X, obj.Y, obj.Z);
-
-                            break;
-
-                        default:
-                            Log.Warn("Unhandled mouse inputs for GameObject type " + obj.GetType());
-
-                            return false;
+                            dropX = obj.X;
+                            dropY = obj.Y;
+                            dropZ = obj.Z;
+                        }
+                    }
+                    else
+                    {
+                        Client.Game.Scene.Audio.PlaySound(0x0051);
                     }
                 }
-                else
-                    Client.Game.Scene.Audio.PlaySound(0x0051);
+                else if (gobj is Land || gobj is Static || gobj is Multi)
+                {
+                    can_drop = gobj.Distance <= Constants.DRAG_ITEMS_DISTANCE;
+
+                    if (can_drop)
+                    {
+                        dropX = gobj.X;
+                        dropY = gobj.Y;
+                        dropZ = gobj.Z;
+                    }
+                    else
+                    {
+                        Client.Game.Scene.Audio.PlaySound(0x0051);
+                    }
+                }
+
+
+                if (can_drop)
+                {
+                    if (drop_container == 0xFFFF_FFFF && dropX == 0 && dropY == 0)
+                    {
+                        can_drop = false;
+                    }
+
+                    if (can_drop)
+                    {
+                        GameActions.DropItem(ItemHold.Serial, dropX, dropY, dropZ, drop_container);
+                    }
+                }
             }
             else if (TargetManager.IsTargeting)
             {
@@ -660,18 +671,31 @@ namespace ClassicUO.Game.Scenes
 
         internal override bool OnMouseWheel(bool up)
         {
+            if (Keyboard.Ctrl && ItemHold.Enabled)
+            {
+                if (!up && !ItemHold.IsFixedPosition)
+                {
+                    ItemHold.IsFixedPosition = true;
+                    ItemHold.IgnoreFixedPosition = true;
+                    ItemHold.FixedX = Mouse.Position.X;
+                    ItemHold.FixedY = Mouse.Position.Y;
+                }
+
+                if (ItemHold.IgnoreFixedPosition)
+                {
+                    return true;
+                }
+            }
+
             if (!IsMouseOverViewport)
                 return false;
 
-            if (ProfileManager.Current.EnableMousewheelScaleZoom)
+            if (Keyboard.Ctrl && ProfileManager.Current.EnableMousewheelScaleZoom)
             {
-                if (!Keyboard.Ctrl)
-                    return false;
-
-                if (!up)
-                    ZoomOut();
-                else
+                if (up)
                     ZoomIn();
+                else
+                    ZoomOut();
 
                 return true;
             }
@@ -694,13 +718,13 @@ namespace ClassicUO.Game.Scenes
                 if (Math.Abs(offset.X) > Constants.MIN_PICKUP_DRAG_DISTANCE_PIXELS || Math.Abs(offset.Y) > Constants.MIN_PICKUP_DRAG_DISTANCE_PIXELS)
                 {
                     Entity obj;
-                    if (ProfileManager.Current.SallosEasyGrab && SelectedObject.LastObject is Entity ent && _dragginObject == null)
+                    if (ProfileManager.Current.SallosEasyGrab && SelectedObject.LastObject is Entity ent && SelectedObject.LastLeftDownObject == null)
                     {
                         obj = ent;
                     }
                     else
                     {
-                        obj = _dragginObject;
+                        obj = SelectedObject.LastLeftDownObject as Entity;
                     }
 
                     if (obj != null)
@@ -729,11 +753,11 @@ namespace ClassicUO.Game.Scenes
                         }
                         else if (obj is Item item)
                         {
-                            PickupItemBegin(item, Mouse.Position.X, Mouse.Position.Y);
+                            GameActions.PickUp(item, Mouse.Position.X, Mouse.Position.Y);
                         }
                     }
 
-                    _dragginObject = null;
+                    SelectedObject.LastLeftDownObject = null;
                 }
             }
 

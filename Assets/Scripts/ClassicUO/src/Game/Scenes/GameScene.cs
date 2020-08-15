@@ -159,8 +159,6 @@ namespace ClassicUO.Game.Scenes
             if (!ProfileManager.Current.TopbarGumpIsDisabled)
                 TopBarGump.Create();
 
-            GameActions.Initialize(PickupItemBegin);
-
 
             CommandManager.Initialize();
             NetClient.Socket.Disconnected += SocketOnDisconnected;
@@ -718,7 +716,7 @@ namespace ClassicUO.Game.Scenes
                 }
                 else if (Time.Ticks - _holdMouse2secOverItemTime >= 1000)
                 {
-                    if (SelectedObject.LastObject is Item it && PickupItemBegin(it.Serial, 0, 0))
+                    if (SelectedObject.LastObject is Item it && GameActions.PickUp(it.Serial, 0, 0))
                     {
                         _isMouseLeftDown = false;
                         _holdMouse2secOverItemTime = 0;
@@ -841,12 +839,10 @@ namespace ClassicUO.Game.Scenes
                 return;
 
             batcher.GraphicsDevice.SetRenderTarget(_lightRenderTarget);
+            batcher.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
 
-            if (UseAltLights)
-            {
-                batcher.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
-            }
-            else
+
+            if (!UseAltLights)
             {
                 var lightColor = World.Light.IsometricLevel;
 
@@ -855,7 +851,6 @@ namespace ClassicUO.Game.Scenes
 
                 _vectorClear.X = _vectorClear.Y = _vectorClear.Z = lightColor;
 
-                batcher.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
                 batcher.GraphicsDevice.Clear(ClearOptions.Target, _vectorClear, 0, 0);
             }
 
