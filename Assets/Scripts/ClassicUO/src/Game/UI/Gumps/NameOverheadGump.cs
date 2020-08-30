@@ -254,8 +254,6 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if (button == MouseButtonType.Left)
             {
-                GameScene scene = Client.Game.GetScene<GameScene>();
-
                 if (!ItemHold.Enabled)
                 {
                     if (UIManager.IsDragging || Math.Max(Math.Abs(Mouse.LDroppedOffset.X), Math.Abs(Mouse.LDroppedOffset.Y)) >= 1)
@@ -297,24 +295,59 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     if (ItemHold.Enabled && !ItemHold.IsFixedPosition)
                     {
-                        Entity entity = World.Get(LocalSerial);
+                        uint drop_container = 0xFFFF_FFFF;
+                        bool can_drop = false;
+                        ushort dropX = 0;
+                        ushort dropY = 0;
+                        sbyte dropZ = 0;
 
-                        if (entity != null)
+                        Entity obj = World.Get(LocalSerial);
+
+                        if (obj != null)
                         {
-                            if (entity.Distance < Constants.DRAG_ITEMS_DISTANCE)
+                            can_drop = obj.Distance <= Constants.DRAG_ITEMS_DISTANCE;
+
+                            if (can_drop)
                             {
-                                GameActions.DropItem(ItemHold.Serial, 0xFFFF, 0xFFFF, 0, LocalSerial);
+                                if ((obj is Item it && it.ItemData.IsContainer) || obj is Mobile)
+                                {
+                                    dropX = 0xFFFF;
+                                    dropY = 0xFFFF;
+                                    dropZ = 0;
+                                    drop_container = obj.Serial;
+                                }
+                                else if (obj is Item it2 && (it2.ItemData.IsSurface || (it2.ItemData.IsStackable && it2.DisplayedGraphic == ItemHold.DisplayedGraphic)))
+                                {
+                                    if (!it2.ItemData.IsSurface)
+                                    {
+                                        drop_container = obj.Serial;
+                                    }
+
+                                    dropX = obj.X;
+                                    dropY = obj.Y;
+                                    dropZ = obj.Z;
+                                }
                             }
                             else
                             {
-                                scene.Audio.PlaySound(0x0051);
+                                Client.Game.Scene.Audio.PlaySound(0x0051);
+                            }
+
+                            if (can_drop)
+                            {
+                                if (drop_container == 0xFFFF_FFFF && dropX == 0 && dropY == 0)
+                                {
+                                    can_drop = false;
+                                }
+
+                                if (can_drop)
+                                {
+                                    GameActions.DropItem(ItemHold.Serial, dropX, dropY, dropZ, drop_container);
+                                }
                             }
                         }
-                        
-                        return;
                     }
-
-                    if (!DelayedObjectClickManager.IsEnabled)
+                    else if (!DelayedObjectClickManager.IsEnabled)
                     {
                         DelayedObjectClickManager.Set(LocalSerial, Mouse.Position.X, Mouse.Position.Y, Time.Ticks + Mouse.MOUSE_DELAY_DOUBLE_CLICK);
                     }
@@ -329,8 +362,6 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if (_positionLocked)
                 return;
-
-            float scale = Client.Game.GetScene<GameScene>().Scale;
 
             if (SerialHelper.IsMobile(LocalSerial))
             {
@@ -355,8 +386,8 @@ namespace ClassicUO.Game.UI.Gumps
                                                               out int width,
                                                               out int height);
 
-                _lockedPosition.X = (int)((m.RealScreenPosition.X + m.Offset.X + 22) / scale);
-                _lockedPosition.Y = (int)((m.RealScreenPosition.Y + (m.Offset.Y - m.Offset.Z) - (height + centerY + 8) + (m.IsGargoyle && m.IsFlying ? -22 : !m.IsMounted ? 22 : 0)) / scale);
+                _lockedPosition.X = (int)((m.RealScreenPosition.X + m.Offset.X + 22));
+                _lockedPosition.Y = (int)((m.RealScreenPosition.Y + (m.Offset.Y - m.Offset.Z) - (height + centerY + 8) + (m.IsGargoyle && m.IsFlying ? -22 : !m.IsMounted ? 22 : 0)));
             }
 
             base.OnMouseOver(x, y);
@@ -383,8 +414,6 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if (IsDisposed || !SetName())
                 return false;
-
-            float scale = Client.Game.GetScene<GameScene>().Scale;
 
             int gx = ProfileManager.Current.GameWindowPosition.X;
             int gy = ProfileManager.Current.GameWindowPosition.Y;
@@ -420,8 +449,8 @@ namespace ClassicUO.Game.UI.Gumps
                                                                   out int width,
                                                                   out int height);
 
-                    x = (int)((m.RealScreenPosition.X + m.Offset.X + 22) / scale);
-                    y = (int)((m.RealScreenPosition.Y + (m.Offset.Y - m.Offset.Z) - (height + centerY + 8) + (m.IsGargoyle && m.IsFlying ? -22 : !m.IsMounted ? 22 : 0)) / scale);
+                    x = (int)(m.RealScreenPosition.X + m.Offset.X + 22);
+                    y = (int)((m.RealScreenPosition.Y + (m.Offset.Y - m.Offset.Z) - (height + centerY + 8) + (m.IsGargoyle && m.IsFlying ? -22 : !m.IsMounted ? 22 : 0)));
                 }
             }
             else if (SerialHelper.IsItem(LocalSerial))
@@ -435,27 +464,26 @@ namespace ClassicUO.Game.UI.Gumps
                     return false;
                 }
 
-                var texture = ArtLoader.Instance.GetTexture(item.Graphic);
+                ArtTexture texture = ArtLoader.Instance.GetTexture(item.Graphic);
 
                 if (texture != null)
                 {
-                    x = (int) ((item.RealScreenPosition.X + (int) item.Offset.X + 22) / scale);
-                    y = (int) ((item.RealScreenPosition.Y + (int) (item.Offset.Y - item.Offset.Z) - (texture.ImageRectangle.Height >> 1)) / scale);
+                    x = (int) ((item.RealScreenPosition.X + (int) item.Offset.X + 22));
+                    y = (int) ((item.RealScreenPosition.Y + (int) (item.Offset.Y - item.Offset.Z) - (texture.ImageRectangle.Height >> 1)));
                 }
                 else
                 {
-                    x = (int) ((item.RealScreenPosition.X + (int) item.Offset.X + 22) / scale);
-                    y = (int) ((item.RealScreenPosition.Y + (int) (item.Offset.Y - item.Offset.Z) + 22) / scale);
+                    x = (int) ((item.RealScreenPosition.X + (int) item.Offset.X + 22));
+                    y = (int) ((item.RealScreenPosition.Y + (int) (item.Offset.Y - item.Offset.Z) + 22));
                 }
             }
 
-            x -= Width >> 1;
-            y -= Height >> 1;
-            x += gx + 6;
-            y += gy;
 
-            X = x;
-            Y = y;
+            ResetHueVector();
+
+            Point p = Client.Game.Scene.Camera.WorldToScreen(new Point(x, y));
+            x = p.X - (Width >> 1);
+            y = p.Y - (Height >> 1);
 
             if (x < gx || x + Width > gx + w)
                 return false;
@@ -463,7 +491,8 @@ namespace ClassicUO.Game.UI.Gumps
             if (y < gy || y + Height > gy + h)
                 return false;
 
-            ResetHueVector();
+            X = x;
+            Y = y;
 
             batcher.DrawRectangle(Texture2DCache.GetTexture(Color.Black), x - 1, y - 1, Width + 1, Height + 1, ref _hueVector);
 

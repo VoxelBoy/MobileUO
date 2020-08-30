@@ -101,7 +101,7 @@ namespace ClassicUO.Game.UI.Gumps
                     Width = _gumpPicContainer.Width = (int) (_gumpPicContainer.Width * scale);
                     Height = _gumpPicContainer.Height = (int) (_gumpPicContainer.Height * scale);
 
-                    foreach (var c in Children)
+                    foreach (Control c in Children)
                     {
                         c.IsVisible = !value;
                     }
@@ -183,7 +183,8 @@ namespace ClassicUO.Game.UI.Gumps
             if (button != MouseButtonType.Left || UIManager.IsMouseOverWorld)
                 return;
 
-            uint serial = SelectedObject.Object is Entity it ? it.Serial : 0;
+            Entity it = SelectedObject.Object as Entity;
+            uint serial = it != null ? it.Serial : 0;
             uint dropcontainer = LocalSerial;
 
             if (TargetManager.IsTargeting && !ItemHold.Enabled && SerialHelper.IsValid(serial))
@@ -224,7 +225,7 @@ namespace ClassicUO.Game.UI.Gumps
                             {
                                 dropcontainer = target.Serial;
                             }
-                            else if (target.ItemData.IsStackable && target.Graphic == ItemHold.Graphic)
+                            else if (target.ItemData.IsStackable && target.DisplayedGraphic == ItemHold.DisplayedGraphic)
                             {
                                 dropcontainer = target.Serial;
                             }
@@ -259,7 +260,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     ContainerGump gump = UIManager.GetGump<ContainerGump>(dropcontainer);
 
-                    if (gump != null)
+                    if (gump != null && (it == null || (it.Serial != dropcontainer && it is Item item && !item.ItemData.IsContainer)))
                     {
                         bool is_chessboard = gump.Graphic == 0x091A || gump.Graphic == 0x092E;
 
@@ -328,7 +329,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     if (!DelayedObjectClickManager.IsEnabled)
                     {
-                        var off = Mouse.LDroppedOffset;
+                        Point off = Mouse.LDroppedOffset;
                         DelayedObjectClickManager.Set(serial,
                                                       (Mouse.Position.X - off.X) - ScreenCoordinateX,
                                                       (Mouse.Position.Y - off.Y) - ScreenCoordinateY,
@@ -438,13 +439,13 @@ namespace ClassicUO.Game.UI.Gumps
                 IsVisible = true;
             }
 
-            for (var i = container.Items; i != null; i = i.Next)
+            for (LinkedObject i = container.Items; i != null; i = i.Next)
             {
-                var item = (Item) i;
+                Item item = (Item) i;
 
                 if (item.Layer == 0 || (is_corpse && Constants.BAD_CONTAINER_LAYERS[(int) item.Layer] && item.Amount > 0))
                 {
-                    var itemControl = new ItemGump(item.Serial,
+                    ItemGump itemControl = new ItemGump(item.Serial,
                                                    item.DisplayedGraphic,
                                                    //(ushort) (item.DisplayedGraphic - (is_chessboard ? 0 : 0)), 
                                                    item.Hue,
@@ -478,7 +479,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         public void CheckItemControlPosition(Item item)
         {
-            var bounds = _data.Bounds;
+            Rectangle bounds = _data.Bounds;
             bool is_chessboard = Graphic == 0x091A || Graphic == 0x092E;
 
             int boundX = bounds.X;
@@ -512,7 +513,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (CUOEnviroment.Debug && !IsMinimized)
             {
-                var bounds = _data.Bounds;
+                Rectangle bounds = _data.Bounds;
                 float scale = UIManager.ContainerScale;
                 ushort boundX = (ushort) (bounds.X * scale);
                 ushort boundY = (ushort) (bounds.Y * scale);
@@ -536,7 +537,7 @@ namespace ClassicUO.Game.UI.Gumps
                 if (World.Player != null && (ProfileManager.Current?.OverrideContainerLocationSetting == 3))
                     UIManager.SavePosition(item, Location);
 
-                for (var i = item.Items; i != null; i = i.Next)
+                for (LinkedObject i = item.Items; i != null; i = i.Next)
                 {
                     Item child = (Item) i;
 

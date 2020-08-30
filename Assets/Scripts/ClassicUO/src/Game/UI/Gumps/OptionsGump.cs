@@ -377,7 +377,7 @@ namespace ClassicUO.Game.UI.Gumps
             _circleOfTranspRadius = new HSliderBar(_useCircleOfTransparency.X + _useCircleOfTransparency.Width + 10, _useCircleOfTransparency.Y + 5, 200, Constants.MIN_CIRCLE_OF_TRANSPARENCY_RADIUS, Constants.MAX_CIRCLE_OF_TRANSPARENCY_RADIUS, ProfileManager.Current.CircleOfTransparencyRadius, HSliderBarStyle.MetalWidgetRecessedBar, true, FONT, HUE_FONT);
             item.Add(_circleOfTranspRadius);
 
-            var textT = new Label("Transparency type:", true, HUE_FONT)
+            Label textT = new Label("Transparency type:", true, HUE_FONT)
             {
                 X = 20,
                 Y = _circleOfTranspRadius.Y + _circleOfTranspRadius.Height + SPACE_Y
@@ -385,7 +385,7 @@ namespace ClassicUO.Game.UI.Gumps
             item.Add(textT);
 
             int cottypeindex = ProfileManager.Current.CircleOfTransparencyType;
-            var cotTypes = new[] { "Full", "Gradient" };
+            string[] cotTypes = new[] { "Full", "Gradient" };
 
             if (cottypeindex < 0 || cottypeindex > cotTypes.Length)
                 cottypeindex = 0;
@@ -638,9 +638,9 @@ namespace ClassicUO.Game.UI.Gumps
 
                 ScrollAreaItem scaleSlider = new ScrollAreaItem();
                 scaleSlider.Y = SPACE_Y;
-                Label zoomSliderText = new Label("Default zoom (5 for standard zoom):", true, HUE_FONT);
+                Label zoomSliderText = new Label("Default zoom:", true, HUE_FONT);
                 scaleSlider.Add(zoomSliderText);
-                _sliderZoom = new HSliderBar(zoomSliderText.X, zoomSliderText.Height + 5, 250, 0, 20, Client.Game.GetScene<GameScene>().ScalePos, HSliderBarStyle.MetalWidgetRecessedBar, true, FONT, HUE_FONT);
+                _sliderZoom = new HSliderBar(zoomSliderText.X, zoomSliderText.Height + 5, 250, 0, Client.Game.Scene.Camera.ZoomValuesCount, Client.Game.Scene.Camera.ZoomIndex, HSliderBarStyle.MetalWidgetRecessedBar, true, FONT, HUE_FONT);
                 scaleSlider.Add(_sliderZoom);
                 rightArea.Add(scaleSlider);
 
@@ -755,6 +755,11 @@ namespace ClassicUO.Game.UI.Gumps
             _runMouseInSeparateThread = CreateCheckBox(rightArea, "Run mouse in a separate thread", Settings.GlobalSettings.RunMouseInASeparateThread, 0, SPACE_Y);
             _auraMouse = CreateCheckBox(rightArea, "Aura on mouse target", ProfileManager.Current.AuraOnMouse, 0, SPACE_Y);
             _xBR = CreateCheckBox(rightArea, "Use xBR effect [BETA]", ProfileManager.Current.UseXBR, 0, SPACE_Y);
+
+            // TODO: due to the new rendering engine, xBR cannot be applied directly to the World render target
+            //       we need a PostProcessing system
+            _xBR.IsVisible = false;
+
             _hideChatGradient = CreateCheckBox(rightArea, "Hide Chat Gradient", ProfileManager.Current.HideChatGradient, 0, SPACE_Y);
 
             Add(rightArea, PAGE);
@@ -1092,10 +1097,10 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 if (e.Button != MouseButtonType.Left)
                     return;
-                var speechHue = (ushort)RandomHelper.GetValue(2, 0x03b2); //this seems to be the acceptable hue range for chat messages,
-                var emoteHue = (ushort)RandomHelper.GetValue(2, 0x03b2); //taken from POL source code.
-                var yellHue = (ushort)RandomHelper.GetValue(2, 0x03b2);
-                var whisperHue = (ushort)RandomHelper.GetValue(2, 0x03b2);
+                ushort speechHue = (ushort)RandomHelper.GetValue(2, 0x03b2); //this seems to be the acceptable hue range for chat messages,
+                ushort emoteHue = (ushort)RandomHelper.GetValue(2, 0x03b2); //taken from POL source code.
+                ushort yellHue = (ushort)RandomHelper.GetValue(2, 0x03b2);
+                ushort whisperHue = (ushort)RandomHelper.GetValue(2, 0x03b2);
                 ProfileManager.Current.SpeechHue = speechHue;
                 _speechColorPickerBox.SetColor(speechHue, HuesLoader.Instance.GetPolygoneColor(12, speechHue));
                 ProfileManager.Current.EmoteHue = emoteHue;
@@ -1550,7 +1555,7 @@ namespace ClassicUO.Game.UI.Gumps
                     _gameWindowFullsize.IsChecked = false;
                     _enableDeathScreen.IsChecked = true;
                     _enableBlackWhiteEffect.IsChecked = true;
-                    Client.Game.GetScene<GameScene>().Scale = 1;
+                    Client.Game.Scene.Camera.Zoom = 1f;
                     ProfileManager.Current.DefaultScale = 1f;
                     _lightBar.Value = 0;
                     _enableLight.IsChecked = false;
@@ -1744,7 +1749,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (_useStandardSkillsGump.IsChecked)
             {
-                var newGump = UIManager.GetGump<SkillGumpAdvanced>();
+                SkillGumpAdvanced newGump = UIManager.GetGump<SkillGumpAdvanced>();
 
                 if (newGump != null)
                 {
@@ -1755,7 +1760,7 @@ namespace ClassicUO.Game.UI.Gumps
             }
             else
             {
-                var standardGump = UIManager.GetGump<StandardSkillsGump>();
+                StandardSkillsGump standardGump = UIManager.GetGump<StandardSkillsGump>();
 
                 if (standardGump != null)
                 {
@@ -1827,14 +1832,14 @@ namespace ClassicUO.Game.UI.Gumps
             ProfileManager.Current.EnableDeathScreen = _enableDeathScreen.IsChecked;
             ProfileManager.Current.EnableBlackWhiteEffect = _enableBlackWhiteEffect.IsChecked;
 
-            Client.Game.GetScene<GameScene>().ScalePos = _sliderZoom.Value;
-            ProfileManager.Current.DefaultScale = Client.Game.GetScene<GameScene>().Scale;
+            Client.Game.Scene.Camera.ZoomIndex = _sliderZoom.Value;
+            ProfileManager.Current.DefaultScale = Client.Game.Scene.Camera.Zoom;
             ProfileManager.Current.EnableMousewheelScaleZoom = _zoomCheckbox.IsChecked;
             ProfileManager.Current.RestoreScaleAfterUnpressCtrl = _restorezoomCheckbox.IsChecked;
 
             if (!CUOEnviroment.IsOutlands && _use_old_status_gump.IsChecked != ProfileManager.Current.UseOldStatusGump)
             {
-                var status = StatusGumpBase.GetStatusGump();
+                StatusGumpBase status = StatusGumpBase.GetStatusGump();
 
                 ProfileManager.Current.UseOldStatusGump = _use_old_status_gump.IsChecked;
 
@@ -1947,7 +1952,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             // fonts
             ProfileManager.Current.ForceUnicodeJournal = _forceUnicodeJournal.IsChecked;
-            var _fontValue = _fontSelectorChat.GetSelectedFont();
+            byte _fontValue = _fontSelectorChat.GetSelectedFont();
             ProfileManager.Current.OverrideAllFonts = _overrideAllFonts.IsChecked;
             ProfileManager.Current.OverrideAllFontsIsUnicode = _overrideAllFontsIsUnicodeCheckbox.SelectedIndex == 1;
             if (ProfileManager.Current.ChatFont != _fontValue)
@@ -2051,9 +2056,9 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 if (ProfileManager.Current.CustomBarsToggled)
                 {
-                    var hbgstandard = UIManager.Gumps.OfType<HealthBarGump>().ToList();
+                    List<HealthBarGump> hbgstandard = UIManager.Gumps.OfType<HealthBarGump>().ToList();
 
-                    foreach (var healthbar in hbgstandard)
+                    foreach (HealthBarGump healthbar in hbgstandard)
                     {
                         UIManager.Add(new HealthBarGumpCustom(healthbar.LocalSerial) {X = healthbar.X, Y = healthbar.Y});
                         healthbar.Dispose();
@@ -2061,9 +2066,9 @@ namespace ClassicUO.Game.UI.Gumps
                 }
                 else
                 {
-                    var hbgcustom = UIManager.Gumps.OfType<HealthBarGumpCustom>().ToList();
+                    List<HealthBarGumpCustom> hbgcustom = UIManager.Gumps.OfType<HealthBarGumpCustom>().ToList();
 
-                    foreach (var customhealthbar in hbgcustom)
+                    foreach (HealthBarGumpCustom customhealthbar in hbgcustom)
                     {
                         UIManager.Add(new HealthBarGump(customhealthbar.LocalSerial) {X = customhealthbar.X, Y = customhealthbar.Y});
                         customhealthbar.Dispose();

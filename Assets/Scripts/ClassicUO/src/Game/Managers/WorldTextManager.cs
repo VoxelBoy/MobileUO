@@ -58,7 +58,7 @@ namespace ClassicUO.Game.Managers
             int mouseX = Mouse.Position.X;
             int mouseY = Mouse.Position.Y;
 
-            for (var item = _drawPointer; item != null; item = item.DLeft)
+            for (TextObject item = _drawPointer; item != null; item = item.DLeft)
             {
                 if (item.RenderedText == null || item.RenderedText.IsDestroyed || item.RenderedText.Texture == null)
                     continue;
@@ -94,9 +94,9 @@ namespace ClassicUO.Game.Managers
             int mouseX = Mouse.Position.X;
             int mouseY = Mouse.Position.Y;
 
-            var last = SelectedObject.LastObject;
+            BaseGameObject last = SelectedObject.LastObject;
 
-            for (var o = _drawPointer; o != null; o = o.DLeft)
+            for (TextObject o = _drawPointer; o != null; o = o.DLeft)
             {
                 if (o.IsDestroyed || o.RenderedText == null || o.RenderedText.IsDestroyed || o.RenderedText.Texture == null || o.Time < ClassicUO.Time.Ticks || (o.Owner.UseInRender != renderIndex && !isGump))
                     continue;
@@ -135,7 +135,7 @@ namespace ClassicUO.Game.Managers
 
             obj.UnlinkD();
 
-            var next = _firstNode.DRight;
+            TextObject next = _firstNode.DRight;
             _firstNode.DRight = obj;
             obj.DLeft = _firstNode;
             obj.DRight = next;
@@ -156,7 +156,7 @@ namespace ClassicUO.Game.Managers
             {
                 if (doit)
                 {
-                    var t = _drawPointer;
+                    TextObject t = _drawPointer;
 
                     if (t.Time >= ClassicUO.Time.Ticks && t.RenderedText != null && !t.RenderedText.IsDestroyed)
                     {
@@ -232,13 +232,13 @@ namespace ClassicUO.Game.Managers
             
             obj.UnlinkD();
 
-            var item = _firstNode;
+            TextObject item = _firstNode;
 
             if (item != null)
             {
                 if (item.DRight != null)
                 {
-                    var next = item.DRight;
+                    TextObject next = item.DRight;
 
                     item.DRight = obj;
                     obj.DLeft = item;
@@ -259,14 +259,14 @@ namespace ClassicUO.Game.Managers
         {
             if (_firstNode != null)
             {
-                var first = _firstNode;
+                TextObject first = _firstNode;
 
                 while (first?.DLeft != null)
                     first = first.DLeft;
 
                 while (first != null)
                 {
-                    var next = first.DRight;
+                    TextObject next = first.DRight;
 
                     first.Destroy();
                     first.Clear();
@@ -277,14 +277,14 @@ namespace ClassicUO.Game.Managers
 
             if (_drawPointer != null)
             {
-                var first = _drawPointer;
+                TextObject first = _drawPointer;
 
                 while (first?.DLeft != null)
                     first = first.DLeft;
 
                 while (first != null)
                 {
-                    var next = first.DRight;
+                    TextObject next = first.DRight;
 
                     first.Destroy();
                     first.Clear();
@@ -330,15 +330,10 @@ namespace ClassicUO.Game.Managers
 
         public override void Draw(UltimaBatcher2D batcher, int startX, int startY, int renderIndex, bool isGump = false)
         {
-            float scale = Client.Game.GetScene<GameScene>().Scale;
-
             base.Draw(batcher, 0, 0, renderIndex, isGump);
 
             foreach (KeyValuePair<uint, OverheadDamage> overheadDamage in _damages)
             {
-                int x = startX;
-                int y = startY;
-
                 Entity mob = World.Get(overheadDamage.Key);
 
                 if (mob == null || mob.IsDestroyed)
@@ -359,7 +354,7 @@ namespace ClassicUO.Game.Managers
                         continue;
                 }
 
-                overheadDamage.Value.Draw(batcher, x, y, scale);
+                overheadDamage.Value.Draw(batcher);
             }
         }
 
@@ -369,7 +364,7 @@ namespace ClassicUO.Game.Managers
             {
                 foreach (Tuple<uint, uint> tuple in _subst)
                 {
-                    if (_damages.TryGetValue(tuple.Item1, out var dmg))
+                    if (_damages.TryGetValue(tuple.Item1, out OverheadDamage dmg))
                     {
                         _damages.Remove(tuple.Item1);
                         _damages[tuple.Item2] = dmg;
@@ -390,7 +385,7 @@ namespace ClassicUO.Game.Managers
 
         internal void AddDamage(uint obj, int dmg)
         {
-            if (!_damages.TryGetValue(obj, out var dm) || dm == null)
+            if (!_damages.TryGetValue(obj, out OverheadDamage dm) || dm == null)
             {
                 dm = new OverheadDamage(World.Get(obj));
                 _damages[obj] = dm;

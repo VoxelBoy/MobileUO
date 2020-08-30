@@ -88,9 +88,9 @@ namespace ClassicUO.Game.UI.Controls
             base.Draw(batcher, x, y);
 
             ResetHueVector();
-            ShaderHuesTraslator.GetHueVector(ref _hueVector, HighlightOnMouseOver && MouseIsOver ? 0x0035 : Hue, IsPartialHue, 0, false);
+            ShaderHueTranslator.GetHueVector(ref _hueVector, HighlightOnMouseOver && MouseIsOver ? 0x0035 : Hue, IsPartialHue, 0, false);
           
-            var texture = ArtLoader.Instance.GetTexture(Graphic);
+            ArtTexture texture = ArtLoader.Instance.GetTexture(Graphic);
 
             if (texture != null)
             {
@@ -109,7 +109,7 @@ namespace ClassicUO.Game.UI.Controls
 
         public override bool Contains(int x, int y)
         {
-            var texture = ArtLoader.Instance.GetTexture(Graphic);
+            ArtTexture texture = ArtLoader.Instance.GetTexture(Graphic);
 
             if (texture == null)
             {
@@ -160,7 +160,7 @@ namespace ClassicUO.Game.UI.Controls
                 Math.Abs(offset.Y) < Constants.MIN_PICKUP_DRAG_DISTANCE_PIXELS)
                 return false;
 
-            var split = UIManager.GetGump<SplitMenuGump>(LocalSerial);
+            SplitMenuGump split = UIManager.GetGump<SplitMenuGump>(LocalSerial);
             if (split == null)
                 return true;
 
