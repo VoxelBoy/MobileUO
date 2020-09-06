@@ -159,7 +159,8 @@ namespace ClassicUO.IO.Audio
                 _sound_instance.SubmitBuffer(buffer, this is UOMusic, buffer.Length);
                 VolumeFactor = volumeFactor;
                 Volume = volume;
-                DurationTime = Time.Ticks + _sound_instance.GetSampleDuration(buffer.Length).TotalMilliseconds;
+                //HACK: since this is probably a problem caused by the way unity handles the stream, removing arbitrarily 50 milliseconds removes any clicks and is unnoticeable.
+                DurationTime = Time.Ticks + (_sound_instance.GetSampleDuration(buffer.Length).TotalMilliseconds - 50);
                 _sound_instance.Play(Name);
 
                 return true;
