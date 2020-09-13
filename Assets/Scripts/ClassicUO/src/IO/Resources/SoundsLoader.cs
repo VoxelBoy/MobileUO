@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClassicUO.Data;
@@ -218,6 +219,7 @@ namespace ClassicUO.IO.Resources
             });
         }
 
+        private static byte[] _SilenceArr = new byte[22050];//this will create a silence of 0.5 sec
         private bool TryGetSound(int sound, out byte[] data, out string name)
         {
             data = null;
@@ -237,7 +239,7 @@ namespace ClassicUO.IO.Resources
             _file.Seek(offset);
 
             byte[] stringBuffer = _file.ReadArray<byte>(40);
-            data = _file.ReadArray<byte>(entry.Length - 40);
+            data = _file.ReadArray<byte>(entry.Length - 40).Concat(_SilenceArr).ToArray();
 
             name = Encoding.UTF8.GetString(stringBuffer);
             int end = name.IndexOf('\0');

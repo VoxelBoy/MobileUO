@@ -34,6 +34,7 @@ namespace ClassicUO.IO.Audio
     {       
         protected AudioChannels Channels = AudioChannels.Mono;
 
+        protected virtual uint DistortionFix => 0;
         protected int Frequency = 22050;
         private string m_Name;
         private float m_volume = 1.0f;
@@ -153,14 +154,13 @@ namespace ClassicUO.IO.Audio
 
             if (buffer != null && buffer.Length > 0)
             {
-                _lastPlayedTime = Time.Ticks + Delay;
+                _lastPlayedTime = Time.Ticks + Delay - DistortionFix;
 
                 _sound_instance.BufferNeeded += OnBufferNeeded;
                 _sound_instance.SubmitBuffer(buffer, this is UOMusic, buffer.Length);
                 VolumeFactor = volumeFactor;
                 Volume = volume;
-                //HACK: since this is probably a problem caused by the way unity handles the stream, removing arbitrarily 50 milliseconds removes any clicks and is unnoticeable.
-                DurationTime = Time.Ticks + (_sound_instance.GetSampleDuration(buffer.Length).TotalMilliseconds - 50);
+                DurationTime = Time.Ticks + (_sound_instance.GetSampleDuration(buffer.Length).TotalMilliseconds - DistortionFix);
                 _sound_instance.Play(Name);
 
                 return true;
@@ -173,6 +173,7 @@ namespace ClassicUO.IO.Audio
         {            
             if (_sound_instance != null)
             {
+                _sound_instance.Volume = 0.0f;
                 _sound_instance.BufferNeeded -= OnBufferNeeded;
                 _sound_instance.Stop();
             }

@@ -29,6 +29,7 @@ namespace ClassicUO.IO.Audio
 {
     internal class UOSound : Sound
     {
+        protected override uint DistortionFix => 500;
         private readonly byte[] _waveBuffer;
 
         public UOSound(string name, int index, byte[] buffer)
