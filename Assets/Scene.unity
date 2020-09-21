@@ -878,6 +878,7 @@ MonoBehaviour:
   background: {fileID: 90313483}
   backgroundImage: {fileID: 90313486}
   handle: {fileID: 906887848}
+  canvas: {fileID: 506237908}
   deadZone: 0.1
   handleRange: 1
   blockVerticalInput: 0

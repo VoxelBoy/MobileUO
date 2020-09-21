@@ -11,6 +11,8 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
     [SerializeField]
     private RectTransform handle;
     [SerializeField]
+    private Canvas canvas;
+    [SerializeField]
     public float deadZone;
     [SerializeField]
     private float handleRange = 1f;
@@ -44,7 +46,9 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
         else
         {
             var backgroundPosition = background.position;
-            pointerPosition = new Vector2(eventData.position.x - backgroundPosition.x, eventData.position.y - backgroundPosition.y);
+            var eventDataPosition = eventData.position;
+            pointerPosition = new Vector2(eventDataPosition.x - backgroundPosition.x, eventDataPosition.y - backgroundPosition.y);
+            pointerPosition /= canvas.scaleFactor;
         }
 
         var extent = background.rect.size * 0.5f * handleRange;
