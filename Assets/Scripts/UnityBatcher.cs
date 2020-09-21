@@ -497,7 +497,7 @@ namespace ClassicUO.Renderer
             vertex.Hue0.y =
                 vertex.Hue1.y =
                     vertex.Hue2.y =
-                        vertex.Hue3.y = ShaderHuesTraslator.SHADER_SHADOW;
+                        vertex.Hue3.y = ShaderHueTranslator.SHADER_SHADOW;
 
             RenderVertex(vertex, texture, vertex.Hue0);
         }
