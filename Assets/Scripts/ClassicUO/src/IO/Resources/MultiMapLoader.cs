@@ -36,10 +36,24 @@ namespace ClassicUO.IO.Resources
 
         private MultiMapLoader()
         {
+
         }
 
         private static MultiMapLoader _instance;
-        public static MultiMapLoader Instance => _instance ?? (_instance = new MultiMapLoader());
+        public static MultiMapLoader Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new MultiMapLoader();
+                }
+
+                return _instance;
+            }
+        }
+
+
 
         internal bool HasFacet(int map)
         {
@@ -53,18 +67,14 @@ namespace ClassicUO.IO.Resources
                 string path = UOFileManager.GetUOFilePath("Multimap.rle");
 
                 if (File.Exists(path))
-                {
                     _file = new UOFile(path, true);
-                }
 
                 for (int i = 0; i < 6; i++)
                 {
                     path = UOFileManager.GetUOFilePath($"facet0{i}.mul");
 
-                    if (File.Exists(path))
-                    {
+                    if (File.Exists(path)) 
                         _facets[i] = new UOFileMul(path);
-                    }
                 }
             });
         }

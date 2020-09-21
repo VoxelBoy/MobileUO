@@ -74,7 +74,7 @@ namespace ClassicUO.Game.GameObjects
 
                 if (this is Mobile mobile && mobile.Steps.Count != 0)
                 {
-                    ref Mobile.Step step = ref mobile.Steps.Back();
+                    ref var step = ref mobile.Steps.Back();
                     x = step.X;
                     y = step.Y;
                 }
@@ -156,49 +156,7 @@ namespace ClassicUO.Game.GameObjects
 
         public virtual void UpdateTextCoordsV()
         {
-            if (TextContainer == null)
-                return;
 
-            var last = (TextObject) TextContainer.Items;
-
-            while (last?.Next != null)
-                last = (TextObject) last.Next;
-
-            if (last == null || last.Time < Time.Ticks)
-                return;
-
-            int offY = 0;
-
-            Point p = RealScreenPosition;
-
-            ArtTexture texture = ArtLoader.Instance.GetTexture(Graphic);
-
-            if (texture != null)
-            {
-                p.Y -= (texture.ImageRectangle.Height >> 1);
-            }
-
-            p.X += (int) Offset.X + 22;
-            p.Y += (int) (Offset.Y - Offset.Z) + 44;
-
-            p = Client.Game.Scene.Camera.WorldToScreen(p);
-
-            for (; last != null; last = (TextObject) last.Previous)
-            {
-                if (last.RenderedText != null && !last.RenderedText.IsDestroyed)
-                {
-                    if (offY == 0 && last.Time < Time.Ticks)
-                        continue;
-
-                    last.OffsetY = offY;
-                    offY += last.RenderedText.Height;
-
-                    last.RealScreenPosition.X = (p.X - (last.RenderedText.Width >> 1));
-                    last.RealScreenPosition.Y = (p.Y - offY);
-                }
-            }
-
-            FixTextCoordinatesInScreen();
         }
 
         protected void FixTextCoordinatesInScreen()
@@ -213,7 +171,7 @@ namespace ClassicUO.Game.GameObjects
             int minY = ProfileManager.Current.GameWindowPosition.Y;
             //int maxY = minY + ProfileManager.Current.GameWindowSize.Y - 6;
 
-            for (TextObject item = (TextObject) TextContainer.Items; item != null; item = (TextObject) item.Next)
+            for (var item = (TextObject) TextContainer.Items; item != null; item = (TextObject) item.Next)
             {
                 if (item.RenderedText == null || item.RenderedText.IsDestroyed || item.RenderedText.Texture == null || item.Time < Time.Ticks)
                     continue;
@@ -248,7 +206,7 @@ namespace ClassicUO.Game.GameObjects
             if (string.IsNullOrEmpty(text))
                 return;
 
-            TextObject msg = MessageManager.CreateMessage(text, hue, font, isunicode, type, text_type);
+            var msg = MessageManager.CreateMessage(text, hue, font, isunicode, type, text_type);
             AddMessage(msg);
         }
 

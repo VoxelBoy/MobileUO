@@ -119,7 +119,7 @@ namespace ClassicUO.Game.Managers
 
         public void Save()
         {
-            List<Macro> list = GetAllMacros();
+            var list = GetAllMacros();
 
             string path = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Profiles", ProfileManager.Current.Username, ProfileManager.Current.ServerName, ProfileManager.Current.CharacterName, "macros.xml");
 
@@ -133,7 +133,7 @@ namespace ClassicUO.Game.Managers
                 xml.WriteStartDocument(true);
                 xml.WriteStartElement("macros");
 
-                foreach (Macro macro in list)
+                foreach (var macro in list)
                 {
                     macro.Save(xml);
                 }
@@ -596,7 +596,7 @@ namespace ClassicUO.Game.Managers
 
                                 case MacroSubType.Mail:
                                 case MacroSubType.PartyManifest:
-                                    PartyGump party = UIManager.GetGump<PartyGump>();
+                                    var party = UIManager.GetGump<PartyGump>();
 
                                     if (party == null)
                                     {
@@ -645,7 +645,7 @@ namespace ClassicUO.Game.Managers
 
                                 case MacroSubType.Paperdoll:
 
-                                    PaperDollGump paperdoll = UIManager.GetGump<PaperDollGump>();
+                                    var paperdoll = UIManager.GetGump<PaperDollGump>();
 
                                     if (paperdoll != null)
                                     {
@@ -661,7 +661,7 @@ namespace ClassicUO.Game.Managers
 
                                 case MacroSubType.Status:
 
-                                    StatusGumpBase status = StatusGumpBase.GetStatusGump();
+                                    var status = StatusGumpBase.GetStatusGump();
 
                                     if (macro.Code == MacroType.Close)
                                     {
@@ -700,7 +700,7 @@ namespace ClassicUO.Game.Managers
                                             status.BringOnTop();
                                         else
                                         {
-                                            BaseHealthBarGump healthbar = UIManager.GetGump<BaseHealthBarGump>(World.Player);
+                                            var healthbar = UIManager.GetGump<BaseHealthBarGump>(World.Player);
 
                                             if (healthbar != null)
                                             {
@@ -713,7 +713,7 @@ namespace ClassicUO.Game.Managers
 
                                 case MacroSubType.Journal:
 
-                                    JournalGump journal = UIManager.GetGump<JournalGump>();
+                                    var journal = UIManager.GetGump<JournalGump>();
 
                                     if (journal != null)
                                     {
@@ -731,7 +731,7 @@ namespace ClassicUO.Game.Managers
 
                                     if (ProfileManager.Current.StandardSkillsGump)
                                     {
-                                        StandardSkillsGump skillgump = UIManager.GetGump<StandardSkillsGump>();
+                                        var skillgump = UIManager.GetGump<StandardSkillsGump>();
 
                                         if (macro.Code == MacroType.Close)
                                             skillgump?.Dispose();
@@ -756,7 +756,7 @@ namespace ClassicUO.Game.Managers
                                 case MacroSubType.SpellWeavingSpellbook:
                                 case MacroSubType.MysticismSpellbook:
 
-                                    SpellbookGump spellbook = UIManager.GetGump<SpellbookGump>();
+                                    var spellbook = UIManager.GetGump<SpellbookGump>();
 
                                     if (spellbook != null)
                                     {
@@ -1153,7 +1153,7 @@ namespace ClassicUO.Game.Managers
                         }
                         else
                         {
-                            Item bandage = World.Player.FindBandage();
+                            var bandage = World.Player.FindBandage();
 
                             if (bandage != null)
                             {
@@ -1165,7 +1165,7 @@ namespace ClassicUO.Game.Managers
                     }
                     else
                     {
-                        Item bandage = World.Player.FindBandage();
+                        var bandage = World.Player.FindBandage();
 
                         if (bandage != null)
                         {
@@ -1305,15 +1305,15 @@ namespace ClassicUO.Game.Managers
                     {
                         case MacroSubType.MSC_NONE:
                         case MacroSubType.DefaultZoom:
-                            Client.Game.Scene.Camera.Zoom = ProfileManager.Current.DefaultScale;
+                            Client.Game.GetScene<GameScene>().Scale = ProfileManager.Current.DefaultScale;
                             break;
 
                         case MacroSubType.ZoomIn:
-                            --Client.Game.Scene.Camera.ZoomIndex;
+                            Client.Game.GetScene<GameScene>().ZoomIn();
                             break;
 
                         case MacroSubType.ZoomOut:
-                            ++Client.Game.Scene.Camera.ZoomIndex;
+                            Client.Game.GetScene<GameScene>().ZoomOut();
                             break;
                     }
 
@@ -1364,9 +1364,9 @@ namespace ClassicUO.Game.Managers
                 case MacroType.CloseAllHealthBars:
 
                     //Includes HealthBarGump/HealthBarGumpCustom
-                    IEnumerable<BaseHealthBarGump> healthBarGumps = UIManager.Gumps.OfType<BaseHealthBarGump>();
+                    var healthBarGumps = UIManager.Gumps.OfType<BaseHealthBarGump>();
 
-                    foreach (BaseHealthBarGump healthbar in healthBarGumps)
+                    foreach (var healthbar in healthBarGumps)
                     {
                         if (UIManager.AnchorManager[healthbar] == null && (healthbar.LocalSerial != World.Player))
                         {
@@ -1524,7 +1524,7 @@ namespace ClassicUO.Game.Managers
             Ctrl = bool.Parse(xml.GetAttribute("ctrl"));
             Shift = bool.Parse(xml.GetAttribute("shift"));
 
-            XmlElement actions = xml["actions"];
+            var actions = xml["actions"];
 
             if (actions != null)
             {

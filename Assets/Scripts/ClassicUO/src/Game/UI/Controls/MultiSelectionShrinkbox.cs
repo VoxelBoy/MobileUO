@@ -192,7 +192,7 @@ namespace ClassicUO.Game.UI.Controls
             if (_buttonimg > 0)
                 _pics = new Button[_items.Length];
 
-            int index = 0;
+            var index = 0;
             int width = 0;
             int height = 0;
             int lh = _label.Height + 2;
@@ -217,9 +217,9 @@ namespace ClassicUO.Game.UI.Controls
                 }
             }
 
-            foreach (string item in _items)
+            foreach (var item in _items)
             {
-                NiceButton but = new NiceButton(20, index * height + lh, width, height, ButtonAction.Activate, item, _buttongroup, TEXT_ALIGN_TYPE.TS_LEFT) { Tag = index };
+                var but = new NiceButton(20, index * height + lh, width, height, ButtonAction.Activate, item, _buttongroup, TEXT_ALIGN_TYPE.TS_LEFT) { Tag = index };
                 if (_buttonimg > 0)
                 {
                     Add(_pics[index] = new Button(index, _buttonimg, _pressedbuttonimg) { X = 6, Y = index * height + lh + 2, ButtonAction = (ButtonAction)0xBEEF, Tag = index });
@@ -231,7 +231,7 @@ namespace ClassicUO.Game.UI.Controls
                 index++;
             }
 
-            int totalHeight = _buttons.Length > 0 ? _buttons.Sum(o => o.Height) + lh : lh;
+            var totalHeight = _buttons.Length > 0 ? _buttons.Sum(o => o.Height) + lh : lh;
 
             Height = totalHeight;
 

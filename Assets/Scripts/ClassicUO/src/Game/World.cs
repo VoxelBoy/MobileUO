@@ -125,7 +125,10 @@ namespace ClassicUO.Game
                         if (value >= Constants.MAPS_COUNT)
                             value = 0;
 
-                        Map = new Map.Map(value);
+                        Map = new Map.Map(value)
+                        {
+                            Center = new Point(x, y)
+                        };
                         Map.Initialize();
 
                         Player.X = x;
@@ -139,6 +142,9 @@ namespace ClassicUO.Game
                     else
                     {
                         Map = new Map.Map(value);
+
+                        if (Player != null)
+                            Map.Center = new Point(Player.X, Player.Y);
                         Map.Initialize();
                     }
 
@@ -442,12 +448,12 @@ namespace ClassicUO.Game
             if (item == null || item.IsDestroyed)
                 return false;
 
-            LinkedObject first = item.Items;
+            var first = item.Items;
             RemoveItemFromContainer(item);
 
             while (first != null)
             {
-                LinkedObject next = first.Next;
+                var next = first.Next;
 
                 RemoveItem(first as Item, forceRemove);
 
@@ -469,11 +475,11 @@ namespace ClassicUO.Game
             if (mobile == null || mobile.IsDestroyed)
                 return false;
 
-            LinkedObject first = mobile.Items;
+            var first = mobile.Items;
 
             while (first != null)
             {
-                LinkedObject next = first.Next;
+                var next = first.Next;
 
                 RemoveItem(first as Item, forceRemove);
 
@@ -522,7 +528,7 @@ namespace ClassicUO.Game
                         if (item.IsMulti || item.IsDestroyed || !item.OnGround)
                             continue;
 
-                        int dist = item.Distance;
+                        var dist = item.Distance;
 
                         if (dist < distance)
                             distance = dist;
@@ -626,7 +632,7 @@ namespace ClassicUO.Game
                             }
                         }
 
-                        int dist = mobile.Distance;
+                        var dist = mobile.Distance;
 
                         if (dist < distance)
                             distance = dist;
@@ -851,7 +857,7 @@ namespace ClassicUO.Game
                 _toRemove.Add(item);
             }
 
-            foreach (uint serial in _toRemove)
+            foreach (var serial in _toRemove)
             {
                 RemoveItem(serial, true);
             }
@@ -869,7 +875,7 @@ namespace ClassicUO.Game
                 _toRemove.Add(mob);
             }
 
-            foreach (uint serial in _toRemove)
+            foreach (var serial in _toRemove)
             {
                 RemoveMobile(serial, true);
             }

@@ -173,8 +173,8 @@ namespace ClassicUO.Game.Scenes
                 int w = mobile.FrameInfo.Width;
                 int h = mobile.FrameInfo.Height;
 
-                x = (int) (x * (1 / Camera.Zoom));
-                y = (int) (y * (1 / Camera.Zoom));
+                x = (int) (x * (1 / Scale));
+                y = (int) (y * (1 / Scale));
 
                 _rectanglePlayer.X = x;
                 _rectanglePlayer.Y = y;
@@ -216,7 +216,7 @@ namespace ClassicUO.Game.Scenes
                         hbgc.Y = finalY;
 
 
-                        foreach (BaseHealthBarGump bar in UIManager.Gumps
+                        foreach (var bar in UIManager.Gumps
                                                 .OfType<BaseHealthBarGump>()
                                                   //.OrderBy(s => mobile.NotorietyFlag)
                                                   //.OrderBy(s => s.ScreenCoordinateX) ///testing placement SYRUPZ SYRUPZ SYRUPZ
@@ -367,7 +367,7 @@ namespace ClassicUO.Game.Scenes
                             dropZ = 0;
                             drop_container = obj.Serial;
                         }
-                        else if (obj is Item it2 && (it2.ItemData.IsSurface || (it2.ItemData.IsStackable && it2.DisplayedGraphic == ItemHold.DisplayedGraphic)))
+                        else if (obj is Item it2 && (it2.ItemData.IsSurface || (it2.ItemData.IsStackable && obj.Graphic == ItemHold.Graphic)))
                         {
                             if (!it2.ItemData.IsSurface)
                             {
@@ -424,7 +424,7 @@ namespace ClassicUO.Game.Scenes
                     case CursorTarget.Object:
                     case CursorTarget.MultiPlacement when World.CustomHouseManager == null:
                     {
-                        BaseGameObject obj = SelectedObject.Object;
+                        var obj = SelectedObject.Object;
                         if (obj is TextObject ov)
                             obj = ov.Owner;
 
@@ -447,7 +447,7 @@ namespace ClassicUO.Game.Scenes
 
                     case CursorTarget.SetTargetClientSide:
                     {
-                        BaseGameObject obj = SelectedObject.Object;
+                        var obj = SelectedObject.Object;
                         if (obj is TextObject ov)
                             obj = ov.Owner;
                         else if (obj is GameEffect eff && eff.Source != null)
@@ -640,7 +640,7 @@ namespace ClassicUO.Game.Scenes
                 {
                     if (obj is Static || obj is Multi || obj is Item)
                     {
-                        ref StaticTiles itemdata = ref TileDataLoader.Instance.StaticData[obj.Graphic];
+                        ref var itemdata = ref TileDataLoader.Instance.StaticData[obj.Graphic];
 
                         if (itemdata.IsSurface && Pathfinder.WalkTo(obj.X, obj.Y, obj.Z, 0))
                         {
@@ -692,7 +692,10 @@ namespace ClassicUO.Game.Scenes
 
             if (Keyboard.Ctrl && ProfileManager.Current.EnableMousewheelScaleZoom)
             {
-                Camera.ZoomIndex += up ? -1 : 1;
+                if (up)
+                    ZoomIn();
+                else
+                    ZoomOut();
 
                 return true;
             }
@@ -728,7 +731,7 @@ namespace ClassicUO.Game.Scenes
                     {
                         if (SerialHelper.IsMobile(obj.Serial) || obj is Item it && it.IsDamageable)
                         {
-                            BaseHealthBarGump customgump = UIManager.GetGump<BaseHealthBarGump>(obj);
+                            var customgump = UIManager.GetGump<BaseHealthBarGump>(obj);
                             customgump?.Dispose();
 
                             if (obj == World.Player)
@@ -854,32 +857,12 @@ namespace ClassicUO.Game.Scenes
             {
                 return;
             }
-
             
-            /*const int MOVE_STEP = 44;
-
-            int step = MOVE_STEP * (Keyboard.Ctrl ? 2 : 1);
-
-            switch (e.keysym.sym)
-            {
-                case SDL.SDL_Keycode.SDLK_UP:
-                    Camera.SetPositionOffset(-step, -step);
-                    return;
-                case SDL.SDL_Keycode.SDLK_DOWN:
-                    Camera.SetPositionOffset(step, step);
-                    return;
-                case SDL.SDL_Keycode.SDLK_LEFT:
-                    Camera.SetPositionOffset(-step, step);
-                    return;
-                case SDL.SDL_Keycode.SDLK_RIGHT:
-                    Camera.SetPositionOffset(step, -step);
-                    return;
-            }
-            */
 
             bool canExecuteMacro = UIManager.KeyboardFocusControl == UIManager.SystemChat.TextBoxControl &&
                                    UIManager.SystemChat.Mode >= ChatMode.Default;
-            
+
+
             if (canExecuteMacro)
             {
                 Macro macro = Macros.FindMacro(e.keysym.sym, Keyboard.Alt, Keyboard.Ctrl, Keyboard.Shift);
@@ -961,9 +944,7 @@ namespace ClassicUO.Game.Scenes
         internal override void OnKeyUp(SDL.SDL_KeyboardEvent e)
         {
             if (ProfileManager.Current.EnableMousewheelScaleZoom && ProfileManager.Current.RestoreScaleAfterUnpressCtrl && !Keyboard.Ctrl)
-            {
-                Camera.Zoom = ProfileManager.Current.DefaultScale;
-            }
+                Scale = ProfileManager.Current.DefaultScale;
 
             if (_flags[4])
             {

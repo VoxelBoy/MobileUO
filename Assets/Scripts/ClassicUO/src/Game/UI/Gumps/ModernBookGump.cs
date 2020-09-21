@@ -278,7 +278,7 @@ namespace ClassicUO.Game.UI.Gumps
             if (ScissorStack.PushScissors(batcher.GraphicsDevice, scissor))
             {
                 batcher.EnableScissorTest(true);
-                RenderedText t = _bookPage.renderedText;
+                var t = _bookPage.renderedText;
                 int startpage = (ActivePage - 1) * 2;
                 if (startpage < BookPageCount)
                 {

@@ -72,7 +72,7 @@ namespace ClassicUO.Game
 
         private static bool CreateItemList(List<PathObject> list, int x, int y, int stepState)
         {
-            GameObject tile = World.Map.GetTile(x, y, false);
+            var tile = World.Map.GetTile(x, y, false);
 
             if (tile == null)
                 return false;

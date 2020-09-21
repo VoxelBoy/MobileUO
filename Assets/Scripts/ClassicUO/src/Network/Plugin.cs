@@ -319,8 +319,8 @@ namespace ClassicUO.Network
             {
                 try
                 {
-                    Assembly asm = Assembly.LoadFile(_path);
-                    Type type = asm.GetType("Assistant.Engine");
+                    var asm = Assembly.LoadFile(_path);
+                    var type = asm.GetType("Assistant.Engine");
 
                     if (type == null)
                     {
@@ -330,7 +330,7 @@ namespace ClassicUO.Network
                         return;
                     }
 
-                    MethodInfo meth = type.GetMethod("Install", BindingFlags.Public | BindingFlags.Static);
+                    var meth = type.GetMethod("Install", BindingFlags.Public | BindingFlags.Static);
 
                     if (meth == null)
                     {
@@ -470,7 +470,7 @@ namespace ClassicUO.Network
         {
             if (index >= 0 && index < Constants.MAX_STATIC_DATA_INDEX_COUNT)
             {
-                ref StaticTiles st = ref TileDataLoader.Instance.StaticData[index];
+                ref var st = ref TileDataLoader.Instance.StaticData[index];
 
                 flags = (ulong) st.Flags;
                 weight = st.Weight;
@@ -494,7 +494,7 @@ namespace ClassicUO.Network
         {
             if (index >= 0 && index < Constants.MAX_STATIC_DATA_INDEX_COUNT)
             {
-                ref LandTiles st = ref TileDataLoader.Instance.LandData[index];
+                ref var st = ref TileDataLoader.Instance.LandData[index];
 
                 flags = (ulong) st.Flags;
                 textid = st.TexID;
@@ -801,14 +801,14 @@ namespace ClassicUO.Network
             Effect current_effect = null;
 
 
-            Viewport lastViewport = device.Viewport;
-            Rectangle lastScissorBox = device.ScissorRectangle;
+            var lastViewport = device.Viewport;
+            var lastScissorBox = device.ScissorRectangle;
 
-            Color lastBlendFactor = device.BlendFactor;
-            BlendState lastBlendState = device.BlendState;
-            RasterizerState lastRasterizeState = device.RasterizerState;
-            DepthStencilState lastDepthStencilState = device.DepthStencilState;
-            SamplerState lastsampler = device.SamplerStates[0];
+            var lastBlendFactor = device.BlendFactor;
+            var lastBlendState = device.BlendState;
+            var lastRasterizeState = device.RasterizerState;
+            var lastDepthStencilState = device.DepthStencilState;
+            var lastsampler = device.SamplerStates[0];
 
 
             //var blend_snap_AlphaBlendFunction = device.BlendState.AlphaBlendFunction;
@@ -857,7 +857,7 @@ namespace ClassicUO.Network
                 switch (cmd.type)
                 {
                     case CMD_VIEWPORT:
-                        ref cmd_viewport viewport = ref cmd.viewport;
+                        ref var viewport = ref cmd.viewport;
 
                         device.Viewport = new Viewport(
                                                        viewport.x,
@@ -868,7 +868,7 @@ namespace ClassicUO.Network
                         break;
 
                     case CMD_SCISSOR:
-                        ref cmd_scissor scissor = ref cmd.scissor;
+                        ref var scissor = ref cmd.scissor;
 
                         device.ScissorRectangle = new Rectangle(
                                                                 scissor.x,
@@ -880,14 +880,14 @@ namespace ClassicUO.Network
 
                     case CMD_BLEND_FACTOR:
 
-                        ref cmd_blend_factor blend_factor = ref cmd.new_blend_factor;
+                        ref var blend_factor = ref cmd.new_blend_factor;
 
                         device.BlendFactor = blend_factor.color;
 
                         break;
 
                     case CMD_NEW_BLEND_STATE:
-                        ref cmd_new_blend_state blend = ref cmd.new_blend_state;
+                        ref var blend = ref cmd.new_blend_state;
 
                         resources[blend.id] = new BlendState()
                         {
@@ -909,7 +909,7 @@ namespace ClassicUO.Network
 
                     case CMD_NEW_RASTERIZE_STATE:
 
-                        ref cmd_new_rasterize_state rasterize = ref cmd.new_rasterize_state;
+                        ref var rasterize = ref cmd.new_rasterize_state;
 
                         resources[rasterize.id] = new RasterizerState()
                         {
@@ -925,7 +925,7 @@ namespace ClassicUO.Network
 
                     case CMD_NEW_STENCIL_STATE:
 
-                        ref cmd_new_stencil_state stencil = ref cmd.new_stencil_state;
+                        ref var stencil = ref cmd.new_stencil_state;
 
                         resources[stencil.id] = new DepthStencilState()
                         {
@@ -952,7 +952,7 @@ namespace ClassicUO.Network
 
                     case CMD_NEW_SAMPLER_STATE:
 
-                        ref cmd_new_sampler_state sampler = ref cmd.new_sampler_state;
+                        ref var sampler = ref cmd.new_sampler_state;
 
                         resources[sampler.id] = new SamplerState()
                         {
@@ -993,9 +993,9 @@ namespace ClassicUO.Network
 
                     case CMD_SET_VERTEX_DATA:
 
-                        ref cmd_set_vertex_data set_vertex_data = ref cmd.set_vertex_data;
+                        ref var set_vertex_data = ref cmd.set_vertex_data;
 
-                        VertexBuffer vertex_buffer = resources[set_vertex_data.id] as VertexBuffer;
+                        var vertex_buffer = resources[set_vertex_data.id] as VertexBuffer;
 
                         vertex_buffer?.SetDataPointerEXT(0,
                                                          set_vertex_data.vertex_buffer_ptr,
@@ -1006,9 +1006,9 @@ namespace ClassicUO.Network
 
                     case CMD_SET_INDEX_DATA:
 
-                        ref cmd_set_index_data set_index_data = ref cmd.set_index_data;
+                        ref var set_index_data = ref cmd.set_index_data;
 
-                        IndexBuffer index_buffer = resources[set_index_data.id] as IndexBuffer;
+                        var index_buffer = resources[set_index_data.id] as IndexBuffer;
 
                         index_buffer?.SetDataPointerEXT(0,
                                                         set_index_data.indices_buffer_ptr,
@@ -1019,7 +1019,7 @@ namespace ClassicUO.Network
 
                     case CMD_CREATE_VERTEX_BUFFER:
 
-                        ref cmd_create_vertex_buffer create_vertex_buffer = ref cmd.create_vertex_buffer;
+                        ref var create_vertex_buffer = ref cmd.create_vertex_buffer;
 
                         VertexElement[] elements = new VertexElement[create_vertex_buffer.decl_count];
 
@@ -1045,7 +1045,7 @@ namespace ClassicUO.Network
 
                     case CMD_CREATE_INDEX_BUFFER:
 
-                        ref cmd_create_index_buffer create_index_buffer = ref cmd.create_index_buffer;
+                        ref var create_index_buffer = ref cmd.create_index_buffer;
 
                         IndexBuffer ib = create_index_buffer.is_dynamic ?
                                              new DynamicIndexBuffer(device, create_index_buffer.index_element_size, create_index_buffer.index_count, create_index_buffer.buffer_usage)
@@ -1058,7 +1058,7 @@ namespace ClassicUO.Network
 
                     case CMD_SET_VERTEX_BUFFER:
 
-                        ref cmd_set_vertex_buffer set_vertex_buffer = ref cmd.set_vertex_buffer;
+                        ref var set_vertex_buffer = ref cmd.set_vertex_buffer;
 
                         vb = resources[set_vertex_buffer.id] as VertexBuffer;
 
@@ -1068,7 +1068,7 @@ namespace ClassicUO.Network
 
                     case CMD_SET_INDEX_BUFFER:
 
-                        ref cmd_set_index_buffer set_index_buffer = ref cmd.set_index_buffer;
+                        ref var set_index_buffer = ref cmd.set_index_buffer;
 
                         ib = resources[set_index_buffer.id] as IndexBuffer;
 
@@ -1078,13 +1078,13 @@ namespace ClassicUO.Network
 
                     case CMD_CREATE_EFFECT:
 
-                        ref cmd_create_effect create_effect = ref cmd.create_effect;
+                        ref var create_effect = ref cmd.create_effect;
 
                         break;
 
                     case CMD_CREATE_BASIC_EFFECT:
 
-                        ref cmd_create_basic_effect create_basic_effect = ref cmd.create_basic_effect;
+                        ref var create_basic_effect = ref cmd.create_basic_effect;
 
                         if (!resources.TryGetValue(create_basic_effect.id, out GraphicsResource res))
                         {
@@ -1108,17 +1108,17 @@ namespace ClassicUO.Network
 
                     case CMD_CREATE_TEXTURE_2D:
 
-                        ref cmd_create_texture_2d create_texture_2d = ref cmd.create_texture_2d;
+                        ref var create_texture_2d = ref cmd.create_texture_2d;
 
                         Texture2D texture;
                         if (create_texture_2d.is_render_target)
                         {
                             texture = new RenderTarget2D(device,
                                                          create_texture_2d.width,
-                                                         create_texture_2d.height);
-                                                         // false,
-                                                         // create_texture_2d.format,
-                                                         // DepthFormat.Depth24Stencil8);
+                                                         create_texture_2d.height,
+                                                         false,
+                                                         create_texture_2d.format,
+                                                         DepthFormat.Depth24Stencil8);
                         }
                         else
                         {
@@ -1136,7 +1136,7 @@ namespace ClassicUO.Network
 
                     case CMD_SET_TEXTURE_DATA_2D:
 
-                        ref cmd_set_texture_data_2d set_texture_data_2d = ref cmd.set_texture_data_2d;
+                        ref var set_texture_data_2d = ref cmd.set_texture_data_2d;
 
                         texture = resources[set_texture_data_2d.id] as Texture2D;
 
@@ -1153,13 +1153,13 @@ namespace ClassicUO.Network
 
                     case CMD_INDEXED_PRIMITIVE_DATA:
 
-                        ref cmd_indexed_primitive_data indexed_primitive_data = ref cmd.indexed_primitive_data;
+                        ref var indexed_primitive_data = ref cmd.indexed_primitive_data;
 
                         //device.Textures[0] = resources[indexed_primitive_data.texture_id] as Texture;
 
                         if (current_effect != null)
                         {
-                            foreach (EffectPass pass in current_effect.CurrentTechnique.Passes)
+                            foreach (var pass in current_effect.CurrentTechnique.Passes)
                             {
                                 pass.Apply();
 
@@ -1187,7 +1187,7 @@ namespace ClassicUO.Network
 
                     case CMD_DESTROY_RESOURCE:
 
-                        ref cmd_destroy_resource destroy_resource = ref cmd.destroy_resource;
+                        ref var destroy_resource = ref cmd.destroy_resource;
 
                         resources[destroy_resource.id]?.Dispose();
                         resources.Remove(destroy_resource.id);

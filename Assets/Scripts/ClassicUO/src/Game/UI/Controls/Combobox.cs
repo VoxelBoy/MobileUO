@@ -117,7 +117,7 @@ namespace ClassicUO.Game.UI.Controls
 
             OnBeforeContextMenu?.Invoke(this, null);
 
-            ComboboxContextMenu contextMenu = new ComboboxContextMenu(this, _items, Width, _maxHeight)
+            var contextMenu = new ComboboxContextMenu(this, _items, Width, _maxHeight)
             {
                 X = ScreenCoordinateX,
                 Y = ScreenCoordinateY
@@ -137,7 +137,7 @@ namespace ClassicUO.Game.UI.Controls
                 ResizePic background;
                 Add(background = new ResizePic(0x0BB8));
                 HoveredLabel[] labels = new HoveredLabel[items.Length];
-                int index = 0;
+                var index = 0;
 
                 for (int i = 0; i < items.Length; i++)
                 {
@@ -146,7 +146,7 @@ namespace ClassicUO.Game.UI.Controls
                     if (item == null)
                         item = string.Empty;
 
-                    HoveredLabel label = new HoveredLabel(item, false, 0x0453, 0x0453, 0x0453, font: _box._font)
+                    var label = new HoveredLabel(item, false, 0x0453, 0x0453, 0x0453, font: _box._font)
                     {
                         X = 2,
                         Y = index * 15,
@@ -158,13 +158,13 @@ namespace ClassicUO.Game.UI.Controls
                     labels[index++] = label;
                 }
 
-                int totalHeight = labels.Max(o => o.Y + o.Height);
-                int maxWidth = Math.Max(minWidth, labels.Max(o => o.X + o.Width));
+                var totalHeight = labels.Max(o => o.Y + o.Height);
+                var maxWidth = Math.Max(minWidth, labels.Max(o => o.X + o.Width));
 
                 if (maxHeight != 0 && totalHeight > maxHeight)
                 {
-                    ScrollArea scrollArea = new ScrollArea(0, 0, maxWidth + 15, maxHeight, true);
-                    foreach (HoveredLabel label in labels)
+                    var scrollArea = new ScrollArea(0, 0, maxWidth + 15, maxHeight, true);
+                    foreach (var label in labels)
                     {
                         label.Y = 0;
                         label.Width = maxWidth;
@@ -176,7 +176,7 @@ namespace ClassicUO.Game.UI.Controls
                 }
                 else
                 {
-                    foreach (HoveredLabel label in labels)
+                    foreach (var label in labels)
                     {
                         label.Width = maxWidth;
                         Add(label);

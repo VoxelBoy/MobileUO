@@ -34,11 +34,11 @@ namespace ClassicUO.Game
         {
             Clear();
 
-            LinkedObject item = Next;
+            var item = Next;
 
             while (item != null && item != this)
             {
-                LinkedObject next = item.Next;
+                var next = item.Next;
                 item.Next = null;
                 item = next;
             }
@@ -57,7 +57,7 @@ namespace ClassicUO.Game
             }
             else
             {
-                LinkedObject last = GetLast();
+                var last = GetLast();
                 last.Next = item;
 
                 Debug.Assert(item.Next == null, "[Append to last-next] item must be unlinked before.");
@@ -118,7 +118,7 @@ namespace ClassicUO.Game
             }
             else
             {
-                LinkedObject next = first.Next;
+                var next = first.Next;
                 item.Next = next;
                 item.Previous = first;
                 first.Next = item;
@@ -152,7 +152,7 @@ namespace ClassicUO.Game
             if (item != null)
             {
                 Unlink(item);
-                LinkedObject last = GetLast();
+                var last = GetLast();
 
                 if (last == null)
                 {
@@ -170,7 +170,7 @@ namespace ClassicUO.Game
 
         public LinkedObject GetLast()
         {
-            LinkedObject last = Items;
+            var last = Items;
 
             while (last != null && last.Next != null)
             {
@@ -184,12 +184,12 @@ namespace ClassicUO.Game
         {
             if (Items != null)
             {
-                LinkedObject item = Items;
+                var item = Items;
                 Items = null;
 
                 while (item != null)
                 {
-                    LinkedObject next = item.Next;
+                    var next = item.Next;
                     item.Next = null;
                     item = next;
                 }

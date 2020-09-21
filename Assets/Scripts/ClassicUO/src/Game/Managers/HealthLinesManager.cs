@@ -63,7 +63,7 @@ namespace ClassicUO.Game.Managers
                 _hp_texture.Ticks = Time.Ticks;
         }
 
-        public void Draw(UltimaBatcher2D batcher)
+        public void Draw(UltimaBatcher2D batcher, float scale)
         {
             int screenX = ProfileManager.Current.GameWindowPosition.X;
             int screenY = ProfileManager.Current.GameWindowPosition.Y;
@@ -71,16 +71,17 @@ namespace ClassicUO.Game.Managers
             int screenH = ProfileManager.Current.GameWindowSize.Y;
 
             if (SerialHelper.IsMobile(TargetManager.LastTargetInfo.Serial))
-                DrawHealthLineWithMath(batcher, TargetManager.LastTargetInfo.Serial, screenX, screenY, screenW, screenH);
+                DrawHealthLineWithMath(batcher, TargetManager.LastTargetInfo.Serial, screenX, screenY, screenW, screenH, scale);
             if (SerialHelper.IsMobile(TargetManager.SelectedTarget))
-                DrawHealthLineWithMath(batcher, TargetManager.SelectedTarget, screenX, screenY, screenW, screenH);
+                DrawHealthLineWithMath(batcher, TargetManager.SelectedTarget, screenX, screenY, screenW, screenH, scale);
             if (SerialHelper.IsMobile(TargetManager.LastAttack))
-                DrawHealthLineWithMath(batcher, TargetManager.LastAttack, screenX, screenY, screenW, screenH);
+                DrawHealthLineWithMath(batcher, TargetManager.LastAttack, screenX, screenY, screenW, screenH, scale);
 
             if (!IsEnabled)
             {
                 return;
             }
+
 
             int mode = ProfileManager.Current.MobileHPType;
 
@@ -89,10 +90,11 @@ namespace ClassicUO.Game.Managers
 
             int showWhen = ProfileManager.Current.MobileHPShowWhen;
 
-            Point p = Point.Zero;
-
             foreach (Mobile mobile in World.Mobiles)
             {
+                //if (World.Party.Contains(mobile) && mobile.Tile == null)
+                //    continue;
+
                 if (mobile.IsDestroyed)
                     continue;
 
@@ -102,64 +104,73 @@ namespace ClassicUO.Game.Managers
                 if (showWhen == 1 && current == max)
                     continue;
 
-                p = mobile.RealScreenPosition;
-                p.X += (int) mobile.Offset.X + 22 + 5;
-                p.Y += (int) (mobile.Offset.Y - mobile.Offset.Z) + 22 + 5;
+                int x = screenX + mobile.RealScreenPosition.X;
+                int y = screenY + mobile.RealScreenPosition.Y;
 
+                x += (int) mobile.Offset.X + 22 ;
+                y += (int) (mobile.Offset.Y - mobile.Offset.Z) + 22;
+
+                x = (int) (x / scale);
+                y = (int) (y / scale);
+                x -= (int) (screenX / scale);
+                y -= (int) (screenY / scale);
+                x += screenX;
+                y += screenY;
+
+                x += 5;
+                y += 5;
+
+                x -= BAR_WIDTH_HALF;
+                y -= BAR_HEIGHT_HALF;
 
                 if (mode != 1 && !mobile.IsDead)
                 {
                     if ((showWhen == 2 && current != max) || showWhen <= 1)
                     {
+                        int xx = x;
+                        int yy = y;
+
+                        if (mobile.IsGargoyle && mobile.IsFlying)
+                            yy -= (int) (22 / scale);
+                        else if (!mobile.IsMounted)
+                            yy += (int) (22 / scale);
+
+
+                        AnimationsLoader.Instance.GetAnimationDimensions(mobile.AnimIndex,
+                                                                      mobile.GetGraphicForAnimation(),
+                                                                      /*(byte) m.GetDirectionForAnimation()*/ 0,
+                                                                      /*Mobile.GetGroupForAnimation(m, isParent:true)*/ 0,
+                                                                      mobile.IsMounted,
+                                                                      /*(byte) m.AnimIndex*/ 0,
+                                                                      out int centerX,
+                                                                      out int centerY,
+                                                                      out int width,
+                                                                      out int height);
+
+                       
+                        yy -= (int) ((height + centerY + 28) / scale);
+
+
+                       
+
                         if (mobile.HitsPercentage != 0)
                         {
-                            AnimationsLoader.Instance.GetAnimationDimensions(mobile.AnimIndex,
-                                mobile.GetGraphicForAnimation(),
-                                /*(byte) m.GetDirectionForAnimation()*/ 0,
-                                /*Mobile.GetGroupForAnimation(m, isParent:true)*/ 0,
-                                mobile.IsMounted,
-                                /*(byte) m.AnimIndex*/ 0,
-                                out int centerX,
-                                out int centerY,
-                                out int width,
-                                out int height);
-
-                            Point p1 = p;
-                            p1.Y -= (height + centerY + 28);
-
+                            xx -= (mobile.HitsTexture.Width >> 1) + 3;
+                            xx += 22;
+                            yy -= mobile.HitsTexture.Height / 1;
                             if (mobile.ObjectHandlesOpened)
-                                p1.Y -= 22;
-                            if (mobile.IsGargoyle && mobile.IsFlying)
-                                p1.Y -= 22;
-                            else if (!mobile.IsMounted)
-                                p1.Y += 22;
+                                yy -= 22;
 
-                            p1 = Client.Game.Scene.Camera.WorldToScreen(p1);
-                            p1.X -= (mobile.HitsTexture.Width >> 1) + 3;
-                            p1.Y -= mobile.HitsTexture.Height;
-                            
-                            if (!(p1.X < screenX || p1.X > screenX + screenW - mobile.HitsTexture.Width || p1.Y < screenY || p1.Y > screenY + screenH))
-                            {
-                                mobile.HitsTexture.Draw(batcher, p1.X, p1.Y);
-                            }
+                            if (!(xx < screenX || xx > screenX + screenW - mobile.HitsTexture.Width || yy < screenY || yy > screenY + screenH))
+                                mobile.HitsTexture.Draw(batcher, xx, yy);
                         }
                     }
                 }
 
-                
-                //if (mobile.IsGargoyle && mobile.IsFlying)
-                //    p.Y -= 22;
-                //else if (!mobile.IsMounted)
-                //    p.Y += 22;
-
-                p = Client.Game.Scene.Camera.WorldToScreen(p);
-                p.X -= BAR_WIDTH_HALF;
-                p.Y -= BAR_HEIGHT_HALF;
-
-                if (p.X < screenX || p.X > screenX + screenW - BAR_WIDTH)
+                if (x < screenX || x > screenX + screenW - BAR_WIDTH)
                     continue;
 
-                if (p.Y < screenY || p.Y > screenY + screenH - BAR_HEIGHT)
+                if (y < screenY || y > screenY + screenH - BAR_HEIGHT)
                     continue;
 
                 if (mode >= 1 && TargetManager.LastTargetInfo.Serial != mobile)
@@ -170,31 +181,44 @@ namespace ClassicUO.Game.Managers
                         mobile == TargetManager.LastAttack)
                         continue;
 
-                    DrawHealthLine(batcher, mobile, p.X, p.Y, mobile != World.Player);
+
+                    DrawHealthLine(batcher, mobile, x, y, mobile != World.Player);
                 }
             }
         }
 
-        private void DrawHealthLineWithMath(UltimaBatcher2D batcher, uint serial, int screenX, int screenY, int screenW, int screenH)
+        private void DrawHealthLineWithMath(UltimaBatcher2D batcher, uint serial, int screenX, int screenY, int screenW, int screenH, float scale)
         {
-            Entity entity = World.Get(serial);
+            var entity = World.Get(serial);
             if (entity == null)
                 return;
 
-            Point p = entity.RealScreenPosition;
-            p.X += (int) entity.Offset.X + 22 + 5;
-            p.Y += (int) (entity.Offset.Y - entity.Offset.Z) + 22 + 5;
-            p = Client.Game.Scene.Camera.WorldToScreen(p);
-            p.X -= BAR_WIDTH_HALF;
-            p.Y -= BAR_HEIGHT_HALF;
+            int x = screenX + entity.RealScreenPosition.X;
+            int y = screenY + entity.RealScreenPosition.Y;
 
-            if (p.X < screenX || p.X > screenX + screenW - BAR_WIDTH)
+            x += (int) entity.Offset.X + 22;
+            y += (int) (entity.Offset.Y - entity.Offset.Z) + 22;
+
+            x = (int) (x / scale);
+            y = (int) (y / scale);
+            x -= (int) (screenX / scale);
+            y -= (int) (screenY / scale);
+            x += screenX;
+            y += screenY;
+
+            x += 5;
+            y += 5;
+
+            x -= BAR_WIDTH_HALF;
+            y -= BAR_HEIGHT_HALF;
+
+            if (x < screenX || x > screenX + screenW - BAR_WIDTH)
                 return;
 
-            if (p.Y < screenY || p.Y > screenY + screenH - BAR_HEIGHT)
+            if (y < screenY || y > screenY + screenH - BAR_HEIGHT)
                 return;
 
-            DrawHealthLine(batcher, entity, p.X, p.Y, false);
+            DrawHealthLine(batcher, entity, x, y, false);
         }
 
         private void DrawHealthLine(UltimaBatcher2D batcher, Entity entity, int x, int y, bool passive)

@@ -30,9 +30,6 @@ namespace ClassicUO.Network
 
         private uint _lastTotalBytesReceived, _lastTotalBytesSent, _lastTotalPacketsReceived, _lastTotalPacketsSent;
 
-        private uint[] _pings = new uint[5];
-        private byte _pingIdx = 0;
-
         public DateTime ConnectedFrom { get; set; }
 
         public uint TotalBytesReceived { get; set; }
@@ -51,34 +48,11 @@ namespace ClassicUO.Network
 
         public uint DeltaPacketsSent { get; private set; }
 
-        public uint Ping {
-            get
-            {
-                byte count = 0;
-                uint sum = 0;
-                for (byte i = 0; i < 5; i++)
-                {
-                    if (_pings[i] != 0)
-                    {
-                        count++;
-                        sum += _pings[i];
-                    }
-                }
-
-                if (count == 0)
-                    return 0;
-
-                return sum / count;
-            }
-        }
+        public uint Ping { get; private set; }
 
         public void PingReceived()
         {
-            _pings[_pingIdx++] = (uint)_pingStopwatch.ElapsedMilliseconds;
-
-            if (_pingIdx >= _pings.Length)
-                _pingIdx = 0;
-
+            Ping = (uint)_pingStopwatch.ElapsedMilliseconds;
             _pingStopwatch.Stop();
         }
 
@@ -119,7 +93,7 @@ namespace ClassicUO.Network
         public static string GetSizeAdaptive(long bytes)
         {
             decimal num = bytes;
-            string arg = "B";
+            var arg = "B";
 
             if (!(num < 1024m))
             {

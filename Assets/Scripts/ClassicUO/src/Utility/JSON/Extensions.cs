@@ -78,7 +78,7 @@ namespace TinyJson
 
 		public static bool HasGenericInterface(this Type type, Type genericInterface) {
 			if (genericInterface == null) throw new ArgumentNullException();
-			Predicate<Type> interfaceTest = new Predicate<Type>(i => i.IsGenericType && i.GetGenericTypeDefinition().IsAssignableFrom(genericInterface));
+			var interfaceTest = new Predicate<Type>(i => i.IsGenericType && i.GetGenericTypeDefinition().IsAssignableFrom(genericInterface));
 			return interfaceTest(type) || type.GetInterfaces().Any(i => interfaceTest(i));
 		}
 
@@ -100,7 +100,7 @@ namespace TinyJson
 
         public static string UnwrappedPropertyName(this PropertyInfo property)
         {
-            JsonPropertyAttribute attr = property.GetCustomAttribute<JsonPropertyAttribute>(true);
+            var attr = property.GetCustomAttribute<JsonPropertyAttribute>(true);
 
             if (attr != null)
             {
@@ -112,7 +112,7 @@ namespace TinyJson
 
         public static string UnwrappedFieldName(this FieldInfo field)
         {
-            JsonPropertyAttribute attr = field.GetCustomAttribute<JsonPropertyAttribute>(true);
+            var attr = field.GetCustomAttribute<JsonPropertyAttribute>(true);
 
             if (attr != null)
             {

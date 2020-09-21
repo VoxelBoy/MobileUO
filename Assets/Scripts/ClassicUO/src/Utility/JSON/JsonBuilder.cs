@@ -90,7 +90,7 @@ namespace TinyJson
 		public void AppendString(string str) {
 			if (str != null) {
 				builder.Append('\"');
-				foreach (char c in str) {
+				foreach (var c in str) {
 					switch (c) {
 					case '"':
 						builder.Append("\\\"");
@@ -133,7 +133,7 @@ namespace TinyJson
 			if (enumerable != null) {
 				AppendBeginArray();
 				bool first = true;
-				foreach (object item in enumerable) {
+				foreach (var item in enumerable) {
 					if (first) first = false; else AppendSeperator();
 					AppendValue(item);
 				}

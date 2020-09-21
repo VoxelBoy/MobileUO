@@ -90,7 +90,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                     _picBase.Graphic = value ? (ushort) 0x7EE : (ushort) (0x07d0 + (LocalSerial == World.Player ? 0 : 1)) ;
 
-                    foreach (Control c in Children)
+                    foreach (var c in Children)
                     {
                         c.IsVisible = !value;
                     }
@@ -318,7 +318,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if (args.Button == MouseButtonType.Left)
             {
-                PartyGump party = UIManager.GetGump<PartyGump>();
+                var party = UIManager.GetGump<PartyGump>();
 
                 if (party == null)
                 {
@@ -432,7 +432,7 @@ namespace ClassicUO.Game.UI.Gumps
                     }
                     else if (!DelayedObjectClickManager.IsEnabled)
                     {
-                        Point off = Mouse.LDroppedOffset;
+                        var off = Mouse.LDroppedOffset;
                         DelayedObjectClickManager.Set(
                             item.Serial,
                           (Mouse.Position.X - off.X) - ScreenCoordinateX,
@@ -766,7 +766,7 @@ namespace ClassicUO.Game.UI.Gumps
                         return false;
 
                     ResetHueVector();
-                    ShaderHueTranslator.GetHueVector(ref _hueVector, MouseIsOver && HighlightOnMouseOver ? 0x0035 : item.Hue, item.ItemData.IsPartialHue, 0, true);
+                    ShaderHuesTraslator.GetHueVector(ref _hueVector, MouseIsOver && HighlightOnMouseOver ? 0x0035 : item.Hue, item.ItemData.IsPartialHue, 0, true);
                  
                     ArtTexture texture = ArtLoader.Instance.GetTexture(item.DisplayedGraphic);
 

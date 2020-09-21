@@ -71,9 +71,7 @@ namespace ClassicUO.IO
         public void Dispose()
         {
             if (_reader == null)
-            {
                 return;
-            }
 
             _reader.Dispose();
             _reader = null;
@@ -97,14 +95,10 @@ namespace ClassicUO.IO
         private void Parse()
         {
             if (_parts.Count > 0)
-            {
                 _parts.Clear();
-            }
 
             if (_groups.Count > 0)
-            {
                 _groups.Clear();
-            }
 
             string line;
 
@@ -113,16 +107,12 @@ namespace ClassicUO.IO
                 line = line.Trim();
 
                 if (line.Length <= 0 || line[0] == COMMENT || !char.IsNumber(line[0]))
-                {
                     continue;
-                }
 
                 int comment = line.IndexOf('#');
 
                 if (comment >= 0)
-                {
                     line = line.Substring(0, comment);
-                }
 
                 int groupStart = line.IndexOf('{');
                 int groupEnd = line.IndexOf('}');
@@ -131,25 +121,20 @@ namespace ClassicUO.IO
 
                 if (groupStart >= 0 && groupEnd >= 0)
                 {
-                    string[] firstPart = line.Substring(0, groupStart).Split(_tokens, StringSplitOptions.RemoveEmptyEntries);
-                    string group = line.Substring(groupStart, groupEnd - groupStart + 1);
-                    string[] lastPart = line.Substring(groupEnd + 1, line.Length - groupEnd - 1).Split(_tokens, StringSplitOptions.RemoveEmptyEntries);
+                    var firstpart = line.Substring(0, groupStart).Split(_tokens, StringSplitOptions.RemoveEmptyEntries);
+                    var group = line.Substring(groupStart, groupEnd - groupStart + 1);
+                    var lastpart = line.Substring(groupEnd + 1, line.Length - groupEnd - 1).Split(_tokens, StringSplitOptions.RemoveEmptyEntries);
 
-                    p = firstPart.Concat(new[] {group}).Concat(lastPart).ToArray();
+                    p = firstpart.Concat(new[] {group}).Concat(lastpart).ToArray();
                 }
                 else
-                {
                     p = line.Split(_tokens, StringSplitOptions.RemoveEmptyEntries);
-                }
 
-                if (p.Length >= _minSize)
-                {
-                    _parts.Add(p);
-                }
+                if (p.Length >= _minSize) _parts.Add(p);
             }
         }
 
-        private string[] GetTokensAtLine(int line)
+        public string[] GetTokensAtLine(int line)
         {
             if (line >= _parts.Count || line < 0)
             {
@@ -161,7 +146,7 @@ namespace ClassicUO.IO
         }
 
 
-        private string TokenAt(int line, int index)
+        public string TokenAt(int line, int index)
         {
             string[] p = GetTokensAtLine(line);
 
@@ -181,15 +166,11 @@ namespace ClassicUO.IO
 
         public int ReadGroupInt(int index = 0)
         {
-            if (!TryReadGroup(TokenAt(Line, Position++), out string[] group))
-            {
+            if (!TryReadGroup(TokenAt(Line, Position++), out string[] group)) 
                 throw new Exception("It's not a group");
-            }
 
             if (index >= group.Length)
-            {
                 throw new IndexOutOfRangeException();
-            }
 
             return int.Parse(group[index]);
         }
@@ -206,20 +187,20 @@ namespace ClassicUO.IO
                     {
                         List<int> results = new List<int>();
 
-                        string[] splitRes = s.Split(_tokensGroup, StringSplitOptions.RemoveEmptyEntries);
+                        var split_res = s.Split(_tokensGroup, StringSplitOptions.RemoveEmptyEntries);
 
-                        for (int i = 0; i < splitRes.Length; i++)
+                        for (int i = 0; i < split_res.Length; i++)
                         {
-                            if (!string.IsNullOrEmpty(splitRes[i]) && char.IsNumber(splitRes[i][0]))
+                            if (!string.IsNullOrEmpty(split_res[i]) && char.IsNumber(split_res[i][0]))
                             {
                                 NumberStyles style = NumberStyles.Any;
 
-                                if (splitRes[i].Length > 1 && splitRes[i][0] == '0' && splitRes[i][1] == 'x')
+                                if (split_res[i].Length > 1 && split_res[i][0] == '0' && split_res[i][1] == 'x')
                                 {
                                     style = NumberStyles.HexNumber;
                                 }
 
-                                if (int.TryParse(splitRes[i], style, null, out int res))
+                                if (int.TryParse(split_res[i], style, null, out int res))
                                 {
                                     results.Add(res);
                                 }
@@ -236,7 +217,7 @@ namespace ClassicUO.IO
             return null;
         }
 
-        private static bool TryReadGroup(string s, out string[] group)
+        private bool TryReadGroup(string s, out string[] group)
         {
             if (s.Length > 0)
             {
@@ -262,9 +243,10 @@ namespace ClassicUO.IO
 
             if (!string.IsNullOrEmpty(token))
             {
-                return token.StartsWith("0x")
-                    ? int.Parse(token.Remove(0, 2), NumberStyles.HexNumber)
-                    : int.Parse(token);
+                if (token.StartsWith("0x"))
+                    return int.Parse(token.Remove(0, 2), NumberStyles.HexNumber);
+
+                return int.Parse(token);
             }
 
             return -1;

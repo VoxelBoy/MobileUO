@@ -66,14 +66,10 @@ namespace ClassicUO.Game.Scenes
         private uint _pingTime;
 
 
-        public LoginScene() 
-            : base
-            (
-                (int) SceneType.Login,
-                false,
-                false,
-                true
-            )
+        public LoginScene() : base((int) SceneType.Login,
+            false,
+            false,
+            true)
         {
 
         }
@@ -167,7 +163,7 @@ namespace ClassicUO.Game.Scenes
                 UIManager.GameCursor.IsLoading = false;
 
                 // this trick avoid the flickering
-                Gump g = _currentGump;
+                var g = _currentGump;
                 UIManager.Add(_currentGump = GetGumpForStep());
                 g.Dispose();
 
@@ -210,7 +206,7 @@ namespace ClassicUO.Game.Scenes
 
         private Gump GetGumpForStep()
         {
-            foreach (Item item in World.Items)
+            foreach (var item in World.Items)
                 World.RemoveItem(item);
 
             foreach (Mobile mobile in World.Mobiles)
@@ -254,8 +250,8 @@ namespace ClassicUO.Game.Scenes
 
         private LoadingGump GetLoadingScreen()
         {
-            string labelText = "No Text";
-            LoginButtons showButtons = LoginButtons.None;
+            var labelText = "No Text";
+            var showButtons = LoginButtons.None;
 
             if (!string.IsNullOrEmpty(PopupMessage))
             {
@@ -669,7 +665,7 @@ namespace ClassicUO.Game.Scenes
 
         private void ParseCities(Packet p)
         {
-            byte count = p.ReadByte();
+            var count = p.ReadByte();
             Cities = new CityInfo[count];
 
             bool isNew = Client.Version >= ClientVersion.CV_70130;

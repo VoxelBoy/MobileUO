@@ -103,7 +103,7 @@ namespace ClassicUO.Game.GameObjects
 
         public void ToTopD()
         {
-            TextObject obj = this;
+            var obj = this;
 
             while (obj != null)
             {
@@ -113,7 +113,7 @@ namespace ClassicUO.Game.GameObjects
                 obj = obj.DLeft;
             }
 
-            TextRenderer next = (TextRenderer) obj;
+            var next = (TextRenderer) obj;
             next.MoveToTop(this);
         }
     }

@@ -20,11 +20,13 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using ClassicUO.Utility;
+using Microsoft.Xna.Framework;
 
 namespace ClassicUO.IO.Resources
 {
@@ -32,10 +34,23 @@ namespace ClassicUO.IO.Resources
     {
         private HuesLoader()
         {
+
         }
 
         private static HuesLoader _instance;
-        public static HuesLoader Instance => _instance ?? (_instance = new HuesLoader());
+        public static HuesLoader Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new HuesLoader();
+                }
+
+                return _instance;
+            }
+        }
+
 
         public HuesGroup[] HuesRange { get; private set; }
 

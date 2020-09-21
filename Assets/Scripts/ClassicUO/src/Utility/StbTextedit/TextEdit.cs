@@ -41,7 +41,7 @@ namespace StbTextEditSharp
 		{
 			if (SelectEnd < SelectStart)
 			{
-				int temp = SelectEnd;
+				var temp = SelectEnd;
 				SelectEnd = SelectStart;
 				SelectStart = temp;
 			}
@@ -96,8 +96,8 @@ namespace StbTextEditSharp
 
 		public int InsertChars(int pos, int[] codepoints, int start, int length)
 		{
-			StringBuilder sb = new StringBuilder();
-			for (int i = start; i < start + length; ++i)
+			var sb = new StringBuilder();
+			for (var i = start; i < start + length; ++i)
 			{
 				sb.Append(char.ConvertFromUtf32(codepoints[i]));
 			}
@@ -122,17 +122,17 @@ namespace StbTextEditSharp
 
         public int InsertChar(int pos, int codepoint)
 		{
-			string s = char.ConvertFromUtf32(codepoint);
+			var s = char.ConvertFromUtf32(codepoint);
 			return InsertChars(pos, s);
 		}
 
 		public int LocateCoord(float x, float y)
 		{
-			TextEditRow r = new TextEditRow();
-			int n = Length;
-			float base_y = (float) 0;
-			int i = 0;
-			int k = 0;
+			var r = new TextEditRow();
+			var n = Length;
+			var base_y = (float) 0;
+			var i = 0;
+			var k = 0;
 			r.x0 = r.x1 = 0;
 			r.ymin = r.ymax = 0;
 			r.num_chars = 0;
@@ -155,10 +155,10 @@ namespace StbTextEditSharp
 				return i;
 			if (x < r.x1)
 			{
-				float prev_x = r.x0;
+				var prev_x = r.x0;
 				for (k = 0; k < r.num_chars; ++k)
 				{
-					float w = Handler.GetWidth(i + k);
+					var w = Handler.GetWidth(i + k);
 					if (x < prev_x + w)
 					{
 						if (x < prev_x + w / 2)
@@ -192,7 +192,7 @@ namespace StbTextEditSharp
 
 		public void Drag(float x, float y)
 		{
-			int p = 0;
+			var p = 0;
 			/*if (SingleLine)
 			{
 				var r = new TextEditRow();
@@ -208,7 +208,7 @@ namespace StbTextEditSharp
 
 		public void Clamp()
 		{
-			int n = Length;
+			var n = Length;
 			if (SelectStart != SelectEnd)
 			{
 				if (SelectStart > n)
@@ -284,7 +284,7 @@ namespace StbTextEditSharp
 
 		public int MoveToNextWord(int c)
 		{
-			int len = Length;
+			var len = Length;
 			++c;
 			while (c < len && !IsWordBoundary(c))
 				++c;
@@ -435,9 +435,9 @@ namespace StbTextEditSharp
 				case ControlKeys.Down:
 				case ControlKeys.Down | ControlKeys.Shift:
 				{
-					FindState find = new FindState();
-					TextEditRow row = new TextEditRow();
-					bool sel = (key & ControlKeys.Shift) != 0;
+					var find = new FindState();
+					var row = new TextEditRow();
+					var sel = (key & ControlKeys.Shift) != 0;
 					if (SingleLine)
 					{
 						key = ControlKeys.Right | (key & ControlKeys.Shift);
@@ -452,15 +452,15 @@ namespace StbTextEditSharp
 					find.FindCharPosition(this, CursorIndex, SingleLine);
 					if (find.length != 0)
 					{
-						float goal_x = HasPreferredX ? PreferredX : find.x;
+						var goal_x = HasPreferredX ? PreferredX : find.x;
 						float x = 0;
-						int start = find.first_char + find.length;
+						var start = find.first_char + find.length;
 						CursorIndex = start;
 						row = Handler.LayoutRow(CursorIndex);
 						x = row.x0;
-						for (int i = 0; i < row.num_chars; ++i)
+						for (var i = 0; i < row.num_chars; ++i)
 						{
-							float dx = (float) 1;
+							var dx = (float) 1;
 							x += dx;
 							if (x > goal_x)
 								break;
@@ -479,10 +479,10 @@ namespace StbTextEditSharp
 				case ControlKeys.Up:
 				case ControlKeys.Up | ControlKeys.Shift:
 				{
-					FindState find = new FindState();
-					TextEditRow row = new TextEditRow();
-					int i = 0;
-					bool sel = (key & ControlKeys.Shift) != 0;
+					var find = new FindState();
+					var row = new TextEditRow();
+					var i = 0;
+					var sel = (key & ControlKeys.Shift) != 0;
 					if (SingleLine)
 					{
 						key = ControlKeys.Left | (key & ControlKeys.Shift);
@@ -497,14 +497,14 @@ namespace StbTextEditSharp
 					find.FindCharPosition(this, CursorIndex, SingleLine);
 					if (find.prev_first != find.first_char)
 					{
-						float goal_x = HasPreferredX ? PreferredX : find.x;
+						var goal_x = HasPreferredX ? PreferredX : find.x;
 						float x = 0;
 						CursorIndex = find.prev_first;
 						row = Handler.LayoutRow(CursorIndex);
 						x = row.x0;
 						for (i = 0; i < row.num_chars; ++i)
 						{
-							float dx = (float) 1;
+							var dx = (float) 1;
 							x += dx;
 							if (x > goal_x)
 								break;
@@ -528,7 +528,7 @@ namespace StbTextEditSharp
 					}
 					else
 					{
-						int n = Length;
+						var n = Length;
 						if (CursorIndex < n)
 							Delete(CursorIndex, 1);
 					}
@@ -584,7 +584,7 @@ namespace StbTextEditSharp
 					break;
 				case ControlKeys.LineEnd:
 				{
-					int n = Length;
+					var n = Length;
 					Clamp();
 					MoveToFirst();
 					if (SingleLine)
@@ -608,7 +608,7 @@ namespace StbTextEditSharp
 					break;
 				case ControlKeys.LineEnd | ControlKeys.Shift:
 				{
-					int n = Length;
+					var n = Length;
 					Clamp();
 					PrepareSelectionAtCursor();
 					if (SingleLine)
@@ -625,13 +625,13 @@ namespace StbTextEditSharp
 
 		public void Undo()
 		{
-			UndoState s = UndoState;
+			var s = UndoState;
 			if (s.undo_point == 0)
 				return;
 
-            UndoRecord u = new UndoRecord();
+            var u = new UndoRecord();
             u = s.undo_rec[s.undo_point - 1];
-			int rpos = s.redo_point - 1;
+			var rpos = s.redo_point - 1;
 			s.undo_rec[rpos].char_storage = -1;
 			s.undo_rec[rpos].insert_length = u.delete_length;
 			s.undo_rec[rpos].delete_length = u.insert_length;
@@ -644,7 +644,7 @@ namespace StbTextEditSharp
 				}
 				else
 				{
-					int i = 0;
+					var i = 0;
 					while (s.undo_char_point + u.delete_length > s.redo_char_point)
 					{
 						if (s.redo_point == 99)
@@ -675,8 +675,8 @@ namespace StbTextEditSharp
 
 		public void Redo()
 		{
-			UndoState s = UndoState;
-			UndoRecord r = new UndoRecord();
+			var s = UndoState;
+			var r = new UndoRecord();
 			if (s.redo_point == 99)
 				return;
 			int upos = s.undo_point;
@@ -686,7 +686,7 @@ namespace StbTextEditSharp
 			s.undo_rec[upos].where = r.where;
 			s.undo_rec[upos].char_storage = -1;
 
-			UndoRecord u = s.undo_rec[upos];
+			var u = s.undo_rec[upos];
 			if (r.delete_length != 0)
 			{
 				if (s.undo_char_point + u.insert_length > s.redo_char_point)
@@ -696,7 +696,7 @@ namespace StbTextEditSharp
 				}
 				else
 				{
-					int i = 0;
+					var i = 0;
 					s.undo_rec[upos].char_storage = s.undo_char_point;
 					s.undo_char_point = s.undo_char_point + u.insert_length;
 					u = s.undo_rec[upos];
@@ -723,7 +723,7 @@ namespace StbTextEditSharp
 		public void MakeUndoDelete(int where, int length)
 		{
 			int i;
-			int? p = UndoState.CreateUndo(where, length, 0);
+			var p = UndoState.CreateUndo(where, length, 0);
 			if (p != null)
 				for (i = 0; i < length; ++i)
 					UndoState.undo_char[p.Value + i] = text[where + i];
@@ -732,7 +732,7 @@ namespace StbTextEditSharp
 		public void MakeUndoReplace(int where, int old_length, int new_length)
 		{
 			int i;
-			int? p = UndoState.CreateUndo(where, old_length, new_length);
+			var p = UndoState.CreateUndo(where, old_length, new_length);
 			if (p != null)
 				for (i = 0; i < old_length; ++i)
 					UndoState.undo_char[p.Value + i] = text[where + i];

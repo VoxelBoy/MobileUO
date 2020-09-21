@@ -236,7 +236,7 @@ namespace ClassicUO.Game.Managers
             if (volume < -1 || volume > 1f)
                 return;
 
-            for (LinkedListNode<UOSound> s = _current_sounds.First; s != null; s = s.Next)
+            for (var s = _current_sounds.First; s != null; s = s.Next)
             {
                 s.Value.Volume = volume;
             }
@@ -275,11 +275,11 @@ namespace ClassicUO.Game.Managers
 
         public void StopSounds()
         {
-            LinkedListNode<UOSound> first = _current_sounds.First;
+            var first = _current_sounds.First;
 
             while (first != null)
             {
-                LinkedListNode<UOSound> next = first.Next;
+                var next = first.Next;
 
                 first.Value.Stop();
 
@@ -313,11 +313,11 @@ namespace ClassicUO.Game.Managers
             }
 
             
-            LinkedListNode<UOSound> first = _current_sounds.First;
+            var first = _current_sounds.First;
 
             while (first != null)
             {
-                LinkedListNode<UOSound> next = first.Next;
+                var next = first.Next;
 
                 if (!first.Value.IsPlaying)
                 {

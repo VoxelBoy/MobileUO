@@ -31,10 +31,9 @@ namespace ClassicUO.Game.UI.Controls
 {
     internal class CheckerTrans : Control
     {
-        //TODO(deccer): should be moved into Renderer namespace
         private static readonly Lazy<DepthStencilState> _checkerStencil = new Lazy<DepthStencilState>(() =>
         {
-            DepthStencilState depthStencilState = new DepthStencilState
+            DepthStencilState state = new DepthStencilState
             {
                 DepthBufferEnable = false,
                 StencilEnable = true,
@@ -47,19 +46,18 @@ namespace ClassicUO.Game.UI.Controls
             };
 
 
-            return depthStencilState;
+            return state;
         });
 
 
-        //TODO(deccer): should be moved into Renderer namespace
         private static readonly Lazy<BlendState> _checkerBlend = new Lazy<BlendState>(() =>
         {
-            BlendState blendState = new BlendState
+            BlendState blend = new BlendState
             {
                 ColorWriteChannels = ColorWriteChannels.None
             };
 
-            return blendState;
+            return blend;
         });
 
         //public CheckerTrans(float alpha = 0.5f)
@@ -84,7 +82,7 @@ namespace ClassicUO.Game.UI.Controls
             //batcher.SetBlendState(_checkerBlend.Value);
             //batcher.SetStencil(_checkerStencil.Value);
 
-            //batcher.Draw2D(TransparentTexture, new Rectangle(position.X, position.Y, Width, Height), Vector3.Zero /*ShaderHueTranslator.GetHueVector(0, false, 0.5f, false)*/);
+            //batcher.Draw2D(TransparentTexture, new Rectangle(position.X, position.Y, Width, Height), Vector3.Zero /*ShaderHuesTraslator.GetHueVector(0, false, 0.5f, false)*/);
 
             //batcher.SetBlendState(null);
             //batcher.SetStencil(null);

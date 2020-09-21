@@ -108,7 +108,7 @@ namespace ClassicUO.Game.GameObjects
                 hue = Constants.DEAD_RANGE_COLOR;
             }
 
-            ShaderHueTranslator.GetHueVector(ref HueVector, hue, data.IsPartialHue, data.IsTranslucent ? .5f : 0);
+            ShaderHuesTraslator.GetHueVector(ref HueVector, hue, data.IsPartialHue, data.IsTranslucent ? .5f : 0);
 
             switch (Blend)
             {
@@ -153,7 +153,7 @@ namespace ClassicUO.Game.GameObjects
                     //{
                     //    ResetHueVector();
                     //    HueVector.X = 0;
-                    //    HueVector.Y = ShaderHueTranslator.SHADER_LIGHTS;
+                    //    HueVector.Y = ShaderHuesTraslator.SHADER_LIGHTS;
                     //    HueVector.Z = 0;
                     //    batcher.SetBlendState(BlendState.Additive);
                     //    base.Draw(batcher, posX, posY);

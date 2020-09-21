@@ -75,7 +75,7 @@ namespace ClassicUO.Game.UI.Controls
                 {
                     _graphic = value;
 
-                    UOTexture32 texture = GumpsLoader.Instance.GetTexture(_graphic);
+                    var texture = GumpsLoader.Instance.GetTexture(_graphic);
 
                     if (texture == null)
                     {
@@ -95,9 +95,9 @@ namespace ClassicUO.Game.UI.Controls
         public override bool Draw(UltimaBatcher2D batcher, int x, int y)
         {
             ResetHueVector();
-            ShaderHueTranslator.GetHueVector(ref _hueVector, Hue, false, Alpha, true);
+            ShaderHuesTraslator.GetHueVector(ref _hueVector, Hue, false, Alpha, true);
 
-            UOTexture32 texture = GumpsLoader.Instance.GetTexture(Graphic);
+            var texture = GumpsLoader.Instance.GetTexture(Graphic);
 
             if (texture != null)
             {
@@ -112,7 +112,7 @@ namespace ClassicUO.Game.UI.Controls
             int width = Width;
             int height = Height;
 
-            UOTexture32 texture = GumpsLoader.Instance.GetTexture(Graphic);
+            var texture = GumpsLoader.Instance.GetTexture(Graphic);
 
             if (texture == null)
             {

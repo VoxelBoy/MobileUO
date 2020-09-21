@@ -26,7 +26,6 @@ using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
-using ClassicUO.IO;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
 using ClassicUO.Utility;
@@ -121,7 +120,7 @@ namespace ClassicUO.Game.GameObjects
                     hue = 0x038E;
             }
 
-            ShaderHueTranslator.GetHueVector(ref HueVector, hue, partial, HueVector.Z);
+            ShaderHuesTraslator.GetHueVector(ref HueVector, hue, partial, HueVector.Z);
 
             if (!IsMulti && !IsCoin && Amount > 1 && ItemData.IsStackable)
             {
@@ -142,11 +141,11 @@ namespace ClassicUO.Game.GameObjects
             if (SelectedObject.Object == this || TargetManager.TargetingState == CursorTarget.MultiPlacement)
                 return false;
 
-            ArtTexture texture = ArtLoader.Instance.GetTexture(graphic);
+            var texture = ArtLoader.Instance.GetTexture(graphic);
 
             if (texture != null)
             {
-                ref UOFileIndex index = ref ArtLoader.Instance.GetValidRefEntry(graphic + 0x4000);
+                ref var index = ref ArtLoader.Instance.GetValidRefEntry(graphic + 0x4000);
 
                 posX -= index.Width;
                 posY -= index.Height;
@@ -243,7 +242,7 @@ namespace ClassicUO.Game.GameObjects
             if (color == 0)
                 color = newHue;
 
-            AnimationDirection direction = gr.Direction[AnimationsLoader.Instance.Direction];
+            var direction = gr.Direction[AnimationsLoader.Instance.Direction];
 
             if (direction == null)
                 return;
@@ -308,7 +307,7 @@ namespace ClassicUO.Game.GameObjects
                     else if (ProfileManager.Current.HighlightGameObjects && SelectedObject.LastObject == owner)
                         color = Constants.HIGHLIGHT_CURRENT_OBJECT_HUE;
 
-                    ShaderHueTranslator.GetHueVector(ref HueVector, color, ispartialhue, alpha);
+                    ShaderHuesTraslator.GetHueVector(ref HueVector, color, ispartialhue, alpha);
                 }
 
                 batcher.DrawSprite(frame, posX, posY, flipped, ref HueVector);

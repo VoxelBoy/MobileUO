@@ -161,11 +161,11 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
                 World.Mobiles.Add(_character);
             }
 
-            LinkedObject first = _character.Items;
+            var first = _character.Items;
 
             while (first != null)
             {
-                LinkedObject next = first.Next;
+                var next = first.Next;
 
                 World.RemoveItem((Item) first, true);
 
@@ -242,7 +242,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
         private void UpdateEquipments()
         {
             bool isFemale = _femaleRadio.IsChecked;
-            RaceType race = GetSelectedRace();
+            var race = GetSelectedRace();
             Layer layer;
             CharacterCreationValues.ComboContent content;
             _character.Hue = CurrentColorOption[Layer.Invalid].Item2;
@@ -275,7 +275,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
         private void HandleGenreChange()
         {
             bool isFemale = _femaleRadio.IsChecked;
-            RaceType race = GetSelectedRace();
+            var race = GetSelectedRace();
             CurrentOption[Layer.Beard] = 0;
             CurrentOption[Layer.Hair] = 1;
 
@@ -294,7 +294,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
                 Remove(_facialLabel);
             }
 
-            foreach (CustomColorPicker customPicker in Children.OfType<CustomColorPicker>().ToList())
+            foreach (var customPicker in Children.OfType<CustomColorPicker>().ToList())
                 Remove(customPicker);
 
             // Hair
@@ -416,7 +416,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
 
         public override void OnButtonClick(int buttonID)
         {
-            CharCreationGump charCreationGump = UIManager.GetGump<CharCreationGump>();
+            var charCreationGump = UIManager.GetGump<CharCreationGump>();
 
             switch ((Buttons) buttonID)
             {
@@ -503,7 +503,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
 
             // This is a workaround to avoid to see naked guy
             // We are simulating server objects into World.Items map.
-            Item item = World.GetOrCreateItem(0x4000_0000 + (uint)layer); // use layer as unique Serial
+            var item = World.GetOrCreateItem(0x4000_0000 + (uint)layer); // use layer as unique Serial
             _character.Remove(item);
             item.Graphic = (ushort)id;
             item.Hue = hue;
@@ -593,7 +593,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
             {
                 int column = e.X / _cellW;
                 int row = e.Y / _cellH;
-                int selectedIndex = row * _columns + column;
+                var selectedIndex = row * _columns + column;
 
                 if (selectedIndex >= 0 && selectedIndex < _colorPickerBox.Hues.Length)
                     ColorSelected?.Invoke(this, new ColorSelectedEventArgs(_layer, _colorPickerBox.Hues, selectedIndex));

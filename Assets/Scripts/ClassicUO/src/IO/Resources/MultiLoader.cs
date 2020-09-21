@@ -19,10 +19,13 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ClassicUO.Data;
 using ClassicUO.Game;
+using ClassicUO.Utility;
+using ClassicUO.Utility.Logging;
 
 namespace ClassicUO.IO.Resources
 {
@@ -34,10 +37,24 @@ namespace ClassicUO.IO.Resources
 
         private MultiLoader()
         {
+
         }
 
         private static MultiLoader _instance;
-        public static MultiLoader Instance => _instance ?? (_instance = new MultiLoader());
+        public static MultiLoader Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new MultiLoader();
+                }
+
+                return _instance;
+            }
+        }
+
+
 
         public int Count { get; private set; }
         public UOFile File => _file;

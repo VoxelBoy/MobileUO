@@ -147,7 +147,7 @@ namespace ClassicUO.Game.Map
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public GameObject GetHeadObject(int x, int y)
         {
-            GameObject obj = Tiles[x, y];
+            var obj = Tiles[x, y];
 
             while (obj?.TPrevious != null)
                 obj = obj.TPrevious;
@@ -300,7 +300,7 @@ namespace ClassicUO.Game.Map
 
         public void RemoveGameObject(GameObject obj, int x, int y)
         {
-            ref GameObject firstNode = ref Tiles[x, y];
+            ref var firstNode = ref Tiles[x, y];
 
             if (firstNode == null || obj == null)
                 return;
@@ -330,11 +330,11 @@ namespace ClassicUO.Game.Map
                     if (obj == null)
                         continue;
 
-                    GameObject first = GetHeadObject(i, j);
+                    var first = GetHeadObject(i, j);
 
                     while (first != null)
                     {
-                        GameObject next = first.TNext;
+                        var next = first.TNext;
 
                         if (first != World.Player)
                             first.Destroy();
@@ -365,11 +365,11 @@ namespace ClassicUO.Game.Map
                     if (obj == null)
                         continue;
 
-                    GameObject first = GetHeadObject(i, j);
+                    var first = GetHeadObject(i, j);
 
                     while (first != null)
                     {
-                        GameObject next = first.TNext;
+                        var next = first.TNext;
 
                         if (first != World.Player)
                             first.Destroy();
@@ -394,7 +394,7 @@ namespace ClassicUO.Game.Map
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    for (GameObject obj = GetHeadObject(i, j); obj != null; obj = obj.TNext)
+                    for (var obj = GetHeadObject(i, j); obj != null; obj = obj.TNext)
                     {
                         if (!(obj is Land) && !(obj is Static) /*&& !(obj is Multi)*/)
                             return false;

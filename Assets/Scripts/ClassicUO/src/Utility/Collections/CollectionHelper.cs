@@ -32,17 +32,17 @@ namespace ClassicUO.Utility.Collections
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            IReadOnlyCollection<T> result = source as IReadOnlyCollection<T>;
+            var result = source as IReadOnlyCollection<T>;
 
             if (result != null)
                 return result;
 
-            ICollection<T> collection = source as ICollection<T>;
+            var collection = source as ICollection<T>;
 
             if (collection != null)
                 return new CollectionWrapper<T>(collection);
 
-            ICollection nongenericCollection = source as ICollection;
+            var nongenericCollection = source as ICollection;
 
             if (nongenericCollection != null)
                 return new NongenericCollectionWrapper<T>(nongenericCollection);

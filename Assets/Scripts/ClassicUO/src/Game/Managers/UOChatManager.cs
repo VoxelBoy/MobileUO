@@ -104,7 +104,7 @@ namespace ClassicUO.Game.Managers
 
         public static void AddChannel(string text, bool haspassword)
         {
-            if (!Channels.TryGetValue(text, out UOChatChannel channel))
+            if (!Channels.TryGetValue(text, out var channel))
             {
                 channel = new UOChatChannel(text, haspassword);
                 Channels[text] = channel;

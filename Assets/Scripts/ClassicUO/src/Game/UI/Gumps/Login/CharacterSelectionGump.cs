@@ -24,7 +24,6 @@ using System.Linq;
 
 using ClassicUO.Configuration;
 using ClassicUO.Data;
-using ClassicUO.Game.Data;
 using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
@@ -50,10 +49,10 @@ namespace ClassicUO.Game.UI.Gumps.Login
             int listTitleY = 106;
 
             LoginScene loginScene = Client.Game.GetScene<LoginScene>();
-            string lastSelected = loginScene.Characters.FirstOrDefault(o => o == Settings.GlobalSettings.LastCharacterName);
+            var lastSelected = loginScene.Characters.FirstOrDefault(o => o == Settings.GlobalSettings.LastCharacterName);
 
-            LockedFeatureFlags f = World.ClientLockedFeatures.Flags;
-            CharacterListFlags ff = World.ClientFeatures.Flags;
+            var f = World.ClientLockedFeatures.Flags;
+            var ff = World.ClientFeatures.Flags;
 
             if ((Client.Version >= ClientVersion.CV_6040) ||
                 (Client.Version >= ClientVersion.CV_5020 && loginScene.Characters.Length > 5))
@@ -183,16 +182,16 @@ namespace ClassicUO.Game.UI.Gumps.Login
 
         private void DeleteCharacter(LoginScene loginScene)
         {
-            string charName = loginScene.Characters[_selectedCharacter];
+            var charName = loginScene.Characters[_selectedCharacter];
 
             if (!string.IsNullOrEmpty(charName))
             {
-                LoadingGump existing = Children.OfType<LoadingGump>().FirstOrDefault();
+                var existing = Children.OfType<LoadingGump>().FirstOrDefault();
 
                 if (existing != null)
                     Remove(existing);
 
-                Add(new LoadingGump($"Permanently delete character \"{charName}\" ?", LoginButtons.OK | LoginButtons.Cancel, buttonID =>
+                Add(new LoadingGump($"Permanently delete {charName}", LoginButtons.OK | LoginButtons.Cancel, buttonID =>
                 {
                     if (buttonID == (int) LoginButtons.OK)
                         loginScene.DeleteCharacter(_selectedCharacter);

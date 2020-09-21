@@ -238,7 +238,7 @@ namespace ClassicUO.Game.UI.Gumps
                 UIManager.SystemChat?.SetFocus();
             }
 
-            Entity entity = World.Get(LocalSerial);
+            var entity = World.Get(LocalSerial);
 
             if (entity != null)
             {
@@ -261,7 +261,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         protected override void OnKeyDown(SDL.SDL_Keycode key, SDL.SDL_Keymod mod)
         {
-            Entity entity = World.Get(LocalSerial);
+            var entity = World.Get(LocalSerial);
 
             if (entity == null || SerialHelper.IsItem(entity.Serial))
                 return;
@@ -277,7 +277,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         protected override void OnMouseOver(int x, int y)
         {
-            Entity entity = World.Get(LocalSerial);
+            var entity = World.Get(LocalSerial);
 
             if (entity != null)
             {
@@ -680,7 +680,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             WantUpdateSize = false;
 
-            Entity entity = World.Get(LocalSerial);
+            var entity = World.Get(LocalSerial);
 
 
             if (World.Party.Contains(LocalSerial))
@@ -837,7 +837,7 @@ namespace ClassicUO.Game.UI.Gumps
             public override bool Draw(UltimaBatcher2D batcher, int x, int y)
             {
                 ResetHueVector();
-                ShaderHueTranslator.GetHueVector(ref _hueVector, 0, false, Alpha);
+                ShaderHuesTraslator.GetHueVector(ref _hueVector, 0, false, Alpha);
 
                 return batcher.Draw2D(LineColor, x, y, LineWidth, Height, ref _hueVector);
             }
@@ -911,7 +911,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             WantUpdateSize = false;
 
-            Entity entity = World.Get(LocalSerial);
+            var entity = World.Get(LocalSerial);
 
             if (World.Party.Contains(LocalSerial))
             {

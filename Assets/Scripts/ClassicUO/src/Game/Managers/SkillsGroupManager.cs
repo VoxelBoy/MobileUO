@@ -269,7 +269,7 @@ namespace ClassicUO.Game.Managers
                 xml.WriteStartDocument(true);
                 xml.WriteStartElement("skillsgroups");
 
-                foreach (SkillsGroup k in Groups)
+                foreach (var k in Groups)
                 {
                     k.Save(xml);
                 }
@@ -295,7 +295,7 @@ namespace ClassicUO.Game.Managers
                 MakeDefaultBard();
             }
 
-            foreach (SkillsGroup g in Groups)
+            foreach (var g in Groups)
             {
                 g.Sort();
             }

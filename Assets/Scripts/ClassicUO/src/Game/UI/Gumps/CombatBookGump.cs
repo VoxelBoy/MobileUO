@@ -166,7 +166,7 @@ namespace ClassicUO.Game.UI.Gumps
                 if (i >= AbilityData.Abilities.Length)
                     break;
 
-                GumpPic icon = new GumpPic(62, 40, (ushort) (0x5200 + i), 0);
+                var icon = new GumpPic(62, 40, (ushort) (0x5200 + i), 0);
                 Add(icon, pageW);
                 icon.SetTooltip(ClilocLoader.Instance.GetString(1061693 + i), 150);
 
@@ -186,7 +186,7 @@ namespace ClassicUO.Game.UI.Gumps
                 }, pageW);
 
 
-                List<ushort> list = GetItemsList((byte) i);
+                var list = GetItemsList((byte) i);
                 int maxStaticCount = TileDataLoader.Instance.StaticData.Length;
 
                 int textX = 62;
@@ -258,7 +258,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         private static UseAbilityButtonGump GetSpellFloatingButton(int id)
         {
-            for (LinkedListNode<Control> i = UIManager.Gumps.Last; i != null; i = i.Previous)
+            for (var i = UIManager.Gumps.Last; i != null; i = i.Previous)
             {
                 if (i.Value is UseAbilityButtonGump g && g.Index == id)
                     return g;

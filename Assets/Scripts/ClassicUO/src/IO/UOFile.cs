@@ -33,23 +33,23 @@ namespace ClassicUO.IO
         private protected MemoryMappedViewAccessor _accessor;
         private protected MemoryMappedFile _file;
 
-        public UOFile(string filepath, bool loadFile = false)
+        public UOFile(string filepath, bool loadfile = false)
         {
             FilePath = filepath;
 
-            if (loadFile)
-            {
+            if (loadfile)
                 Load();
-            }
         }
 
-        public string FilePath { get; private set; }
+        public string FilePath { get; private protected set; }
+
 
         protected virtual void Load()
         {
             Log.Trace( $"Loading file:\t\t{FilePath}");
 
             FileInfo fileInfo = new FileInfo(FilePath);
+
             if (!fileInfo.Exists)
             {
                 Log.Error( $"{FilePath}  not exists.");
@@ -58,6 +58,7 @@ namespace ClassicUO.IO
             }
 
             long size = fileInfo.Length;
+
             if (size > 0)
             {
                 _file = MemoryMappedFile.CreateFromFile(File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), null, 0, MemoryMappedFileAccess.Read, HandleInheritability.None, false);
@@ -78,9 +79,7 @@ namespace ClassicUO.IO
                 }
             }
             else
-            {
                 Log.Error( $"{FilePath}  size must be > 0");
-            }
         }
 
         public virtual void FillEntries(ref UOFileIndex[] entries)
@@ -121,7 +120,7 @@ namespace ClassicUO.IO
         }
 
         [MethodImpl(256)]
-        private T[] ReadArray<T>(long position, int count) where T : struct
+        internal T[] ReadArray<T>(long position, int count) where T : struct
         {
             T[] array = new T[count];
             _accessor.ReadArray(position, array, 0, count);

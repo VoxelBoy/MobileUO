@@ -77,7 +77,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         public override void Dispose()
         {
-            for (LinkedListNode<Control> g = UIManager.Gumps.Last; g != null; g = g.Previous)
+            for (var g = UIManager.Gumps.Last; g != null; g = g.Previous)
             {
                 if (g.Value is BulletinBoardItem)
                 {
@@ -103,7 +103,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         public void AddBulletinObject(uint serial, string msg)
         {
-            foreach (Control c in _area.Children)
+            foreach (var c in _area.Children)
             {
                 if (c.LocalSerial == serial)
                 {
@@ -406,7 +406,7 @@ namespace ClassicUO.Game.UI.Gumps
             if (button != MouseButtonType.Left)
                 return false;
 
-            Control root = RootParent;
+            var root = RootParent;
 
             if (root != null)
                 NetClient.Socket.Send(new PBulletinBoardRequestMessage(root.LocalSerial, LocalSerial));

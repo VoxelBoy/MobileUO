@@ -33,13 +33,24 @@ namespace ClassicUO.IO.Resources
     {
         private UOFile _file;
 
-        private GumpsLoader(int count)
-            : base(count)
+        private GumpsLoader(int count) : base(count)
         {
+
         }
 
         private static GumpsLoader _instance;
-        public static GumpsLoader Instance => _instance ?? (_instance = new GumpsLoader(Constants.MAX_GUMP_DATA_INDEX_COUNT));
+        public static GumpsLoader Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new GumpsLoader(Constants.MAX_GUMP_DATA_INDEX_COUNT);
+                }
+
+                return _instance;
+            }
+        }
 
         public override Task Load()
         {
@@ -119,11 +130,11 @@ namespace ClassicUO.IO.Resources
             if (g >= Resources.Length)
                 return null;
 
-            ref UOTexture32 texture = ref Resources[g];
+            ref var texture = ref Resources[g];
 
             if (texture == null || texture.IsDisposed)
             {
-                uint[] pixels = GetGumpPixels(g, out int w, out int h);
+                var pixels = GetGumpPixels(g, out int w, out int h);
 
                 if (pixels == null || pixels.Length == 0)
                     return null;
@@ -131,7 +142,7 @@ namespace ClassicUO.IO.Resources
                 texture = new UOTexture32(w, h);
                 texture.PushData(pixels, keepData);
 
-                SaveId(g);
+                SaveID(g);
             }
             else
             {
@@ -152,7 +163,7 @@ namespace ClassicUO.IO.Resources
 
         public unsafe uint[] GetGumpPixels(uint index, out int width, out int height)
         {
-            ref UOFileIndex entry = ref GetValidRefEntry((int) index);
+            ref var entry = ref GetValidRefEntry((int) index);
 
             if (entry.Width <= 0 && entry.Height <= 0)
             {
@@ -167,9 +178,7 @@ namespace ClassicUO.IO.Resources
             ushort color = entry.Hue;
 
             if (width == 0 || height == 0)
-            {
                 return null;
-            }
 
             _file.SetData(entry.Address, entry.FileSize);
 

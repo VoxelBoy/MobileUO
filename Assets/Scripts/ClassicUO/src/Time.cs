@@ -22,7 +22,7 @@
 
 namespace ClassicUO
 {
-    internal static class Time
+    static class Time
     {
         public static uint Ticks;
     }

@@ -34,10 +34,22 @@ namespace ClassicUO.IO.Resources
     {
         private TileDataLoader()
         {
+
         }
 
         private static TileDataLoader _instance;
-        public static TileDataLoader Instance => _instance ?? (_instance = new TileDataLoader());
+        public static TileDataLoader Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new TileDataLoader();
+                }
+
+                return _instance;
+            }
+        }
 
         private static StaticTiles[] _staticData;
         private static LandTiles[] _landData;
@@ -53,7 +65,7 @@ namespace ClassicUO.IO.Resources
 
                 FileSystemHelper.EnsureFileExists(path);
 
-                UOFileMul tileData = new UOFileMul(path);
+                UOFileMul tiledata = new UOFileMul(path);
 
 
                 bool isold = Client.Version < ClientVersion.CV_7090;
@@ -61,14 +73,12 @@ namespace ClassicUO.IO.Resources
 
                 int land_group = isold ? Marshal.SizeOf<LandGroupOld>() : Marshal.SizeOf<LandGroupNew>();
                 int static_group = isold ? Marshal.SizeOf<StaticGroupOld>() : Marshal.SizeOf<StaticGroupNew>();
-                int staticscount = (int) (((tileData.Length - (LAND_SIZE * land_group))) / static_group);
+                int staticscount = (int) (((tiledata.Length - (LAND_SIZE * land_group))) / static_group);
 
                 if (staticscount > 2048)
-                {
                     staticscount = 2048;
-                }
 
-                tileData.Seek(0);
+                tiledata.Seek(0);
 
                 _landData = new LandTiles[Constants.MAX_LAND_DATA_INDEX_COUNT];
                 _staticData = new StaticTiles[staticscount * 32];
@@ -76,19 +86,19 @@ namespace ClassicUO.IO.Resources
 
                 for (int i = 0; i < 512; i++)
                 {
-                    tileData.Skip(4);
+                    tiledata.Skip(4);
 
                     for (int j = 0; j < 32; j++)
                     {
-                        if (tileData.Position + (isold ? 4 : 8) + 2 + 20 > tileData.Length)
+                        if (tiledata.Position + (isold ? 4 : 8) + 2 + 20 > tiledata.Length)
                             goto END;
 
                         int idx = i * 32 + j;
-                        ulong flags = isold ? tileData.ReadUInt() : tileData.ReadULong();
-                        ushort textId = tileData.ReadUShort();
-                        tileData.Fill(ref bufferString, 20);
+                        ulong flags = isold ? tiledata.ReadUInt() : tiledata.ReadULong();
+                        ushort textId = tiledata.ReadUShort();
+                        tiledata.Fill(ref bufferString, 20);
                         string name = string.Intern(Encoding.UTF8.GetString(bufferString).TrimEnd('\0'));
-
+                    
                         LandData[idx] = new LandTiles(flags, textId, name);
                     }
                 }
@@ -97,27 +107,27 @@ namespace ClassicUO.IO.Resources
 
                 for (int i = 0; i < staticscount; i++)
                 {
-                    if (tileData.Position >= tileData.Length)
+                    if (tiledata.Position >= tiledata.Length)
                         break;
 
-                    tileData.Skip(4);
+                    tiledata.Skip(4);
 
                     for (int j = 0; j < 32; j++)
                     {
-                        if (tileData.Position + (isold ? 4 : 8) + 13 + 20 > tileData.Length)
+                        if (tiledata.Position + (isold ? 4 : 8) + 13 + 20 > tiledata.Length)
                             goto END_2;
 
                         int idx = i * 32 + j;
 
-                        ulong flags = isold ? tileData.ReadUInt() : tileData.ReadULong();
-                        byte weight = tileData.ReadByte();
-                        byte layer = tileData.ReadByte();
-                        int count = tileData.ReadInt();
-                        ushort animId = tileData.ReadUShort();
-                        ushort hue = tileData.ReadUShort();
-                        ushort lightIndex = tileData.ReadUShort();
-                        byte height = tileData.ReadByte();
-                        tileData.Fill(ref bufferString, 20);
+                        ulong flags = isold ? tiledata.ReadUInt() : tiledata.ReadULong();
+                        byte weight = tiledata.ReadByte();
+                        byte layer = tiledata.ReadByte();
+                        int count = tiledata.ReadInt();
+                        ushort animId = tiledata.ReadUShort();
+                        ushort hue = tiledata.ReadUShort();
+                        ushort lightIndex = tiledata.ReadUShort();
+                        byte height = tiledata.ReadByte();
+                        tiledata.Fill(ref bufferString, 20);
                         string name = string.Intern(Encoding.UTF8.GetString(bufferString).TrimEnd('\0'));
 
                         StaticData[idx] = new StaticTiles(flags, weight, layer, count, animId, hue, lightIndex, height, name);
@@ -305,7 +315,7 @@ namespace ClassicUO.IO.Resources
                 }
 
                 END_2:
-                tileData.Dispose();
+                tiledata.Dispose();
             });
         }
 

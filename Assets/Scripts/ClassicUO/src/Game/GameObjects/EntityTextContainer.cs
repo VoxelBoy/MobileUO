@@ -48,12 +48,12 @@ namespace ClassicUO.Game.GameObjects
 
         public new void Clear()
         {
-            TextObject item = (TextObject) Items;
+            var item = (TextObject) Items;
             Items = null;
 
             while (item != null)
             {
-                TextObject next = (TextObject) item.Next;
+                var next = (TextObject) item.Next;
                 item.Next = null;
                 item.Destroy();
                 Remove(item);
@@ -112,7 +112,7 @@ namespace ClassicUO.Game.GameObjects
 
             for (int i = 0; i < _messages.Count; i++)
             {
-                TextObject c = _messages[i];
+                var c = _messages[i];
 
                 float delta = c.Time - Time.Ticks;
 
@@ -138,19 +138,23 @@ namespace ClassicUO.Game.GameObjects
             }
         }
 
-        public void Draw(UltimaBatcher2D batcher)
+        public void Draw(UltimaBatcher2D batcher, int x, int y, float scale)
         {
             if (IsDestroyed || _messages.Count == 0)
                 return;
 
+            int screenX = ProfileManager.Current.GameWindowPosition.X;
+            int screenY = ProfileManager.Current.GameWindowPosition.Y;
+            int screenW = ProfileManager.Current.GameWindowSize.X;
+            int screenH = ProfileManager.Current.GameWindowSize.Y;
+
             int offY = 0;
 
-            Point p = new Point();
 
             if (Parent != null)
             {
-                p.X += Parent.RealScreenPosition.X;
-                p.Y += Parent.RealScreenPosition.Y;
+                x += Parent.RealScreenPosition.X;
+                y += Parent.RealScreenPosition.Y;
 
                 _rectangle.X = Parent.RealScreenPosition.X;
                 _rectangle.Y = Parent.RealScreenPosition.Y;
@@ -173,8 +177,9 @@ namespace ClassicUO.Game.GameObjects
                                                                   out int centerY,
                                                                   out int width,
                                                                   out int height);
-                    p.X += (int) m.Offset.X + 22;
-                    p.Y += (int) (m.Offset.Y - m.Offset.Z - (height + centerY + 8));
+                    x += (int) m.Offset.X;
+                    x += 22;
+                    y += (int) (m.Offset.Y - m.Offset.Z - (height + centerY + 8));
                 }
                 else
                 {
@@ -182,7 +187,7 @@ namespace ClassicUO.Game.GameObjects
 
                     if (texture != null)
                     {
-                        p.X += 22;
+                        x += 22;
                         int yValue = texture.Height >> 1;
 
                         if (Parent is Item it)
@@ -193,22 +198,43 @@ namespace ClassicUO.Game.GameObjects
                         else if (Parent is Static || Parent is Multi)
                             offY = -44;
 
-                        p.Y -= yValue;
+                        y -= yValue;
                     }
+
+                   
                 }
             }
 
-            p = Client.Game.Scene.Camera.WorldToScreen(p);
 
-            foreach (TextObject item in _messages)
+            x = (int) (x / scale);
+            y = (int) (y / scale);
+
+            x -= (int) (screenX / scale);
+            y -= (int) (screenY / scale);
+
+            x += screenX;
+            y += screenY;
+
+
+            foreach (var item in _messages)
             {
+                ushort hue = 0;
+
                 if (item.IsDestroyed || item.RenderedText == null || item.RenderedText.IsDestroyed)
                     continue;
 
-                item.X = p.X - (item.RenderedText.Width >> 1);
-                item.Y = p.Y - offY - item.RenderedText.Height - item.OffsetY;
+                //if (ProfileManager.Current.HighlightGameObjects)
+                //{
+                //    if (SelectedObject.LastObject == item)
+                //        hue = 23;
+                //}
+                //else if (SelectedObject.LastObject == item)
+                //    hue = 23;
 
-                item.RenderedText.Draw(batcher, item.X, item.Y, item.Alpha);
+                item.X = x - (item.RenderedText.Width >> 1);
+                item.Y = y - offY - item.RenderedText.Height - item.OffsetY;
+
+                item.RenderedText.Draw(batcher, item.X, item.Y, item.Alpha, hue);
                 offY += item.RenderedText.Height;
             }
         }
@@ -221,7 +247,7 @@ namespace ClassicUO.Game.GameObjects
 
             IsDestroyed = true;
 
-            foreach (TextObject item in _messages)
+            foreach (var item in _messages)
                 item.Destroy();
 
             _messages.Clear();

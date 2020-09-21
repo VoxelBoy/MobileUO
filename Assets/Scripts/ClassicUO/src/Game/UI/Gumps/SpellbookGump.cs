@@ -73,7 +73,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                     _picBase.Graphic = value ? minimizedGraphic : bookGraphic;
 
-                    foreach (Control c in Children)
+                    foreach (var c in Children)
                     {
                         c.IsVisible = !value;
                     }
@@ -222,7 +222,7 @@ namespace ClassicUO.Game.UI.Gumps
             }
 
 
-            for (LinkedObject i = item.Items; i != null; i = i.Next)
+            for (var i = item.Items; i != null; i = i.Next)
             {
                 Item spell = (Item) i;
                 int currentCount = spell.Amount;
@@ -348,7 +348,7 @@ namespace ClassicUO.Game.UI.Gumps
                                         {
                                             int id = activedSpells[k];
 
-                                            SpellDefinition spell = SpellsMastery.GetSpell(id);
+                                            var spell = SpellsMastery.GetSpell(id);
 
                                             if (spell != null)
                                             {
@@ -717,7 +717,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         private static UseSpellButtonGump GetSpellFloatingButton(int id)
         {
-            for (LinkedListNode<Control> i = UIManager.Gumps.Last; i != null; i = i.Previous)
+            for (var i = UIManager.Gumps.Last; i != null; i = i.Previous)
             {
                 if (i.Value is UseSpellButtonGump g && g.SpellID == id)
                     return g;
@@ -1070,7 +1070,7 @@ namespace ClassicUO.Game.UI.Gumps
             if (_lastPressed != null && e.Button == MouseButtonType.Left)
             {
                 _clickTiming = -Mouse.MOUSE_DELAY_DOUBLE_CLICK;
-                SpellDefinition def = GetSpellDefinition((int) _lastPressed.Tag);
+                var def = GetSpellDefinition((int) _lastPressed.Tag);
 
                 if (def != null) GameActions.CastSpell(def.ID);
 

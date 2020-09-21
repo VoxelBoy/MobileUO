@@ -31,13 +31,24 @@ namespace ClassicUO.IO.Resources
     {
         private UOFileMul _file;
 
-        private LightsLoader(int count)
-            : base(count)
+        protected LightsLoader(int count) : base(count)
         {
+
         }
 
         private static LightsLoader _instance;
-        public static LightsLoader Instance => _instance ?? (_instance = new LightsLoader(Constants.MAX_LIGHTS_DATA_INDEX_COUNT));
+        public static LightsLoader Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new LightsLoader(Constants.MAX_LIGHTS_DATA_INDEX_COUNT);
+                }
+
+                return _instance;
+            }
+        }
 
         public override Task Load()
         {
@@ -68,7 +79,7 @@ namespace ClassicUO.IO.Resources
             if (id >= Resources.Length)
                 return null;
 
-            ref UOTexture32 texture = ref Resources[id];
+            ref var texture = ref Resources[id];
 
             if (texture == null || texture.IsDisposed)
             {
@@ -80,7 +91,7 @@ namespace ClassicUO.IO.Resources
                 texture = new UOTexture32(w, h);
                 texture.PushData(pixels);
 
-                SaveId(id);
+                SaveID(id);
             }
             else
             {
@@ -93,7 +104,7 @@ namespace ClassicUO.IO.Resources
 
         private uint[] GetLight(uint idx, out int width, out int height)
         {
-            ref UOFileIndex entry = ref GetValidRefEntry((int) idx);
+            ref var entry = ref GetValidRefEntry((int) idx);
 
             width = entry.Width;
             height = entry.Height;

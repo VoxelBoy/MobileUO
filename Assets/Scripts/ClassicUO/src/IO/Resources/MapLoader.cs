@@ -42,14 +42,23 @@ namespace ClassicUO.IO.Resources
         private readonly UOFileMul[] _staDifi = new UOFileMul[Constants.MAPS_COUNT];
         private readonly UOFileMul[] _staDifl = new UOFileMul[Constants.MAPS_COUNT];
 
-        private protected MapLoader()
+        public MapLoader()
         {
+
         }
 
         private static MapLoader _instance;
         public static MapLoader Instance
         {
-            get => _instance ?? (_instance = new MapLoader());
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new MapLoader();
+                }
+
+                return _instance;
+            }
             set
             {
                 _instance?.Dispose();
@@ -57,16 +66,16 @@ namespace ClassicUO.IO.Resources
             }
         }
 
+
+
         public new UOFileIndex[][] Entries = new UOFileIndex[Constants.MAPS_COUNT][]; 
 
         public IndexMap[][] BlockData { get; private set; } = new IndexMap[Constants.MAPS_COUNT][];
 
         public int[,] MapBlocksSize { get; private set; } = new int[Constants.MAPS_COUNT, 2];
 
-        // ReSharper disable RedundantExplicitArraySize
         public int[,] MapsDefaultSize { get; private protected set; } = new int[6, 2]
-            // ReSharper restore RedundantExplicitArraySize
-            {
+        {
             {
                 7168, 4096
             },
@@ -94,7 +103,10 @@ namespace ClassicUO.IO.Resources
 
         protected static UOFile GetMapFile(int map)
         {
-            return map < Instance._filesMap.Length ? Instance._filesMap[map] : null;
+            if (map < MapLoader.Instance._filesMap.Length)
+                return MapLoader.Instance._filesMap[map];
+
+            return null;
         }
 
         public override unsafe Task Load()
@@ -138,15 +150,9 @@ namespace ClassicUO.IO.Resources
                     }
                     
                     path = UOFileManager.GetUOFilePath($"statics{i}.mul");
-                    if (File.Exists(path))
-                    {
-                        _filesStatics[i] = new UOFileMul(path);
-                    }
+                    if (File.Exists(path)) _filesStatics[i] = new UOFileMul(path);
                     path = UOFileManager.GetUOFilePath($"staidx{i}.mul");
-                    if (File.Exists(path))
-                    {
-                        _filesIdxStatics[i] = new UOFileMul(path);
-                    }
+                    if (File.Exists(path)) _filesIdxStatics[i] = new UOFileMul(path);
                 }
 
                 if (!foundOneMap)
@@ -299,7 +305,7 @@ namespace ClassicUO.IO.Resources
                     }
                 }
 
-                ref IndexMap data = ref BlockData[i][block];
+                ref var data = ref BlockData[i][block];
                 data.MapAddress = realmapaddress;
                 data.StaticAddress = realstaticaddress;
                 data.StaticCount = realstaticcount;
@@ -365,8 +371,8 @@ namespace ClassicUO.IO.Resources
 
                 if (mapPatchesCount != 0)
                 {
-                    UOFileMul difl = _mapDifl[i];
-                    UOFileMul dif = _mapDif[i];
+                    var difl = _mapDifl[i];
+                    var dif = _mapDif[i];
 
                     if (difl == null || dif == null || difl.Length == 0 || dif.Length == 0)
                         continue;
@@ -392,8 +398,8 @@ namespace ClassicUO.IO.Resources
 
                 if (staticPatchesCount != 0)
                 {
-                    UOFileMul difl = _staDifl[i];
-                    UOFileMul difi = _staDifi[i];
+                    var difl = _staDifl[i];
+                    var difi = _staDifi[i];
 
                     if (difl == null || difi == null || _staDif[i] == null || difl.Length == 0 || difi.Length == 0 || _staDif[i].Length == 0)
                         continue;
@@ -448,7 +454,7 @@ namespace ClassicUO.IO.Resources
         {
             for (int i = 0; i < Constants.MAPS_COUNT; i++)
             {
-                IndexMap[] list = BlockData[i];
+                var list = BlockData[i];
 
                 if (list == null)
                     continue;

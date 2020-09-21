@@ -24,7 +24,6 @@ using System;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
-using ClassicUO.IO;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
 
@@ -101,7 +100,7 @@ namespace ClassicUO.Game.GameObjects
                 partial = false;
             }
 
-            ShaderHueTranslator.GetHueVector(ref HueVector, hue, partial, 0);
+            ShaderHuesTraslator.GetHueVector(ref HueVector, hue, partial, 0);
 
             //Engine.DebugInfo.MultiRendered++;
 
@@ -138,7 +137,7 @@ namespace ClassicUO.Game.GameObjects
                     return true;
                 }
 
-                ref UOFileIndex index = ref ArtLoader.Instance.GetValidRefEntry(graphic + 0x4000);
+                ref var index = ref ArtLoader.Instance.GetValidRefEntry(graphic + 0x4000);
 
                 posX -= index.Width;
                 posY -= index.Height;

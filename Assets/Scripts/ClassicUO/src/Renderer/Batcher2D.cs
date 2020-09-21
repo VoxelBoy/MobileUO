@@ -50,8 +50,6 @@ namespace ClassicUO.Renderer
         private bool _useScissor;
         private BoundingBox _drawingArea;
         private int _numSprites;
-        private Matrix _transformMatrix;
-
 
         public UltimaBatcher2D_Unused(GraphicsDevice device)
         {
@@ -200,7 +198,7 @@ namespace ClassicUO.Renderer
         {
             EnsureSize();
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             int w = texture.Width;
             int h = texture.Height;
@@ -313,7 +311,7 @@ namespace ClassicUO.Renderer
         {
             EnsureSize();
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             vertex.TextureCoordinate0.X = 0;
             vertex.TextureCoordinate0.Y = 0;
@@ -365,7 +363,7 @@ namespace ClassicUO.Renderer
         {
             EnsureSize();
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             float ww = texture.Width * 0.5f;
             float hh = texture.Height * 0.5f;
@@ -443,7 +441,7 @@ namespace ClassicUO.Renderer
         {
             EnsureSize();
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             float width = texture.Width;
             float height = texture.Height * 0.5f;
@@ -543,7 +541,7 @@ namespace ClassicUO.Renderer
             vertex.Hue0.Y =
             vertex.Hue1.Y =
             vertex.Hue2.Y =
-            vertex.Hue3.Y = ShaderHueTranslator.SHADER_SHADOW;
+            vertex.Hue3.Y = ShaderHuesTraslator.SHADER_SHADOW;
 
             PushSprite(texture);
 
@@ -571,7 +569,7 @@ namespace ClassicUO.Renderer
                 if (h3mod != 0.0f)
                 {
                     EnsureSize();
-                    ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+                    ref var vertex = ref _vertexInfo[_numSprites];
 
                     vertex.Position0.X = x + width;
                     vertex.Position0.Y = y;
@@ -656,7 +654,7 @@ namespace ClassicUO.Renderer
                     //}
 
                     EnsureSize();
-                    ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+                    ref var vertex = ref _vertexInfo[_numSprites];
 
 
                     vertex.Position0.X = x + width;
@@ -775,7 +773,7 @@ namespace ClassicUO.Renderer
                     //}
 
                     EnsureSize();
-                    ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+                    ref var vertex = ref _vertexInfo[_numSprites];
 
                     vertex.Position0.X = x + widthOffset;
                     vertex.Position0.Y = y + h06;
@@ -855,7 +853,7 @@ namespace ClassicUO.Renderer
                     //}
 
                     EnsureSize();
-                    ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+                    ref var vertex = ref _vertexInfo[_numSprites];
 
                     vertex.Position0.X = x + SITTING_OFFSET;
                     vertex.Position0.Y = y;
@@ -916,7 +914,7 @@ namespace ClassicUO.Renderer
                     //}
 
                     EnsureSize();
-                    ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+                    ref var vertex = ref _vertexInfo[_numSprites];
 
                     vertex.Position0.X = x + SITTING_OFFSET;
                     vertex.Position0.Y = y + h03;
@@ -977,7 +975,7 @@ namespace ClassicUO.Renderer
                     //}
 
                     EnsureSize();
-                    ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+                    ref var vertex = ref _vertexInfo[_numSprites];
 
                     vertex.Position0.X = x;
                     vertex.Position0.Y = y + h06;
@@ -1034,7 +1032,7 @@ namespace ClassicUO.Renderer
         {
             EnsureSize();
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             vertex.Position0.X = x;
             vertex.Position0.Y = y;
@@ -1093,7 +1091,7 @@ namespace ClassicUO.Renderer
             float minY = sy / (float) texture.Height;
             float maxY = (sy + sheight) / texture.Height;
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             vertex.Position0.X = x;
             vertex.Position0.Y = y;
@@ -1139,14 +1137,14 @@ namespace ClassicUO.Renderer
         }
         
         [MethodImpl(256)]
-        public bool Draw2D(Texture2D texture, float dx, float dy, float dwidth, float dheight, float sx, float sy, float swidth, float sheight, ref Vector3 hue, float angle = 0.0f)
+        public bool Draw2D(Texture2D texture, float dx, float dy, float dwidth, float dheight, int sx, int sy, float swidth, float sheight, ref Vector3 hue, float angle = 0.0f)
         {
             EnsureSize();
 
-            float minX = sx / texture.Width, maxX = (sx + swidth) / texture.Width;
-            float minY = sy / texture.Height, maxY = (sy + sheight) / texture.Height;
+            float minX = sx / (float) texture.Width, maxX = (sx + swidth) / texture.Width;
+            float minY = sy / (float) texture.Height, maxY = (sy + sheight) / texture.Height;
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             float x = dx;
             float y = dy;
@@ -1163,7 +1161,14 @@ namespace ClassicUO.Renderer
 
                 float sin = (float)Math.Sin(angle);
                 float cos = (float)Math.Cos(angle);
-                
+
+                //float sinx = sin * ww;
+                //float cosx = cos * ww;
+                //float siny = sin * hh;
+                //float cosy = cos * hh;
+
+
+
                 float tempX = -ww;
                 float tempY = -hh;
                 float rotX = tempX * cos - tempY * sin;
@@ -1274,7 +1279,7 @@ namespace ClassicUO.Renderer
         {
             EnsureSize();
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             vertex.Position0.X = x;
             vertex.Position0.Y = y;
@@ -1369,7 +1374,7 @@ namespace ClassicUO.Renderer
         {
             EnsureSize();
 
-            ref PositionNormalTextureColor4 vertex = ref _vertexInfo[_numSprites];
+            ref var vertex = ref _vertexInfo[_numSprites];
 
             const int WIDTH = 1;
             Vector2 begin = new Vector2(startX, startY);
@@ -1452,19 +1457,17 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public void Begin()
         {
-            SetMatrixToDefault();
-            Begin(null, _transformMatrix);
+            Begin(null, Matrix.Identity);
         }
 
         [MethodImpl(256)]
         public void Begin(Effect effect)
         {
-            SetMatrixToDefault();
-            Begin(effect, _transformMatrix);
+            Begin(effect, Matrix.Identity);
         }
 
         [MethodImpl(256)]
-        public void Begin(Effect customEffect, Matrix transform_matrix)
+        public void Begin(Effect customEffect, Matrix projection)
         {
             EnsureNotStarted();
             _started = true;
@@ -1477,7 +1480,6 @@ namespace ClassicUO.Renderer
             _drawingArea.Max.Z = 150;
 
             _customEffect = customEffect;
-            _transformMatrix = transform_matrix;
         }
 
         [MethodImpl(256)]
@@ -1497,17 +1499,6 @@ namespace ClassicUO.Renderer
 
             if (_numSprites >= MAX_SPRITES)
                 Flush();
-        }
-
-        private void SetMatrixToDefault()
-        {
-            var viewport = GraphicsDevice.Viewport;
-            Matrix.CreateOrthographicOffCenter(
-                viewport.X,
-                viewport.X + viewport.Width,
-                viewport.Y + viewport.Height, 
-                viewport.Y, 
-                0, 1, out _transformMatrix);
         }
 
         [MethodImpl(256)]
@@ -1550,7 +1541,7 @@ namespace ClassicUO.Renderer
             GraphicsDevice.Indices = _indexBuffer;
             GraphicsDevice.SetVertexBuffer(_vertexBuffer);
 
-            DefaultEffect.ApplyStates(ref _transformMatrix);
+            DefaultEffect.ApplyStates();
         }
 
         private unsafe void Flush()
@@ -1579,7 +1570,7 @@ namespace ClassicUO.Renderer
             if (_customEffect != null)
             {
                 if (_customEffect is MatrixEffect eff)
-                    eff.ApplyStates(ref _transformMatrix);
+                    eff.ApplyStates();
                 else
                     _customEffect.CurrentTechnique.Passes[0].Apply();
             }
@@ -1703,6 +1694,7 @@ namespace ClassicUO.Renderer
         private class IsometricEffect : MatrixEffect
         {
             private Vector2 _viewPort;
+            private Matrix _matrix = Matrix.Identity;
 
             public IsometricEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, Resources.IsometricEffect)
             {
@@ -1719,15 +1711,15 @@ namespace ClassicUO.Renderer
             public EffectParameter Brighlight { get; }
 
 
-            public override void ApplyStates(ref Matrix matrix)
+            public override void ApplyStates()
             {
-                WorldMatrix.SetValue(Matrix.Identity);
+                WorldMatrix.SetValue(_matrix);
 
                 _viewPort.X = GraphicsDevice.Viewport.Width;
                 _viewPort.Y = GraphicsDevice.Viewport.Height;
                 Viewport.SetValue(_viewPort);
 
-                base.ApplyStates(ref matrix);
+                base.ApplyStates();
             }
         }
 

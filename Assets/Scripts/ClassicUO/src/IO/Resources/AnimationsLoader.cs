@@ -59,10 +59,22 @@ namespace ClassicUO.IO.Resources
 
         private AnimationsLoader()
         {
+            
         }
 
         private static AnimationsLoader _instance;
-        public static AnimationsLoader Instance => _instance ?? (_instance = new AnimationsLoader());
+        public static AnimationsLoader Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new AnimationsLoader();
+                }
+
+                return _instance;
+            }
+        }
 
 
         public ushort Color;
@@ -595,7 +607,7 @@ namespace ClassicUO.IO.Resources
                             if (realAnimID != 0xFFFF && animFile != 0)
                             {
                                 UOFile currentIdxFile = _files[animFile].IdxFile;
-                                ANIMATION_GROUPS_TYPE realType = Client.Version < ClientVersion.CV_500A 
+                                var realType = Client.Version < ClientVersion.CV_500A 
                                     ? CalculateTypeByGraphic(realAnimID) : DataIndex[index].Type;
                                 long addressOffset = DataIndex[index].CalculateOffset(realAnimID, realType, out int count);
 
@@ -635,7 +647,7 @@ namespace ClassicUO.IO.Resources
 
                                                 if (aidx->Size != 0 && aidx->Position != 0xFFFFFFFF && aidx->Size != 0xFFFFFFFF)
                                                 {
-                                                    AnimationDirection dataindex = DataIndex[index].BodyConvGroups[j].Direction[d];
+                                                    var dataindex = DataIndex[index].BodyConvGroups[j].Direction[d];
 
                                                     dataindex.Address = aidx->Position;
                                                     dataindex.Size = aidx->Size;
@@ -708,7 +720,7 @@ namespace ClassicUO.IO.Resources
                             if (index >= Constants.MAX_ANIMATIONS_DATA_INDEX_COUNT)
                                 continue;
 
-                            if (filter.TryGetValue(index, out bool b) && b)
+                            if (filter.TryGetValue(index, out var b) && b)
                             {
                                 continue;
                             }
@@ -754,8 +766,8 @@ namespace ClassicUO.IO.Resources
 
                     for (int i = 0; i < _filesUop.Length; i++)
                     {
-                        UOFileUop uopFile = _filesUop[i];
-                        if (uopFile != null && uopFile.TryGetUOPData(hash, out UOFileIndex data))
+                        var uopFile = _filesUop[i];
+                        if (uopFile != null && uopFile.TryGetUOPData(hash, out var data))
                         {
                             if (DataIndex[animID] == null)
                             {
@@ -767,7 +779,7 @@ namespace ClassicUO.IO.Resources
                                 DataIndex[animID].InitializeUOP();
                             }
 
-                            ref AnimationGroupUop g = ref DataIndex[animID].UopGroups[grpID];
+                            ref var g = ref DataIndex[animID].UopGroups[grpID];
 
                             g = new AnimationGroupUop
                             {
@@ -921,7 +933,7 @@ namespace ClassicUO.IO.Resources
 
                 if (index.IsUOP && (isParent || !index.IsValidMUL))
                 {
-                    AnimationGroupUop uop = index.GetUopGroup(group);
+                    var uop = index.GetUopGroup(group);
 
                     return uop ?? _empty;
                 }
@@ -966,7 +978,7 @@ namespace ClassicUO.IO.Resources
 
                 if (index.IsUOP)
                 {
-                    AnimationGroupUop uop = index.GetUopGroup(group);
+                    var uop = index.GetUopGroup(group);
 
                     return uop ?? _empty;
                 }
@@ -1173,7 +1185,7 @@ namespace ClassicUO.IO.Resources
         [MethodImpl(256)]
         public void FixSittingDirection(ref byte layerDirection, ref bool mirror, ref int x, ref int y)
         {
-            ref SittingInfoData data = ref SittingInfos[SittingValue - 1];
+            ref var data = ref SittingInfos[SittingValue - 1];
 
             switch (Direction)
             {
@@ -1378,7 +1390,7 @@ namespace ClassicUO.IO.Resources
 
             if (animDir.IsUOP || (animDir.Address == 0 && animDir.Size == 0))
             {
-                AnimationGroupUop animData = DataIndex[AnimID].GetUopGroup(AnimGroup);
+                var animData = DataIndex[AnimID].GetUopGroup(AnimGroup);
 
                 if (animData == null || animData.Offset == 0)
                     return false;
@@ -1402,7 +1414,7 @@ namespace ClassicUO.IO.Resources
 
         private unsafe bool ReadUOPAnimationFrame(ref AnimationDirection animDirection)
         {
-            AnimationGroupUop animData = DataIndex[AnimID].GetUopGroup(AnimGroup);
+            var animData = DataIndex[AnimID].GetUopGroup(AnimGroup);
 
             if (animData.FileIndex < 0 || animData.FileIndex >= _filesUop.Length)
             {
@@ -1418,7 +1430,7 @@ namespace ClassicUO.IO.Resources
 
             animDirection.LastAccessTime = Time.Ticks;
             int decLen = (int)animData.DecompressedLength;
-            UOFileUop file = _filesUop[animData.FileIndex];
+            var file = _filesUop[animData.FileIndex];
             file.Seek(animData.Offset);
 
            // byte* decBuffer = stackalloc byte[decLen];
@@ -1723,7 +1735,7 @@ namespace ClassicUO.IO.Resources
                         if (!(animDataStruct.FileIndex == 0 && animDataStruct.CompressedLength == 0 && animDataStruct.DecompressedLength == 0 && animDataStruct.Offset == 0))
                         {
                             int decLen = (int) animDataStruct.DecompressedLength;
-                            UOFileUop file = _filesUop[animDataStruct.FileIndex];
+                            var file = _filesUop[animDataStruct.FileIndex];
                             file.Seek(animDataStruct.Offset);
                             byte[] decbuffer = file.GetData((int) animDataStruct.CompressedLength, decLen);
 
@@ -1789,17 +1801,17 @@ namespace ClassicUO.IO.Resources
             int count = 0;
             long ticks = Time.Ticks - Constants.CLEAR_TEXTURES_DELAY;
 
-            LinkedListNode<AnimationDirection> first = _usedTextures.First;
+            var first = _usedTextures.First;
 
             while (first != null)
             {
-                LinkedListNode<AnimationDirection> next = first.Next;
+                var next = first.Next;
 
                 if (first.Value.LastAccessTime != 0 && first.Value.LastAccessTime < ticks)
                 {
                     for (int j = 0; j < first.Value.FrameCount; j++)
                     {
-                        ref AnimationFrameTexture texture = ref first.Value.Frames[j];
+                        ref var texture = ref first.Value.Frames[j];
 
                         if (texture != null)
                         {

@@ -19,7 +19,6 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -247,7 +246,7 @@ namespace ClassicUO.Game.UI.Gumps
             writer.WriteAttributeString("columns", _columns.ToString());
             writer.WriteAttributeString("rectsize", _rectSize.ToString());
 
-            IEnumerable<CounterItem> controls = FindControls<CounterItem>();
+            var controls = FindControls<CounterItem>();
 
             writer.WriteStartElement("controls");
             foreach (CounterItem control in controls)
@@ -274,7 +273,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (controlsXml != null)
             {
-                CounterItem[] items = GetControls<CounterItem>();
+                var items = GetControls<CounterItem>();
                 int index = 0;
 
                 foreach (XmlElement controlXml in controlsXml.GetElementsByTagName("control"))
@@ -423,7 +422,7 @@ namespace ClassicUO.Game.UI.Gumps
                 if (parent == null)
                     return;
 
-                for (LinkedObject i = parent.Items; i != null; i = i.Next)
+                for (var i = parent.Items; i != null; i = i.Next)
                 {
                     Item item = (Item) i;
 
