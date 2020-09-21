@@ -84,6 +84,7 @@ namespace Microsoft.Xna.Framework.Audio
         {
             if (source != null)
             {
+                source.volume = 0.0f;
                 source.Stop();
                 source.clip = null;
                 if (audioSourcePool.Contains(source) == false)
