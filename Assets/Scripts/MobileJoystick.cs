@@ -35,8 +35,18 @@ public class MobileJoystick : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
         {
             return;
         }
-        
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(background, eventData.position, null, out var pointerPosition);
+
+        Vector2 pointerPosition;
+        if (UserPreferences.UseLegacyJoystick.CurrentValue == (int) PreferenceEnums.UseLegacyJoystick.On)
+        {
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(background, eventData.position, null, out pointerPosition);
+        }
+        else
+        {
+            var backgroundPosition = background.position;
+            pointerPosition = new Vector2(eventData.position.x - backgroundPosition.x, eventData.position.y - backgroundPosition.y);
+        }
+
         var extent = background.rect.size * 0.5f * handleRange;
         
         var horizontalInput = pointerPosition.x / extent.x;

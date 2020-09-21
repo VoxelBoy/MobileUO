@@ -118,4 +118,10 @@ namespace PreferenceEnums
         Off = 0,
         On = 1
     }
+    
+    public enum UseLegacyJoystick
+    {
+        Off = 0,
+        On = 1
+    }
 }

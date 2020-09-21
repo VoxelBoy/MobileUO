@@ -83,6 +83,7 @@ public static class UserPreferences
     public static IntPreference AssistantMinimized;
     public static IntPreference ShowDebugConsole;
     public static IntPreference EnlargeSmallButtons;
+    public static IntPreference UseLegacyJoystick;
 
     public static void Initialize()
     {
@@ -105,5 +106,6 @@ public static class UserPreferences
         ShowDebugConsole = new IntPreference(nameof(ShowDebugConsole), (int) PreferenceEnums.ShowDebugConsole.Off);
         AssistantMinimized = new IntPreference(nameof(AssistantMinimized), (int) PreferenceEnums.AssistantMinimized.Off);
         EnlargeSmallButtons = new IntPreference(nameof(EnlargeSmallButtons), (int) PreferenceEnums.EnlargeSmallButtons.Off);
+        UseLegacyJoystick = new IntPreference(nameof(UseLegacyJoystick), (int) PreferenceEnums.UseLegacyJoystick.Off);
     }
 }
