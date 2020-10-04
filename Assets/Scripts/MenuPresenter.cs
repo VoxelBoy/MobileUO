@@ -47,6 +47,7 @@ public class MenuPresenter : MonoBehaviour
         GetOptionEnumViewInstance().Initialize(typeof(JoystickDeadZone), UserPreferences.JoystickDeadZone, "Joystick DeadZone", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(JoystickRunThreshold), UserPreferences.JoystickRunThreshold, "Joystick Run Threshold", false, false);
         GetOptionEnumViewInstance().Initialize(typeof(UseLegacyJoystick), UserPreferences.UseLegacyJoystick, "Use Legacy Joystick", false, false);
+        GetOptionEnumViewInstance().Initialize(typeof(JoystickCancelsFollow), UserPreferences.JoystickCancelsFollow, "Joystick Cancels Follow", false, false);
 
         //Only show customize joystick button when UO client is running and we're in the game scene
         customizeJoystickButtonGameObject.transform.SetAsLastSibling();

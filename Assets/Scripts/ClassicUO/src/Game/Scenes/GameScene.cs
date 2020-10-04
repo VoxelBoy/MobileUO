@@ -583,7 +583,7 @@ namespace ClassicUO.Game.Scenes
                 }
             }
 
-            if (JoystickInput != Vector2.Zero)
+            if (JoystickInput != Vector2.Zero && UserPreferences.JoystickCancelsFollow.CurrentValue == (int) PreferenceEnums.JoystickCancelsFollow.On)
             {
                 _continueRunning = false;
                 StopFollowing();
