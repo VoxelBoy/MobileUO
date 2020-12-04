@@ -7,10 +7,6 @@ MobileUO runs on **iOS & Android** and enables you to play UO on the go.
 <a href='https://play.google.com/store/apps/details?id=com.mobileuo.mobileuo&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height='60' alt='Get it on Google Play' src='https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/playStoreBadge.png'/></a>
 <a href='https://apps.apple.com/us/app/id1511721667'><img height='60' alt='Download on the App Store' src='https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/appStoreBadge.png'/></a>
 
-**Support the project on Patreon**
-
-<a href="http://www.patreon.com/mobileuo"><img src="https://raw.githubusercontent.com/VoxelBoy/MobileUO/master/docs/images/become_a_patron_button%402x.png" alt="Patreon" width="200"/></a>
-
 **Join the community**
 
 <a href="https://discord.gg/d6NQsj3">
