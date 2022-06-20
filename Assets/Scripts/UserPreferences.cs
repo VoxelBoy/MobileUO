@@ -81,7 +81,6 @@ public static class UserPreferences
     public static IntPreference ShowModifierKeyButtons;
     public static IntPreference EnableAssistant;
     public static IntPreference AssistantMinimized;
-    public static IntPreference ShowDebugConsole;
     public static IntPreference EnlargeSmallButtons;
     public static IntPreference UseLegacyJoystick;
     public static IntPreference JoystickCancelsFollow;
@@ -104,7 +103,6 @@ public static class UserPreferences
         ShowModifierKeyButtons = new IntPreference(nameof(ShowModifierKeyButtons), (int) PreferenceEnums.ShowModifierKeyButtons.Off);
         DisableTouchscreenKeyboardOnMobile = new IntPreference(nameof(DisableTouchscreenKeyboardOnMobile), (int) PreferenceEnums.DisableTouchscreenKeyboardOnMobile.Off);
         EnableAssistant = new IntPreference(nameof(EnableAssistant), (int) PreferenceEnums.EnableAssistant.Off);
-        ShowDebugConsole = new IntPreference(nameof(ShowDebugConsole), (int) PreferenceEnums.ShowDebugConsole.Off);
         AssistantMinimized = new IntPreference(nameof(AssistantMinimized), (int) PreferenceEnums.AssistantMinimized.Off);
         EnlargeSmallButtons = new IntPreference(nameof(EnlargeSmallButtons), (int) PreferenceEnums.EnlargeSmallButtons.Off);
         UseLegacyJoystick = new IntPreference(nameof(UseLegacyJoystick), (int) PreferenceEnums.UseLegacyJoystick.Off);

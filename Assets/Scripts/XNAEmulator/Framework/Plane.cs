@@ -1,4 +1,4 @@
-﻿﻿#region License
+﻿#region License
 /*
 MIT License
 Copyright © 2006 The Mono.Xna Team

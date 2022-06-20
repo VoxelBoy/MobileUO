@@ -8,6 +8,7 @@
 /Builds/
 /*.sln
 /*.csproj
+/UserSettings/
 
 # Ignore assistant files since developer does not want them to be public at this point
 /Assets/Resources/Resources.resx*

@@ -59,7 +59,6 @@ public class MenuPresenter : MonoBehaviour
 #endif
         
         //Options that are hidden by default
-        GetOptionEnumViewInstance().Initialize(typeof(ShowDebugConsole), UserPreferences.ShowDebugConsole, "Show Debug Console", false, false, true);
         GetOptionEnumViewInstance().Initialize(typeof(VisualizeFingerInput), UserPreferences.VisualizeFingerInput, "Visualize Finger Input", false, false, true);
 
         ShowAdvancedPreferencesButton.onClick.AddListener(OnShowAdvancedPreferencesButtonClicked);

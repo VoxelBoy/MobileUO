@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Init : MonoBehaviour
 {
@@ -28,8 +27,6 @@ public class Init : MonoBehaviour
         ConsoleRedirect.Redirect();
         
         UserPreferences.Initialize();
-        UserPreferences.ShowDebugConsole.ValueChanged += OnShowDebugConsoleChanged;
-        OnShowDebugConsoleChanged(UserPreferences.ShowDebugConsole.CurrentValue);
 
         StateManager.AddState(new BootState());
         StateManager.AddState(new ServerConfigurationState(serverConfigurationUiParent));
@@ -45,11 +42,6 @@ public class Init : MonoBehaviour
         ExternalStoragePath = GetAndroidExternalFilesDir();
     }
 
-    private void OnShowDebugConsoleChanged(int currentValue)
-    {
-        inGameDebugConsoleCanvas.enabled = currentValue == (int) PreferenceEnums.ShowDebugConsole.On;
-    }
-    
     private static string GetAndroidExternalFilesDir()
     {
         #if UNITY_ANDROID && !UNITY_EDITOR
