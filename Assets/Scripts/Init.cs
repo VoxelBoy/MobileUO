@@ -15,9 +15,6 @@ public class Init : MonoBehaviour
     private ErrorPresenter errorPresenter;
 
     [SerializeField]
-    private Canvas inGameDebugConsoleCanvas;
-
-    [SerializeField]
     private SupportedServerConfigurations supportedServerConfigurations;
 
     public static string ExternalStoragePath { get; private set; }
@@ -30,8 +27,8 @@ public class Init : MonoBehaviour
 
         StateManager.AddState(new BootState());
         StateManager.AddState(new ServerConfigurationState(serverConfigurationUiParent));
-        StateManager.AddState(new DownloadState(downloadPresenter, inGameDebugConsoleCanvas));
-        StateManager.AddState(new GameState(clientRunner, errorPresenter, inGameDebugConsoleCanvas));
+        StateManager.AddState(new DownloadState(downloadPresenter));
+        StateManager.AddState(new GameState(clientRunner, errorPresenter));
 
         Input.simulateMouseWithTouches = false;
         

@@ -14,17 +14,14 @@ public class DownloadState : IState
     public const string DefaultFileDownloadPort = "8080";
     
     private readonly DownloadPresenter downloadPresenter;
-    private readonly Canvas inGameDebugConsoleCanvas;
     
     private ServerConfiguration serverConfiguration;
     private DownloaderBase downloader;
     private const string H_REF_PATTERN = @"<a\shref=[^>]*>([^<]*)<\/a>";
 
-    public DownloadState(DownloadPresenter downloadPresenter, Canvas inGameDebugConsoleCanvas)
+    public DownloadState(DownloadPresenter downloadPresenter)
     {
         this.downloadPresenter = downloadPresenter;
-        this.inGameDebugConsoleCanvas = inGameDebugConsoleCanvas;
-        
         downloadPresenter.BackButtonPressed += OnBackButtonPressed;
         downloadPresenter.CellularWarningYesButtonPressed += OnCellularWarningYesButtonPressed;
         downloadPresenter.CellularWarningNoButtonPressed += OnCellularWarningNoButtonPressed;
@@ -44,7 +41,6 @@ public class DownloadState : IState
 
     private void OnBackButtonPressed()
     {
-        inGameDebugConsoleCanvas.enabled = false;
         StateManager.GoToState<ServerConfigurationState>();
     }
 
@@ -175,7 +171,6 @@ public class DownloadState : IState
         //Stop downloads
         downloadPresenter.ShowError(error);
         downloadPresenter.ClearFileList();
-        inGameDebugConsoleCanvas.enabled = true;
     }
 
     public void Exit()

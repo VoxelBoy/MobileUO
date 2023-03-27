@@ -6,13 +6,11 @@ public class GameState : IState
 {
     private readonly ClientRunner clientRunner;
     private readonly ErrorPresenter errorPresenter;
-    private readonly Canvas inGameDebugConsoleCanvas;
 
-    public GameState(ClientRunner clientRunner, ErrorPresenter errorPresenter, Canvas inGameDebugConsoleCanvas)
+    public GameState(ClientRunner clientRunner, ErrorPresenter errorPresenter)
     {
         this.clientRunner = clientRunner;
         this.errorPresenter = errorPresenter;
-        this.inGameDebugConsoleCanvas = inGameDebugConsoleCanvas;
     }
     public void Enter()
     {
@@ -43,7 +41,6 @@ public class GameState : IState
 
     private void GoBackToServerConfigurationState()
     {
-        inGameDebugConsoleCanvas.enabled = false;
         StateManager.GoToState<ServerConfigurationState>();
     }
 
@@ -52,14 +49,12 @@ public class GameState : IState
         clientRunner.enabled = false;
         errorPresenter.gameObject.SetActive(true);
         errorPresenter.SetErrorText(error);
-        inGameDebugConsoleCanvas.enabled = true;
     }
 
     public void Exit()
     {
         clientRunner.enabled = false;
         errorPresenter.gameObject.SetActive(false);
-        
         errorPresenter.BackButtonClicked -= GoBackToServerConfigurationState;
         clientRunner.OnExiting -= GoBackToServerConfigurationState;
         clientRunner.OnError -= OnError;

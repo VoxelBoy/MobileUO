@@ -15,12 +15,7 @@ public class MenuPresenter : MonoBehaviour
     [SerializeField] private GameObject customizeJoystickButtonGameObject;
     [SerializeField] private GameObject loginButtonGameObject;
     [SerializeField] private ClientRunner clientRunner;
-    [SerializeField] private Button ShowAdvancedPreferencesButton;
-    [SerializeField] private Button ShowDebugInspectorPanelButton;
-    
-    [SerializeField] private GameObject DebugInspectorPanelParent;
-    [SerializeField] private GameObject DebugHierarchyPanelParent;
-    
+
     private readonly List<OptionEnumView> optionEnumViews = new List<OptionEnumView>();
     
     private bool menuOpened;
@@ -59,36 +54,12 @@ public class MenuPresenter : MonoBehaviour
 #endif
         
         //Options that are hidden by default
-        GetOptionEnumViewInstance().Initialize(typeof(VisualizeFingerInput), UserPreferences.VisualizeFingerInput, "Visualize Finger Input", false, false, true);
+        GetOptionEnumViewInstance().Initialize(typeof(VisualizeFingerInput), UserPreferences.VisualizeFingerInput, "Visualize Finger Input", false, false);
 
-        ShowAdvancedPreferencesButton.onClick.AddListener(OnShowAdvancedPreferencesButtonClicked);
-        ShowAdvancedPreferencesButton.transform.SetAsLastSibling();
-
-        ShowDebugInspectorPanelButton.onClick.AddListener(OnShowDebugInspectorPanelButtonClicked);
-        ShowDebugInspectorPanelButton.transform.SetAsLastSibling();
-        
         clientRunner.SceneChanged += OnUoSceneChanged;
         
         optionEnumViewInstance.gameObject.SetActive(false);
-    }
-
-    private void OnShowDebugInspectorPanelButtonClicked()
-    {
-        var active = DebugInspectorPanelParent.activeSelf == false;
-        DebugInspectorPanelParent.SetActive(active);
-        DebugHierarchyPanelParent.SetActive(active);
-    }
-
-    private void OnShowAdvancedPreferencesButtonClicked()
-    {
-        optionEnumViews.ForEach(x =>
-        {
-            if (x.HiddenByDefault)
-            {
-                x.gameObject.SetActive(x.gameObject.activeSelf == false);
-            }
-        });
-    }
+    }   
 
     private void OnUoSceneChanged(bool isGameScene)
     {
