@@ -120,13 +120,17 @@ namespace Lean.Touch
 
 		/// <summary>This allows you to set which layers your GUI is on, so it can be ignored by each finger.</summary>
 		[Tooltip("This allows you to set which layers your GUI is on, so it can be ignored by each finger.")]
-		public LayerMask GuiLayers = Physics.DefaultRaycastLayers;
+		// public LayerMask GuiLayers = Physics.DefaultRaycastLayers;
+		//YLMZ: Set the value directly to avoid referencing Physics module
+		public LayerMask GuiLayers = -5;
 
 		public static LayerMask CurrentGuiLayers
 		{
 			get
 			{
-				return Instances.Count > 0 ? Instances[0].GuiLayers : (LayerMask)Physics.DefaultRaycastLayers;
+				//YLMZ: Set the value directly to avoid referencing Physics module
+				// return Instances.Count > 0 ? Instances[0].GuiLayers : (LayerMask)Physics.DefaultRaycastLayers;
+				return Instances.Count > 0 ? Instances[0].GuiLayers : -5;
 			}
 		}
 

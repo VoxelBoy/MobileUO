@@ -74,7 +74,7 @@ public class Init : MonoBehaviour
                 }
             }
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             Debug.LogException(e);
             return null;
