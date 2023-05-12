@@ -37,6 +37,8 @@ public class ZipDownloader : DownloaderBase
             directoryInfo.Create();
         }
         
+        downloadPresenter.UpdateView(0,1);
+        
         DownloadFile();
 
         while (webRequest.isDone == false)
@@ -89,8 +91,13 @@ public class ZipDownloader : DownloaderBase
         {
             return;
         }
-        
-        if (request.isHttpError || request.isNetworkError)
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            downloadPresenter.SetFileDownloaded(fileName);
+            downloadPresenter.UpdateView(1, 1);
+        }
+        else
         {
             if(downloadAttempts >= MAX_DOWNLOAD_ATTEMPTS)
             {
@@ -106,12 +113,6 @@ public class ZipDownloader : DownloaderBase
                 DownloadFile();
                 downloadPresenter.SetDownloadProgress(request.uri.AbsolutePath, 0f);
             }
-        }
-        else
-        {
-            Debug.Log($"Download finished - {fileName}");
-            downloadPresenter.SetFileDownloaded(fileName);
-            downloadPresenter.UpdateView(1,1);
         }
     }
     

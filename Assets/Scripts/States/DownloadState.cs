@@ -60,7 +60,7 @@ public class DownloadState : IState
             downloadPresenter.gameObject.SetActive(true);
 
             //Figure out what kind of downloader we should use
-            if (serverConfiguration.FileDownloadServerUrl.ToLowerInvariant().EndsWith(".zip"))
+            if (serverConfiguration.FileDownloadServerUrl.ToLowerInvariant().Contains(".zip"))
             {
                 downloader = new ZipDownloader();
                 downloader.Initialize(this, serverConfiguration, downloadPresenter);

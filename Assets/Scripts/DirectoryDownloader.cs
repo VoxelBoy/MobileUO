@@ -104,7 +104,14 @@ public class DirectoryDownloader : DownloaderBase
         
         --concurrentDownloadCounter;
         activeRequestAndFileNameTupleList.RemoveAll(x => x.Item1 == request);
-        if (request.isHttpError || request.isNetworkError)
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log($"Download finished - {fileName}");
+            ++numberOfFilesDownloaded;
+            downloadPresenter.SetFileDownloaded(fileName);
+            downloadPresenter.UpdateView(numberOfFilesDownloaded, numberOfFilesToDownload);
+        }
+        else
         {
             if(downloadAttemptsPerFile[fileName] >= MAX_DOWNLOAD_ATTEMPTS)
             {
@@ -122,13 +129,7 @@ public class DirectoryDownloader : DownloaderBase
                 downloadPresenter.SetDownloadProgress(request.uri.AbsolutePath, 0f);
             }
         }
-        else
-        {
-            Debug.Log($"Download finished - {fileName}");
-            ++numberOfFilesDownloaded;
-            downloadPresenter.SetFileDownloaded(fileName);
-            downloadPresenter.UpdateView(numberOfFilesDownloaded, numberOfFilesToDownload);
-        }
+
     }
 
     public override void Dispose()
