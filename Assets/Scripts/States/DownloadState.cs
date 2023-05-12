@@ -60,7 +60,12 @@ public class DownloadState : IState
             downloadPresenter.gameObject.SetActive(true);
 
             //Figure out what kind of downloader we should use
-            if (serverConfiguration.FileDownloadServerUrl.ToLowerInvariant().Contains("uooutlands.com"))
+            if (serverConfiguration.FileDownloadServerUrl.ToLowerInvariant().EndsWith(".zip"))
+            {
+                downloader = new ZipDownloader();
+                downloader.Initialize(this, serverConfiguration, downloadPresenter);
+            }
+            else if (serverConfiguration.FileDownloadServerUrl.ToLowerInvariant().Contains("uooutlands.com"))
             {
                 downloader = new OutlandsDownloader();
                 downloader.Initialize(this, serverConfiguration, downloadPresenter);

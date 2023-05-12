@@ -328,6 +328,8 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         {
             //File Download Server Url validation
             var fileDownloadServerUrl = fileDownloadServerUrlInputField.text;
+            fileDownloadServerUrl = fileDownloadServerUrl.Replace("http://", "");
+            fileDownloadServerUrl = fileDownloadServerUrl.Replace("https://", "");
             if (string.IsNullOrWhiteSpace(fileDownloadServerUrl))
             {
                 validationError = "File Download Server Address cannot be empty.";
@@ -340,6 +342,7 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
             }
             catch (Exception e)
             {
+                Debug.LogException(e);
                 validationError = "File Download Server Address is not valid";
                 return false;
             }

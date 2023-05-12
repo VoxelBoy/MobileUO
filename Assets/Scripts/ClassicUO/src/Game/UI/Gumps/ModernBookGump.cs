@@ -406,6 +406,13 @@ namespace ClassicUO.Game.UI.Gumps
                     Stb.Click(x, y);
                     UpdateCaretScreenPosition();
                     _caretPage = GetCaretPage();
+                    if (UnityEngine.Application.isMobilePlatform && IsEditable &&
+                        UserPreferences.DisableTouchscreenKeyboardOnMobile.CurrentValue == (int) PreferenceEnums.DisableTouchscreenKeyboardOnMobile.Off)
+                    {
+                        //NOTE: Show touchscreen keyboard when abstract text box is selected
+                        GameController.TouchScreenKeyboard = UnityEngine.TouchScreenKeyboard.Open(Stb.text,
+                            UnityEngine.TouchScreenKeyboardType.Default, false, Multiline, false);
+                    }
                 }
             }
 
