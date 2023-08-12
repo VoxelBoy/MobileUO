@@ -106,6 +106,7 @@ public static class ServerConfigurationModel
         var directoryInfo = new DirectoryInfo(config.GetPathToSaveFiles());
         if (directoryInfo.Exists)
         {
+            //TODO: Should we just delete all files in the directory?
             //Delete all files that have an extension contained in DownloadState.NeededUoFileExtensions
             directoryInfo.GetFiles().Where(f => DownloadState.NeededUoFileExtensions.Contains(f.Extension)).ToList().ForEach(f1 => f1.Delete());
         }

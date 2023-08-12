@@ -48,8 +48,21 @@ public class ZipDownloader : DownloaderBase
         }
         
         var filePath = Path.Combine(pathToSaveFiles, fileName);
-        ZipFile.ExtractToDirectory(filePath, pathToSaveFiles);
-        File.Delete(filePath);
+        try
+        {
+            ZipFile.ExtractToDirectory(filePath, pathToSaveFiles);
+        }
+        catch (Exception e)
+        {
+            var error = $"Error while extracting {fileName}: {e}";
+            downloadState.StopAndShowError(error);
+            yield break;
+        }
+        finally
+        {
+            downloadCoroutine = null;
+            File.Delete(filePath);
+        }
 
         serverConfiguration.AllFilesDownloaded = true;
         ServerConfigurationModel.SaveServerConfigurations();
@@ -69,7 +82,7 @@ public class ZipDownloader : DownloaderBase
         var filePath = Path.Combine(pathToSaveFiles, fileName);
         var fileDownloadHandler = new DownloadHandlerFile(filePath) {removeFileOnAbort = true};
         webRequest.downloadHandler = fileDownloadHandler;
-        webRequest.SendWebRequest().completed += operation => DownloadFinished(webRequest, fileName);
+        webRequest.SendWebRequest().completed += _ => DownloadFinished(webRequest, fileName);
     }
 
     private static string GetFileNameFromUrl(string url)

@@ -10,7 +10,7 @@ public class DownloadState : IState
     public List<string> FilesToDownload;
     public string ResourcePathForFilesToDownload;
     
-    public static readonly List<string> NeededUoFileExtensions = new List<string>{".def", ".mul", ".idx", ".uop", ".enu", ".rle", ".txt"};
+    public static readonly List<string> NeededUoFileExtensions = new() {".def", ".mul", ".idx", ".uop", ".enu", ".rle", ".txt"};
     public const string DefaultFileDownloadPort = "8080";
     
     private readonly DownloadPresenter downloadPresenter;
@@ -166,7 +166,9 @@ public class DownloadState : IState
         var httpsPort = port == 443;
         var defaultPort = httpPort || httpsPort;
         var scheme = httpsPort ? "https" : "http";
-        var uriBuilder = new UriBuilder(scheme, serverUrl, defaultPort ? - 1 : port, fileName);
+        var serverUrlWithoutHttp = serverUrl.Replace("http://", "");
+        serverUrlWithoutHttp = serverUrlWithoutHttp.Replace("https://", "");
+        var uriBuilder = new UriBuilder(scheme, serverUrlWithoutHttp, defaultPort ? - 1 : port, fileName);
         return uriBuilder.Uri;
     }
 

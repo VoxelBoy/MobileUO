@@ -22,3 +22,14 @@ MonoBehaviour:
     UseEncryption: 0
     ClientPathForUnityEditor: 
     AllFilesDownloaded: 0
+    PreferExternalStorage: 0
+  - Name: UOAlive (supported)
+    UoServerUrl: login.uoalive.com
+    UoServerPort: 2593
+    FileDownloadServerUrl: login.uoalive.com
+    FileDownloadServerPort: 8000
+    ClientVersion: 7.0.98.1
+    UseEncryption: 0
+    ClientPathForUnityEditor: 
+    AllFilesDownloaded: 0
+    PreferExternalStorage: 0
