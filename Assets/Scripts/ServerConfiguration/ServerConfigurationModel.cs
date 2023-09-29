@@ -27,13 +27,12 @@ public static class ServerConfigurationModel
 
     public static Action ActiveConfigurationChanged;
 
-    public static void Initialize(SupportedServerConfigurations supportedServerConfigurations)
+    public static void Initialize(List<ServerConfiguration> serverConfigurations)
     {
         var json = PlayerPrefs.GetString(serverConfigurationsKey, string.Empty);
         ServerConfigurations = string.IsNullOrEmpty(json) == false ? JsonConvert.DeserializeObject<List<ServerConfiguration>>(json) : new List<ServerConfiguration>();
         DefaultConfiguration = GetDefaultConfiguration();
-
-        SupportedServerConfigurations = new List<ServerConfiguration>(supportedServerConfigurations.ServerConfigurations);
+        SupportedServerConfigurations = new List<ServerConfiguration>(serverConfigurations);
     }
 
     private static ServerConfiguration GetDefaultConfiguration()
@@ -99,6 +98,7 @@ public static class ServerConfigurationModel
         {
             directoryInfo.Delete(true);
         }
+        SaveServerConfigurations();
     }
 
     public static void DeleteConfigurationFiles(ServerConfiguration config)
@@ -106,9 +106,7 @@ public static class ServerConfigurationModel
         var directoryInfo = new DirectoryInfo(config.GetPathToSaveFiles());
         if (directoryInfo.Exists)
         {
-            //TODO: Should we just delete all files in the directory?
-            //Delete all files that have an extension contained in DownloadState.NeededUoFileExtensions
-            directoryInfo.GetFiles().Where(f => DownloadState.NeededUoFileExtensions.Contains(f.Extension)).ToList().ForEach(f1 => f1.Delete());
+            directoryInfo.Delete(true);
         }
         config.AllFilesDownloaded = false;
         SaveServerConfigurations();

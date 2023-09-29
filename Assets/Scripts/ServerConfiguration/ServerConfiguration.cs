@@ -15,6 +15,7 @@ public class ServerConfiguration
     public string ClientPathForUnityEditor;
     public bool AllFilesDownloaded;
     public bool PreferExternalStorage;
+    public bool SupportedServer;
 
     public string GetPathToSaveFiles()
     {
@@ -46,7 +47,8 @@ public class ServerConfiguration
             UseEncryption = this.UseEncryption,
             ClientPathForUnityEditor = this.ClientPathForUnityEditor,
             AllFilesDownloaded = this.AllFilesDownloaded,
-            PreferExternalStorage = this.PreferExternalStorage
+            PreferExternalStorage = this.PreferExternalStorage,
+            SupportedServer = this.SupportedServer
         };
     }
 }

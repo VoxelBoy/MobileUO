@@ -93,6 +93,9 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
     [SerializeField]
     private ServerDiscoveryButtonPresenter serverDiscoveryButtonPresenter;
 
+    [SerializeField]
+    private GameObject[] gameObjectToDisableForSupportedServers;
+
     public Action OnConfigurationEditSaved;
     public Action OnConfigurationEditCanceled;
     public Action OnConfigurationDeleted;
@@ -124,6 +127,11 @@ public class ServerConfigurationEditPresenter : MonoBehaviour
         useExternalStorageToggle.isOn = serverConfigurationToEdit?.PreferExternalStorage ?? false;
         clientPathForUnityEditorInputField.text = serverConfigurationToEdit?.ClientPathForUnityEditor ?? "";
         clientPathForUnityEditorParent.SetActive(Application.isMobilePlatform == false);
+
+        foreach (var go in gameObjectToDisableForSupportedServers)
+        {
+            go.SetActive(serverConfigurationToEdit?.SupportedServer == false);
+        }
         
         documentationButtonParent.SetActive(true);
         validationErrorTextParent.SetActive(false);

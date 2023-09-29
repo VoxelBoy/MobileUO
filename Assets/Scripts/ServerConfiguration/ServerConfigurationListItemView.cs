@@ -1,13 +1,11 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ServerConfigurationListItemView : MonoBehaviour
 {
     [SerializeField] private Text nameText;
     [SerializeField] private Button selectButton;
-    [FormerlySerializedAs("editButton")]
     [SerializeField] private Button addOrEditButton;
     [SerializeField] private Text addOrEditButtonText;
 

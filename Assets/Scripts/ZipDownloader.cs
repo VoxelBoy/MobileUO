@@ -50,7 +50,7 @@ public class ZipDownloader : DownloaderBase
         var filePath = Path.Combine(pathToSaveFiles, fileName);
         try
         {
-            ZipFile.ExtractToDirectory(filePath, pathToSaveFiles);
+            ZipFile.ExtractToDirectory(filePath, pathToSaveFiles, true);
         }
         catch (Exception e)
         {
