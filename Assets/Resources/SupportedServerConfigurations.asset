@@ -29,7 +29,7 @@ MonoBehaviour:
     UoServerPort: 2593
     FileDownloadServerUrl: mobile.uoalive.com/uoalive_v1.zip
     FileDownloadServerPort: 80
-    ClientVersion: 7.0.98.1
+    ClientVersion: 7.0.99.1
     UseEncryption: 0
     ClientPathForUnityEditor: 
     AllFilesDownloaded: 0
