@@ -35,3 +35,14 @@ MonoBehaviour:
     AllFilesDownloaded: 0
     PreferExternalStorage: 0
     SupportedServer: 1
+  - Name: Unchained
+    UoServerUrl: 74.91.116.240
+    UoServerPort: 2593
+    FileDownloadServerUrl: patchuo.b-cdn.net/MobileUO.zip
+    FileDownloadServerPort: 80
+    ClientVersion: 7.0.10.3
+    UseEncryption: 0
+    ClientPathForUnityEditor: 
+    AllFilesDownloaded: 0
+    PreferExternalStorage: 0
+    SupportedServer: 1
