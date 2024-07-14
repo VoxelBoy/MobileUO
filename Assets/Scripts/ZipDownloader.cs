@@ -76,8 +76,15 @@ public class ZipDownloader : DownloaderBase
         var uriString = uri.ToString();
         if (uriString.EndsWith("/"))
         {
-            uriString = uriString.Substring(0, uriString.Length - 1);
+            uriString = uriString[..^1];
         }
+
+        if (uriString.Contains("dropbox", StringComparison.InvariantCultureIgnoreCase) &&
+            uriString.EndsWith("dl=0", StringComparison.InvariantCultureIgnoreCase))
+        {
+            uriString = uriString.Replace("dl=0", "dl=1", StringComparison.InvariantCultureIgnoreCase);
+        }
+        
         webRequest = UnityWebRequest.Get(uriString);
         var filePath = Path.Combine(pathToSaveFiles, fileName);
         var fileDownloadHandler = new DownloadHandlerFile(filePath) {removeFileOnAbort = true};
