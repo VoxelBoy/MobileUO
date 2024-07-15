@@ -257,16 +257,16 @@ namespace ClassicUO.Game.UI.Gumps.Login
 
             //Add(new NiceButton(){ });
 
-            Add(new HtmlControl(htmlX, htmlY, 150, 15,
-                                false, false,
-                                false,
-                                text: "<body link=\"#ad9413\" vlink=\"#00FF00\" ><a href=\"https://www.paypal.me/muskara\">Click to donate PayPal",
-                                0x32, true, isunicode: true, style: FontStyle.BlackBorder));
-            Add(new HtmlControl(htmlX, htmlY + 20, 150, 15,
-                                false, false,
-                                false,
-                                text: "<body link=\"#ad9413\" vlink=\"#00FF00\" ><a href=\"https://www.patreon.com/classicuo\">Become a Patreon!",
-                                0x32, true, isunicode: true, style: FontStyle.BlackBorder));
+            // Add(new HtmlControl(htmlX, htmlY, 150, 15,
+            //                     false, false,
+            //                     false,
+            //                     text: "<body link=\"#ad9413\" vlink=\"#00FF00\" ><a href=\"https://www.paypal.me/muskara\">Click to donate PayPal",
+            //                     0x32, true, isunicode: true, style: FontStyle.BlackBorder));
+            // Add(new HtmlControl(htmlX, htmlY + 20, 150, 15,
+            //                     false, false,
+            //                     false,
+            //                     text: "<body link=\"#ad9413\" vlink=\"#00FF00\" ><a href=\"https://www.patreon.com/classicuo\">Become a Patreon!",
+            //                     0x32, true, isunicode: true, style: FontStyle.BlackBorder));
 
 
             Add(new HtmlControl(505, htmlY, 100, 15,
