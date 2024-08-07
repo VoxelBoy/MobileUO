@@ -10,7 +10,3 @@
 /*.csproj
 /UserSettings/
 *.DS_Store
-
-# Ignore assistant files since developer does not want them to be public at this point
-/Assets/Scripts/Assistant/*
-/Assets/Scripts/Assistant.meta
