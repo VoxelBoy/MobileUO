@@ -135,13 +135,17 @@ namespace ClassicUO.IO.Resources
 
                 if (File.Exists(path))
                 {
+                    // don't worry about subdirectories, we'll recursively search them all
+                    string musicDir = UOFileManager.GetUOFilePath(@"Music");
+                    string[] musicFileList = Directory.GetFiles(musicDir, "*.mp3", SearchOption.AllDirectories);
+                    
                     using (StreamReader reader = new StreamReader(path))
                     {
                         string line;
 
                         while ((line = reader.ReadLine()) != null)
                         {
-                            if (TryParseConfigLine(line, out Tuple<int, string, bool> songData))
+                            if (TryParseConfigLine(line, musicFileList, out Tuple<int, string, bool> songData))
                                 _mMusicData[songData.Item1] = new Tuple<string, bool>(songData.Item2, songData.Item3);
                         }
                     }
@@ -256,7 +260,7 @@ namespace ClassicUO.IO.Resources
         /// <param name="line">A line from the file.</param>
         /// <param name="?">If successful, contains a tuple with these fields: int songIndex, string songName, bool doesLoop</param>
         /// <returns>true if line could be parsed, false otherwise.</returns>
-        private bool TryParseConfigLine(string line, out Tuple<int, string, bool> songData)
+        private bool TryParseConfigLine(string line, string[] musicFileList, out Tuple<int, string, bool> songData)
         {
             songData = null;
 
@@ -268,7 +272,7 @@ namespace ClassicUO.IO.Resources
 
             // check if name exists as file, ignoring case since UO isn't consistent with file case (necessary for *nix)
             // also, not every filename in Config.txt has a file extension, so let's strip it out just in case.
-            string name = GetTrueFileName(Path.GetFileNameWithoutExtension(splits[1]));
+            string name = GetTrueFileName(Path.GetFileNameWithoutExtension(splits[1]), musicFileList);
 
             bool doesLoop = splits.Length == 3 && splits[2] == "loop";
 
@@ -282,31 +286,18 @@ namespace ClassicUO.IO.Resources
         /// </summary>
         /// <param name="name">The filename from the music Config.txt</param>
         /// <returns>a string with the true case sensitive filename</returns>
-        private static string GetTrueFileName(string name)
+        private static string GetTrueFileName(string name, string[] musicFileList)
         {
-            // don't worry about subdirectories, we'll recursively search them all
-            string dir = UOFileManager.GetUOFilePath(@"Music");
-
             // Enumerate all files in the directory, using the file name as a pattern
             // This will list all case variants of the filename even on file systems that
             // are case sensitive.
-            Regex  pattern = new Regex($"^{name}.mp3", RegexOptions.IgnoreCase);
-            //string[] fileList = Directory.GetFiles(dir, "*.mp3", SearchOption.AllDirectories).Where(path => pattern.IsMatch(Path.GetFileName(path))).ToArray();
-            string[] fileList = Directory.GetFiles(dir, "*.mp3", SearchOption.AllDirectories);
-            fileList = Array.FindAll(fileList, path => pattern.IsMatch(Path.GetFileName(path)));
+            Regex pattern = new Regex($"^{name}.mp3", RegexOptions.IgnoreCase);
+            
+            var file = musicFileList.FirstOrDefault(path => pattern.IsMatch(Path.GetFileName(path)));
 
-            if (fileList != null && fileList.Length != 0)
-            {
-                if (fileList.Length > 1)
-                {
-                    // More than one file with the same name but different case spelling found
-                    Log.Warn($"Ambiguous File reference for {name}. More than one file found with different spellings.");
-                }
-
-                Log.Debug($"Loading music:\t\t{fileList[0]}");
-
-                return Path.GetFileName(fileList[0]);
-            }
+            //If found, return path to file
+            if (string.IsNullOrEmpty(file) == false)
+                return Path.GetFileName(musicFileList[0]);
             
             // If we've made it this far, there is no file with that name, regardless of case spelling
             // return name and GetMusic will fail gracefully (play nothing)
