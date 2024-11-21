@@ -1,0 +1,4 @@
+[submodule "external/ClassicUO"]
+	path = external/ClassicUO
+	url = https://github.com/ClassicUO/ClassicUO.git
+	# commit = 303c2ae699ca02caa6b09fbe5fbcb0c92f8bbd68
