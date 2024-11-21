@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.ext.nunit": {
-      "version": "1.0.6",
+      "version": "2.0.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -17,20 +17,34 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mobile.android-logcat": {
-      "version": "1.4.2",
+      "version": "1.4.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.ugui": {
+    "com.unity.multiplayer.center": {
       "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
+      }
+    },
+    "com.unity.ugui": {
+      "version": "2.0.0",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "com.unity.modules.accessibility": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
     },
     "com.unity.modules.androidjni": {
       "version": "1.0.0",
@@ -47,6 +61,12 @@
     "com.unity.modules.audio": {
       "version": "1.0.0",
       "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.hierarchycore": {
+      "version": "1.0.0",
+      "depth": 2,
       "source": "builtin",
       "dependencies": {}
     },
@@ -73,6 +93,17 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {}
+    },
+    "com.unity.modules.uielements": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.hierarchycore": "1.0.0"
+      }
     },
     "com.unity.modules.unityanalytics": {
       "version": "1.0.0",
